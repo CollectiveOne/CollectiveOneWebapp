@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="cards-container-list">
 
-    <div v-for="(cardWrapper, ix) in cardWrappers"
+    <div v-for="cardWrapper in cardWrappers"
       :key="cardWrapper.id"
       class="section-card"
       :class="cardsContainerClasses"
@@ -37,7 +37,7 @@
       </div>
 
       <div v-if="!creatingNewCard" class="">
-        <popper :append-to-body="true" trigger="click":options="popperOptions" class="">
+        <popper :append-to-body="true" trigger="click" :options="popperOptions" class="">
           <app-drop-down-menu
             class="drop-menu"
             @createNew="creatingNewCard = true"
@@ -124,8 +124,8 @@ export default {
     newCardItems () {
       let menuItems = []
 
-      menuItems.push({ text: 'create new', value: 'createNew', faIcon: 'fa-plus' })
-      menuItems.push({ text: 'add existing', value: 'addExisting', faIcon: 'fa-plus' })
+      menuItems.push({ text: this.$t('model.CREATE_NEW'), value: 'createNew', faIcon: 'fa-plus' })
+      menuItems.push({ text: this.$t('model.ADD_EXISTING'), value: 'addExisting', faIcon: 'fa-plus' })
 
       return menuItems
     },

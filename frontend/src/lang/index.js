@@ -417,8 +417,8 @@ const translations = {
       'MODEL_SECTION': 'Model Section',
       'AS_TOP_LEVEL_IN': 'As top level section under the initiative',
       'IN_SECTION': 'In Section',
-      'CREATE_NEW': 'Create New',
-      'ADD_EXISTING': 'Add Existing',
+      'CREATE_NEW': 'Create new',
+      'ADD_EXISTING': 'Add existing',
       'SCOPE_IN': 'Scope (in "{title}" section)',
       'NEW_SCOPE_IN': 'New scope (in "{title}" section)',
       'PRIVATE': 'private',
@@ -467,7 +467,9 @@ const translations = {
       'MOVE_TO': 'Move to',
       'ADD_ALSO_TO': 'Add also in',
       'ENABLE_DRAG_AND_DROP': 'move manually',
-      'DISABLE_DRAG_AND_DROP': 'disable manual move'
+      'DISABLE_DRAG_AND_DROP': 'disable manual move',
+      'TITLE_TOO_LONG': 'title too long',
+      'CARD_EMPTY': 'card cannot be empty'
     },
     help: {
       'MESSAGES-TAB-TT': 'messages',
@@ -889,8 +891,8 @@ const translations = {
       'MODEL_SECTION': 'Sección',
       'AS_TOP_LEVEL_IN': 'Como sección principal en esta iniciativa',
       'IN_SECTION': 'En la sección',
-      'CREATE_NEW': 'Crear Nueva',
-      'ADD_EXISTING': 'Añadir Existente',
+      'CREATE_NEW': 'Crear nueva',
+      'ADD_EXISTING': 'Añadir existente',
       'SCOPE_IN': 'Visiblidad (en la sección "{title}")',
       'NEW_SCOPE_IN': 'Nueva visiblidad (en la sección "{title}")',
       'PRIVATE': 'privada',
@@ -937,7 +939,11 @@ const translations = {
       'ADD_TO_SECTION': 'añadir en sección',
       'MOVE_CARD': 'Mover Tarjeta',
       'MOVE_TO': 'Mover a',
-      'ADD_ALSO_TO': 'Añadir en'
+      'ADD_ALSO_TO': 'Añadir en',
+      'ENABLE_DRAG_AND_DROP': 'mover manualmente',
+      'DISABLE_DRAG_AND_DROP': 'desactivar mover',
+      'TITLE_TOO_LONG': 'el tamaño del título excede el límite',
+      'CARD_EMPTY': 'no es posible crear una tarjeta totalmente vacía'
     },
     help: {
       'MESSAGES-TAB-TT': 'mensajes',

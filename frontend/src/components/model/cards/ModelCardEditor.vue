@@ -105,6 +105,10 @@
         </div>
         <div class="w3-row">
           <app-error-panel
+            :show="textErrorShow"
+            :message="textErrorMsg">
+          </app-error-panel>
+          <app-error-panel
             :show="errorCreatingCard"
             :message="errorCreatingCardMessage">
           </app-error-panel>
@@ -117,7 +121,6 @@
 
 <script>
 import { cardMixin } from '@/components/model/cards/cardMixin.js'
-import InModelSectionsTags from '@/components/model/InModelSectionsTags.vue'
 
 export default {
 
@@ -126,7 +129,6 @@ export default {
   mixins: [ cardMixin ],
 
   components: {
-    'app-in-model-sections-tags': InModelSectionsTags
   },
 
   props: {
@@ -166,62 +168,81 @@ export default {
       errorUploadingFile: false,
       errorUploadingFileMsg: '',
       errorCreatingCard: false,
-      errorCreatingCardMessage: ''
+      errorCreatingCardMessage: '',
+      cardEmptyError: false
     }
   },
 
   computed: {
+    errorTitleTooLongShow () {
+      return this.titleTooLong
+    },
+
     titleEmpty () {
       if (this.editedCard) {
         return this.editedCard.title === ''
       }
       return false
     },
+
     titleTooLong () {
       if (this.editedCard) {
         return this.editedCard.title.length > 42
       }
       return false
     },
+
     textEmpty () {
       if (this.editedCard) {
         return this.editedCard.text === ''
       }
       return false
     },
-    textErrorShow () {
-      return this.textEmptyError && this.textEmpty
+
+    cardEmpty () {
+      return this.textEmpty && this.titleEmpty
     },
+
+    textErrorShow () {
+      return this.cardEmptyShow || this.titleTooLong
+    },
+
+    cardEmptyShow () {
+      return this.cardEmptyError && this.cardEmpty
+    },
+
+    textErrorMsg () {
+      return this.titleTooLong ? this.$t('model.TITLE_TOO_LONG') : this.$t('model.CARD_EMPTY')
+    },
+
     noCardSelected () {
       return this.existingCard === null
     },
+
     noCardSelectedShow () {
       return this.noCardSelectedError && this.noCardSelected
     },
-    titleErrorShow () {
-      return this.titleEmptyShow || this.titleTooLongShow
-    },
-    titleEmptyShow () {
-      return this.titleEmptyError && this.titleEmpty
-    },
-    titleTooLongShow () {
-      return this.titleTooLong
-    },
+
     atCardWrapper () {
       return this.cardWrapper === null ? null : this.cardWrapper.cardWrapper
     },
+
     cardWrapperIdForImage () {
       return this.isNew ? '' : this.atCardWrapper.id
     },
+
     newCardLocation () {
       return this.$store.state.support.createNewCardLocation === 'before'
     },
+
     cardButtonText () {
       return this.isNew ? this.$t('general.CREATE') : this.$t('general.SAVE')
     },
+
     hasImage () {
       return this.editedCard.imageFile != null
     },
+
     containerClass () {
       let containerClass = {}
 
@@ -235,6 +256,7 @@ export default {
 
       return containerClass
     },
+
     inputClass () {
       let inputClass = {}
 
@@ -244,6 +266,7 @@ export default {
 
       return inputClass
     },
+
     controlsClass () {
       let controlsClass = {}
 
@@ -252,9 +275,11 @@ export default {
 
       return controlsClass
     },
+
     card () {
       return this.atCardWrapper.card
     },
+
     cardScopeText () {
       switch (this.scope) {
         case 'PRIVATE':
@@ -346,6 +371,11 @@ export default {
 
       if (!this.addExisting) {
         if (this.titleTooLong) {
+          ok = false
+        }
+
+        if (this.cardEmpty) {
+          this.cardEmptyError = true
           ok = false
         }
       } else {
