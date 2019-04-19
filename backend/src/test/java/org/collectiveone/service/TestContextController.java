@@ -108,6 +108,8 @@ public class TestContextController extends AbstractTest {
 			System.out.println(exception);
 		}
 		
+		authorizationTokenUser1 = authorizationTokenUser1.substring(0, authorizationTokenUser1.length() - 5) + "AAAAA";
+		
 		MvcResult result = this.mockMvc
 	    	.perform(get("/1/user/myProfile")
 	        .header("Authorization", "Bearer " + authorizationTokenUser1))	    	
