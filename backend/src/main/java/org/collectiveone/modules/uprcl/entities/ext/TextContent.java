@@ -1,4 +1,4 @@
-package org.collectiveone.modules.contexts.entities.ext;
+package org.collectiveone.modules.uprcl.entities.ext;
 
 import java.util.UUID;
 

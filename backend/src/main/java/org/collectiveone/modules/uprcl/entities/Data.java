@@ -1,4 +1,4 @@
-package org.collectiveone.modules.contexts.entities;
+package org.collectiveone.modules.uprcl.entities;
 
 import java.security.MessageDigest;
 
@@ -11,8 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.bitcoinj.core.Base58;
-import org.collectiveone.modules.contexts.entities.ext.DataType;
-import org.collectiveone.modules.contexts.entities.ext.TextContent;
+import org.collectiveone.modules.uprcl.entities.ext.DataType;
+import org.collectiveone.modules.uprcl.entities.ext.TextContent;
 
 @Entity
 @Table(name = "data")

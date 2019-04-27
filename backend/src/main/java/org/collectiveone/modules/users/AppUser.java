@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.contexts.entities.Context;
+import org.collectiveone.modules.uprcl.entities.Context;
 import org.collectiveone.modules.users.nannies.DIDNanny;
 
 @Entity

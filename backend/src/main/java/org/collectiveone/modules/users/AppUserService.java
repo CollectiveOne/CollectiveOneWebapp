@@ -4,12 +4,11 @@ import javax.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.ECKey;
 import org.collectiveone.common.crypto.CryptoService;
-import org.collectiveone.modules.contexts.ContextService;
-import org.collectiveone.modules.contexts.entities.Context;
+import org.collectiveone.modules.uprcl.ContextService;
+import org.collectiveone.modules.uprcl.entities.Context;
 import org.collectiveone.modules.users.nannies.DIDMethod;
 import org.collectiveone.modules.users.nannies.DIDNanny;
 import org.collectiveone.modules.users.nannies.DIDNannyRepositoryIf;

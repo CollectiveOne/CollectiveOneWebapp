@@ -1,8 +1,8 @@
-package org.collectiveone.modules.contexts.repositories;
+package org.collectiveone.modules.uprcl.repositories;
 
 import java.util.UUID;
 
-import org.collectiveone.modules.contexts.entities.Context;
+import org.collectiveone.modules.uprcl.entities.Context;
 import org.springframework.data.repository.CrudRepository;
 
 public interface ContextRepositoryIf extends CrudRepository<Context, UUID> {

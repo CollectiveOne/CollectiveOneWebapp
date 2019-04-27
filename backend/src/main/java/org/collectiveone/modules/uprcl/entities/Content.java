@@ -1,4 +1,4 @@
-package org.collectiveone.modules.contexts.entities;
+package org.collectiveone.modules.uprcl.entities;
 
 import java.util.Set;
 
@@ -9,7 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.contexts.entities.ext.OrderedLink;
+import org.collectiveone.modules.uprcl.entities.ext.OrderedLink;
 
 @Entity
 @Table(name = "content")

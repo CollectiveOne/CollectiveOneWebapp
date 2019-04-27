@@ -1,4 +1,4 @@
-package org.collectiveone.modules.contexts.entities;
+package org.collectiveone.modules.uprcl.entities;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

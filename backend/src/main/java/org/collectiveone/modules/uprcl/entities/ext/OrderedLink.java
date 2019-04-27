@@ -1,4 +1,4 @@
-package org.collectiveone.modules.contexts.entities.ext;
+package org.collectiveone.modules.uprcl.entities.ext;
 
 import java.util.UUID;
 
@@ -11,8 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.contexts.entities.Commit;
-import org.collectiveone.modules.contexts.entities.Perspective;
+import org.collectiveone.modules.uprcl.entities.Commit;
+import org.collectiveone.modules.uprcl.entities.Perspective;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
