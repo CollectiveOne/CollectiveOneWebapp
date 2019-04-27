@@ -1,21 +1,17 @@
-package org.collectiveone.modules.contexts.entities;
+package org.collectiveone.modules.contexts.entities.ext;
 
-import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name = "commit_groups")
-public class CommitGroup {
+public class TextContent {
 	
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -23,24 +19,14 @@ public class CommitGroup {
 		parameters = { @Parameter( name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy") })
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
+
+	private String text;
 	
-	@OneToMany(mappedBy = "group")
-	private List<Commit> commits;
-
-	public UUID getId() {
-		return id;
+	public String getText() {
+		return text;
 	}
-
-	public void setId(UUID id) {
-		this.id = id;
-	}
-
-	public List<Commit> getCommits() {
-		return commits;
-	}
-
-	public void setCommits(List<Commit> commits) {
-		this.commits = commits;
+	public void setText(String text) {
+		this.text = text;
 	}
 	
 }

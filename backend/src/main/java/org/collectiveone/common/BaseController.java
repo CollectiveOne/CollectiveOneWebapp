@@ -1,7 +1,5 @@
 package org.collectiveone.common;
 
-import java.util.UUID;
-
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,17 +11,17 @@ public class BaseController {
 	@Autowired
 	protected AppUserService appUserService;
 	
-	protected UUID getLoggedUserId() {
+	protected String getLoggedUserId() throws Exception {
 		AppUser loggedUser = getLoggedUser();
 		if (loggedUser == null) {
 			return null;
 		} else {
-			return loggedUser.getId();
+			return loggedUser.getDid();
 		}
 	}
 	
-	protected AppUser getLoggedUser() {
+	protected AppUser getLoggedUser() throws Exception {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return appUserService.getFromAuth0Id(auth.getName());
+		return appUserService.getOrCreateFromAuth0Id(auth.getName());
 	}
 } 

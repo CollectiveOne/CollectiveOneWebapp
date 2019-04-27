@@ -3,64 +3,51 @@ package org.collectiveone.modules.contexts.entities;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 @Entity
 @Table(name = "perspectives")
 public class Perspective {
 
 	@Id
-	@GeneratedValue(generator = "UUID")
-	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
-		parameters = { @Parameter( name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy") })
-	@Column(name = "id", updatable = false, nullable = false)
-	private UUID id;
+	@Column(name = "id", updatable = false, nullable = false, unique = true)
+	private String id;
 	
 	private String name;
 	
+	private String creator;
+	
 	@Column
-	private Timestamp creationDate;
+	private Timestamp timestamp;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Context context;
 	
+	/* non hashed content */
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Commit head;
 	
-	/* working commits are uncommitted changes, there is one per user and perspective. */
+	/* non _prtcl */
+	
+	/* working commits are uncommitted changes, there cab be zero or more per user and perspective. */
 	@OneToMany
 	private List<Commit> workingCommits = new ArrayList<Commit>();
-	
-	
-	public Perspective(String name, Context context, Commit head, List<Commit> workingCommits) {
-		super();
-		this.name = name;
-		this.context = context;
-		this.head = head;
-		this.workingCommits = workingCommits;
-	}
-	
-	public Perspective() {
-		super();
-	}
 
-	public UUID getId() {
+		
+	
+	public String getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -71,13 +58,21 @@ public class Perspective {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public Timestamp getCreationDate() {
-		return creationDate;
+
+	public String getCreator() {
+		return creator;
 	}
 
-	public void setCreationDate(Timestamp creationDate) {
-		this.creationDate = creationDate;
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
+
+	public Timestamp getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Timestamp timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	public Context getContext() {
