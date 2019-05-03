@@ -89,8 +89,8 @@ public class Context {
 		return id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setId() {
+		this.id = this.computeId();
 	}
 
 	public String getCreator() {

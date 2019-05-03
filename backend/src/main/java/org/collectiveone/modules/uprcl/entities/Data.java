@@ -11,8 +11,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.bitcoinj.core.Base58;
-import org.collectiveone.modules.uprcl.entities.ext.DataType;
-import org.collectiveone.modules.uprcl.entities.ext.TextContent;
+import org.collectiveone.modules.c1.data.DataType;
+import org.collectiveone.modules.c1.data.TextContent;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
 @Table(name = "data")
@@ -32,14 +34,23 @@ public class Data {
 	public String computeId() {
 		try {
 			MessageDigest digestInstance = MessageDigest.getInstance("SHA-256");
+			ObjectMapper objectMapper = new ObjectMapper();
 			
+			String json = "";
+					
 			switch (type) {
 				case TEXT:
-					return Base58.encode(digestInstance.digest(textContent.getText().getBytes()));
+					json = objectMapper.writeValueAsString(textContent);
+				break;
 					
 				default: 
 					throw new Exception("unexpected type: " + type.toString());
-			}	
+			}
+			
+			byte[] hash = digestInstance.digest(json.getBytes());
+			
+			return Base58.encode(hash);	
+				
 		} catch (Exception e) {
 			// TODO
 		}
@@ -50,8 +61,8 @@ public class Data {
 		return id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setId() {
+		this.id = this.computeId();
 	}
 
 	public DataType getType() {

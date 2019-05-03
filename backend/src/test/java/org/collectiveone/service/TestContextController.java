@@ -2,13 +2,23 @@ package org.collectiveone.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-import java.lang.reflect.Type;
+import java.sql.Timestamp;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.collectiveone.AbstractTest;
 import org.collectiveone.common.dto.GetResult;
+import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.c1.data.DataType;
+import org.collectiveone.modules.c1.data.TextContentDto;
+import org.collectiveone.modules.uprcl.dtos.CommitDto;
+import org.collectiveone.modules.uprcl.dtos.ContentDto;
+import org.collectiveone.modules.uprcl.dtos.ContextDto;
+import org.collectiveone.modules.uprcl.dtos.DataDto;
+import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
+import org.collectiveone.modules.uprcl.entities.PerspectiveType;
 import org.collectiveone.modules.users.AppUserDto;
 import org.junit.After;
 import org.junit.Before;
@@ -18,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -147,7 +158,59 @@ public class TestContextController extends AbstractTest {
     @Test
     @Rollback(false)
     public void createContext() throws Exception {
+    	String text = "My First Context";
+    	Long timestamp = System.currentTimeMillis();
     	
+    	ContextDto context = new ContextDto();
+    	
+    	context.setCreator(user1.getDid());
+    	context.setNonce(0L);
+    	context.setTimestamp(timestamp);
+    	
+    	PerspectiveDto perspective = new PerspectiveDto();
+    	
+    	perspective.setContext(context);
+    	perspective.setCreator(user1.getDid());
+    	perspective.setTimestamp(timestamp);
+    	perspective.setName("DEFAULT");
+    	perspective.setType(PerspectiveType.DYNAMIC);
+    	
+    	CommitDto head = new CommitDto();
+    	
+    	head.setCreator(user1.getDid());
+    	head.setMessage("");
+    	head.setNonce(0L);
+    	
+    	ContentDto content = new ContentDto();
+    	DataDto data = new DataDto();
+    	TextContentDto textContent = new TextContentDto();
+    	textContent.setText(text);
+    	
+    	data.setType(DataType.TEXT);
+    	data.setTextContent(textContent);
+    	content.setData(data);
+    	head.setContent(content);
+    	perspective.setHead(head);
+    	
+    	String json = gson.toJson(perspective);
+        MvcResult result = null;
+        
+        /* add new context to user 1 working commit */
+        result = this.mockMvc
+	    	.perform(post("/1/p")
+	    	.header("Authorization", "Bearer " + authorizationTokenUser1)
+	    	.contentType(MediaType.APPLICATION_JSON)
+	    	.content(json))
+	    	.andReturn();
+        
+        assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+        
+        PostResult postResult = gson.fromJson(result.getResponse().getContentAsString(), PostResult.class); 
+        
+        assertEquals("error creating context: " + postResult.getMessage(),
+        		"success", postResult.getResult());
+
     }
     
 }

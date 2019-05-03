@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.ECKey;
 import org.collectiveone.common.crypto.CryptoService;
-import org.collectiveone.modules.uprcl.ContextService;
+import org.collectiveone.modules.uprcl.UprtclService;
 import org.collectiveone.modules.uprcl.entities.Context;
 import org.collectiveone.modules.users.nannies.DIDMethod;
 import org.collectiveone.modules.users.nannies.DIDNanny;
@@ -27,7 +27,7 @@ public class AppUserService {
 	private static final Logger logger = LogManager.getLogger(AppUserService.class);
 	
 	@Autowired
-	private ContextService contextService;
+	private UprtclService contextService;
 
 	@Autowired
 	private CryptoService cryptoService;
