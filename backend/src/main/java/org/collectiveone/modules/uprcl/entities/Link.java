@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import org.bitcoinj.core.Base58;
 import org.collectiveone.modules.c1.data.PositionType;
+import org.collectiveone.modules.uprcl.dtos.LinkDto;
 import org.collectiveone.modules.uprcl.support.LinkDoubleLinked;
 import org.collectiveone.modules.uprcl.support.PositionDoubleLinkedList;
 
@@ -26,6 +27,9 @@ public class Link {
 	private String id;
 
 	private LinkType type;
+	
+	@ManyToOne
+	private Perspective parent;
 	
 	@ManyToOne
 	private Perspective perspective;
@@ -70,6 +74,30 @@ public class Link {
 		return objectMapper.writeValueAsString(linkStd);
 	}
 	
+	public LinkDto toDto() {
+		LinkDto dto = new LinkDto();
+		
+		dto.setId(id);
+		dto.setPerspective(perspective.toDto());
+		dto.setType(type);
+		dto.setPositionType(positionType);
+		
+		switch (positionType) {
+		
+		case DOUBLE_LINKED_LIST:
+			dto.setAfter(after.toDto());
+			dto.setBefore(before.toDto());
+		break;
+		
+		case SINGLE_LINKED_LIST:
+			dto.setBefore(before.toDto());
+		break;
+		
+		}
+		
+		return dto;
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -94,6 +122,14 @@ public class Link {
 		this.perspective = perspective;
 	}
 	
+	public Perspective getParent() {
+		return parent;
+	}
+
+	public void setParent(Perspective parent) {
+		this.parent = parent;
+	}
+
 	public PositionType getOrderType() {
 		return positionType;
 	}

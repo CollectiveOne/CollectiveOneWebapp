@@ -14,6 +14,13 @@ public class PerspectiveDto {
 	private CommitDto head;
 	private PerspectiveType type;
 	
+	public PerspectiveDto() {
+		super();
+	}
+	public PerspectiveDto(String id) {
+		super();
+		this.id = id;
+	}
 	public String getId() {
 		return id;
 	}

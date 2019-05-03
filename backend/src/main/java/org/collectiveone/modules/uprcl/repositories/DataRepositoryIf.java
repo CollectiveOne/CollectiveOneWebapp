@@ -1,8 +1,8 @@
 package org.collectiveone.modules.uprcl.repositories;
 
 import org.collectiveone.modules.uprcl.entities.Data;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DataRepositoryIf extends CrudRepository<Data, String> {
+public interface DataRepositoryIf extends JpaRepository<Data, String> {
 	
 }

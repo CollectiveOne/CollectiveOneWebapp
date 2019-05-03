@@ -7,6 +7,7 @@ public class LinkDto {
 
 	private String id;
 	private LinkType type;
+	private PerspectiveDto parentPerspective;
 	private PerspectiveDto perspective;
 	private PositionType positionType;
 	private PerspectiveDto before;
@@ -23,6 +24,12 @@ public class LinkDto {
 	}
 	public void setType(LinkType type) {
 		this.type = type;
+	}
+	public PerspectiveDto getParentPerspective() {
+		return parentPerspective;
+	}
+	public void setParentPerspective(PerspectiveDto parentPerspective) {
+		this.parentPerspective = parentPerspective;
 	}
 	public PerspectiveDto getPerspective() {
 		return perspective;

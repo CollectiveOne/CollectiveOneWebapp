@@ -1,11 +1,16 @@
 package org.collectiveone.modules.users;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.c1.userSupport.DefaultPerspective;
 import org.collectiveone.modules.uprcl.entities.Context;
 import org.collectiveone.modules.users.nannies.DIDNanny;
 
@@ -22,6 +27,9 @@ public class AppUser {
 	
 	@OneToOne
 	private Context context;
+	
+	@OneToMany(mappedBy = "user")
+	private List<DefaultPerspective> defaultPerspectives = new ArrayList<DefaultPerspective>();
 	
 	public AppUserDto toDto() {
 		AppUserDto dto = new AppUserDto();

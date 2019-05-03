@@ -2,8 +2,8 @@ package org.collectiveone.modules.c1.data;
 
 import java.util.UUID;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TextContentRepositoryIf extends CrudRepository<TextContent, UUID> {
+public interface TextContentRepositoryIf extends JpaRepository<TextContent, UUID> {
 	
 }

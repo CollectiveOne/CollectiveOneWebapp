@@ -10,6 +10,13 @@ public class ContextDto {
 	private Long nonce;
 	private List<PerspectiveDto> perspectives = new ArrayList<PerspectiveDto>();
 	
+	public ContextDto() {
+		super();
+	}
+	public ContextDto(String id) {
+		super();
+		this.id = id;
+	}
 	public String getId() {
 		return id;
 	}

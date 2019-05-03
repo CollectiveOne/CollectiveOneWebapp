@@ -22,6 +22,6 @@ public class BaseController {
 	
 	protected AppUser getLoggedUser() throws Exception {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return appUserService.getOrCreateFromAuth0Id(auth.getName());
+		return appUserService.getOrCreateFromMyAuth0Id(auth.getName());
 	}
 } 

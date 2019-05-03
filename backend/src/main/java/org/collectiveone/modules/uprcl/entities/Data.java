@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import org.bitcoinj.core.Base58;
 import org.collectiveone.modules.c1.data.DataType;
 import org.collectiveone.modules.c1.data.TextContent;
+import org.collectiveone.modules.uprcl.dtos.DataDto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -55,6 +56,21 @@ public class Data {
 			// TODO
 		}
 		return null;
+	}
+	
+	public DataDto toDto() {
+		DataDto dto = new DataDto();
+		
+		dto.setId(id);
+		switch (type) {
+		
+		case TEXT:
+			dto.setTextContent(textContent.toDto());
+		break;
+		
+		} 
+		
+		return dto;
 	}
 	
 	public String getId() {

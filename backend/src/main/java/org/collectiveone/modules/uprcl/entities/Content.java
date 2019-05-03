@@ -2,6 +2,7 @@ package org.collectiveone.modules.uprcl.entities;
 
 import java.security.MessageDigest;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -14,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.bitcoinj.core.Base58;
+import org.collectiveone.modules.uprcl.dtos.ContentDto;
 import org.hibernate.annotations.SortNatural;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -56,6 +58,19 @@ public class Content {
 			// TODO
 		}
 		return null;
+	}
+	
+	public ContentDto toDto() {
+		ContentDto dto = new ContentDto();
+		
+		dto.setId(id);
+		dto.setData(data.toDto());
+		
+		for (Map.Entry<String, Link> linkEntry : links.entrySet()) {
+			dto.getLinks().put(linkEntry.getKey(), linkEntry.getValue().toDto());
+		}
+		
+		return dto;
 	}
 	
 	@JsonGetter("data")

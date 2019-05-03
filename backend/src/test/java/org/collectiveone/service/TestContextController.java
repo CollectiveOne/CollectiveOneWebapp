@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-import java.sql.Timestamp;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.collectiveone.AbstractTest;
@@ -155,22 +153,17 @@ public class TestContextController extends AbstractTest {
         // clean up after each test method
     }
     
-    @Test
-    @Rollback(false)
-    public void createContext() throws Exception {
-    	String text = "My First Context";
-    	Long timestamp = System.currentTimeMillis();
-    	
+    private PerspectiveDto buildPerspectiveObjects(String creator, String text, Long timestamp) {
     	ContextDto context = new ContextDto();
     	
-    	context.setCreator(user1.getDid());
+    	context.setCreator(creator);
     	context.setNonce(0L);
     	context.setTimestamp(timestamp);
     	
     	PerspectiveDto perspective = new PerspectiveDto();
     	
     	perspective.setContext(context);
-    	perspective.setCreator(user1.getDid());
+    	perspective.setCreator(creator);
     	perspective.setTimestamp(timestamp);
     	perspective.setName("DEFAULT");
     	perspective.setType(PerspectiveType.DYNAMIC);
@@ -192,13 +185,24 @@ public class TestContextController extends AbstractTest {
     	head.setContent(content);
     	perspective.setHead(head);
     	
+    	return perspective;
+    }
+    
+    @Test
+    @Rollback(false)
+    public void createContext() throws Exception {
+    	String text = "My First Context";
+    	Long timestamp = System.currentTimeMillis();
+    	
+    	PerspectiveDto perspective = buildPerspectiveObjects(user1.getDid(), text, timestamp);
     	String json = gson.toJson(perspective);
         MvcResult result = null;
         
-        /* add new context to user 1 working commit */
+        /* create new context and perspective */
         result = this.mockMvc
 	    	.perform(post("/1/p")
 	    	.header("Authorization", "Bearer " + authorizationTokenUser1)
+	    	.param("parentPerspectiveId", user1.getRootPerspective().getId())
 	    	.contentType(MediaType.APPLICATION_JSON)
 	    	.content(json))
 	    	.andReturn();
@@ -210,6 +214,31 @@ public class TestContextController extends AbstractTest {
         
         assertEquals("error creating context: " + postResult.getMessage(),
         		"success", postResult.getResult());
+        
+        String perspecitveId1 = postResult.getElementId();        
+        
+        /* read context */
+        result = this.mockMvc
+    	    	.perform(get("/1/p/" + perspecitveId1)
+    	    	.header("Authorization", "Bearer " + authorizationTokenUser1))
+    	    	.andReturn();
+        
+        assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+        
+        
+		@SuppressWarnings("serial")
+        GetResult<PerspectiveDto> getResult = 
+        		gson.fromJson(result.getResponse().getContentAsString(), 
+        				new TypeToken<GetResult<PerspectiveDto>>(){}.getType());
+        
+        assertEquals("error getting context: " + getResult.getMessage(),
+        		"success", getResult.getResult());
+        
+        PerspectiveDto perspectiveDto = getResult.getData();
+        
+        assertEquals("unexpected content",
+        		text, perspectiveDto.getHead().getContent().getData().getTextContent().getText());
 
     }
     

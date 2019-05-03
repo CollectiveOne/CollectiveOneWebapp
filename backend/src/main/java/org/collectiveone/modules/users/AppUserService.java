@@ -6,9 +6,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.ECKey;
-import org.collectiveone.common.crypto.CryptoService;
+import org.collectiveone.modules.c1.userSupport.DefaultPerspective;
+import org.collectiveone.modules.c1.userSupport.DefaultPerspectiveRepositoryIf;
 import org.collectiveone.modules.uprcl.UprtclService;
 import org.collectiveone.modules.uprcl.entities.Context;
+import org.collectiveone.modules.uprcl.entities.Perspective;
+import org.collectiveone.modules.uprcl.repositories.ContextRepositoryIf;
+import org.collectiveone.modules.uprcl.repositories.PerspectiveRepositoryIf;
 import org.collectiveone.modules.users.nannies.DIDMethod;
 import org.collectiveone.modules.users.nannies.DIDNanny;
 import org.collectiveone.modules.users.nannies.DIDNannyRepositoryIf;
@@ -27,13 +31,19 @@ public class AppUserService {
 	private static final Logger logger = LogManager.getLogger(AppUserService.class);
 	
 	@Autowired
-	private UprtclService contextService;
+	private UprtclService uprtclService;
 
 	@Autowired
-	private CryptoService cryptoService;
+	private AppUserRepositoryIf appUserRepository;
 	
 	@Autowired
-	private AppUserRepositoryIf appUserRepository;
+	private DefaultPerspectiveRepositoryIf defaultPerspectiveRepository;
+	
+	@Autowired
+	private ContextRepositoryIf contextRepository;
+	
+	@Autowired
+	private PerspectiveRepositoryIf perspectiveRepository;
 	
 	@Autowired
 	private DIDNannyRepositoryIf DIDNannyRepository;
@@ -42,7 +52,7 @@ public class AppUserService {
 	private ManagementAPI mgmt;
 	
 	@Transactional(rollbackOn = Exception.class)
-	public AppUser getOrCreateFromAuth0Id(String auth0Id) throws Exception {
+	public AppUser getOrCreateFromMyAuth0Id(String auth0Id) throws Exception {
 		
 		AppUser appUser = appUserRepository.findByAuth0Id(auth0Id);
 		
@@ -51,8 +61,20 @@ public class AppUserService {
 			 * is added to the local DB */
 			appUser = addUserToLocalDB(auth0Id);
 		}
-    	
-    	return appUser;
+		
+		return appUser;
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
+	public AppUserDto toDtoWithRootPerspective(AppUser user) throws Exception {
+		
+		AppUserDto appUserDto = user.toDto();
+		
+		/* inject root perspective */
+		appUserDto.setRootPerspective(
+				getDefaultRootPerspective(user.getDid()).toDto());
+		
+		return appUserDto;
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
@@ -78,10 +100,10 @@ public class AppUserService {
 			appUser = appUserRepository.save(appUser);
 			
 			/* each user has one and only one context associated to his identity */
-			Context userContext = contextService.getOrCreateUserContext(appUser.getDid());
-			appUser.setContext(userContext);
+			Perspective userPerspective = uprtclService.getOrCreateUserContext(appUser.getDid());
+			appUser.setContext(userPerspective.getContext());
 			
-			logger.debug("user root context id: {}", userContext.getId().toString());
+			logger.debug("user root context id: {}", userPerspective.getContext().getId().toString());
 				 
 			appUser = appUserRepository.save(appUser);
 			
@@ -117,5 +139,56 @@ public class AppUserService {
 		    	throw new Exception(method.toString() + " method not found");
 		}
 	}
-
+	
+	
+	@Transactional(rollbackOn = Exception.class)
+	public Perspective getDefaultRootPerspective(String userDid) throws Exception {
+		return perspectiveRepository.findOne(
+				getDefaultRootPerspectiveId(userDid));
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
+	public String getDefaultRootPerspectiveId(String userDid) throws Exception {
+		return getDefaultPerspectiveId(userDid, appUserRepository.getContextId(userDid));
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
+	public String getDefaultPerspectiveId(String userDid, String contextId) throws Exception {
+		
+		String perspectiveId = defaultPerspectiveRepository.getDefaultOfUser(userDid, contextId);
+		
+		if (perspectiveId != null) {
+			return perspectiveId;
+		}
+		
+		DefaultPerspective defaultPerspective = new  DefaultPerspective();
+		
+		defaultPerspective.setUser(appUserRepository.getOne(userDid));
+		
+		Context context = contextRepository.getOne(contextId);
+		defaultPerspective.setContext(context);
+		
+		String referenceId = null;
+		
+		/* use the default perspective of the context creator as first candidate */
+		if (referenceId == null) {
+			referenceId = defaultPerspectiveRepository.getDefaultOfUser(context.getCreator(), context.getId());	
+		}
+		
+		/* use the oldest perspective as second candidate */
+		if (referenceId == null) {
+			referenceId = perspectiveRepository.findIdOfOldestOfContext(context.getId());	
+		}
+		
+		/* this means the context don't have a perspective (at least in this platform), so create one */
+		if (referenceId == null) {
+			throw new Exception(); 	
+		}
+		
+		defaultPerspective.setPerspective(perspectiveRepository.getOne(referenceId));
+		defaultPerspective = defaultPerspectiveRepository.save(defaultPerspective);
+		
+		return referenceId;		
+	}
+	
 }

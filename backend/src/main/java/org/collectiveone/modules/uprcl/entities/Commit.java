@@ -2,6 +2,7 @@ package org.collectiveone.modules.uprcl.entities;
 
 import java.security.MessageDigest;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -15,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.bitcoinj.core.Base58;
+import org.collectiveone.modules.uprcl.dtos.CommitDto;
 import org.hibernate.annotations.SortNatural;
 import org.hibernate.annotations.Type;
 
@@ -66,6 +68,21 @@ public class Commit {
 			// TODO
 		}
 		return null;
+	}
+	
+	public CommitDto toDto() {
+		CommitDto dto = new CommitDto();
+		
+		dto.setId(id);
+		dto.setContent(content.toDto());
+		dto.setMessage(message);
+		dto.setNonce(nonce);
+		
+		for (Map.Entry<String, Commit> parentEntry : parents.entrySet()) {
+			dto.getParents().put(parentEntry.getKey(), parentEntry.getValue().toDto());
+		}
+		
+		return dto;
 	}
 	
 	@JsonGetter("parents")

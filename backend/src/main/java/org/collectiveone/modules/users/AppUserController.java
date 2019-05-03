@@ -23,8 +23,10 @@ public class AppUserController extends BaseController {
 			return new GetResult<AppUserDto>("error", "anonymous user", null);
 		}
 		
-		AppUser user = appUserService.getOrCreateFromAuth0Id(auth0Id);
+		AppUserDto userDto = appUserService.toDtoWithRootPerspective(
+				appUserService.getOrCreateFromMyAuth0Id(auth0Id));
 		
-		return new GetResult<AppUserDto> ("success", "user retrieved", user.toDto());
+		return new GetResult<AppUserDto> ("success", "user retrieved", userDto);
 	}
+	
 }

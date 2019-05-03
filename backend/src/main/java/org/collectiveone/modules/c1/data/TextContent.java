@@ -27,6 +27,14 @@ public class TextContent {
 
 	private String text;
 	
+	public TextContentDto toDto() {
+		TextContentDto dto = new TextContentDto();
+		
+		dto.setText(text);
+		
+		return dto;
+	}
+	
 	public TextContent() {
 		super();
 	}

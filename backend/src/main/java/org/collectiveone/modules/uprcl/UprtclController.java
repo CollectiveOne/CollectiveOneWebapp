@@ -2,7 +2,7 @@ package org.collectiveone.modules.uprcl;
 
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.PostResult;
-import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
+import org.collectiveone.modules.uprcl.dtos.LinkDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,22 +23,18 @@ public class UprtclController extends BaseController {
 	 * URLParams 
 	 * - (optional) parentPerspectiveId=[UUID]. If not provided, the private perspective of the user is used.
 	 * 
-	 * DataParams
-	 * 	Required
-	 * 	- contextDto 
-	 * 		{
-	 * 			title: (required max 1024 length)[string],
-	 * 			description: (optional)[string]
-	 * 		} 
+	 * Content 
+	 * - (required) perspectiveDto JSON (see https://github.com/uprtcl/spec/blob/master/schema.gql) 
+	 * 		 
 	 * */
 	@RequestMapping(path = "/p", method = RequestMethod.POST)
-	public PostResult createPerspective(
-			@RequestBody PerspectiveDto perspectiveDto) throws Exception {
+	public PostResult createPerspectiveWithParent(
+			@RequestBody LinkDto linkDto) throws Exception {
 		
 		return new PostResult(
 				"success", 
 				"contex created", 
-				uprtclService.createPerspective(perspectiveDto, getLoggedUserId()).getId());
+				uprtclService.createPerspective(linkDto, getLoggedUserId()).getId());
 	}
 	
 }	

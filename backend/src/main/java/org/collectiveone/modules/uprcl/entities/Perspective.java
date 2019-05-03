@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.bitcoinj.core.Base58;
+import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
 import org.collectiveone.modules.uprcl.support.JacksonViews;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -103,6 +104,20 @@ public class Perspective {
     public String getHeadId() {
         return head.getId();
     }
+	
+	public PerspectiveDto toDto() {
+		PerspectiveDto dto = new PerspectiveDto();
+		
+		dto.setId(id);
+		dto.setContext(context.toDto());
+		dto.setCreator(creator);
+		dto.setType(type);
+		dto.setTimestamp(timestamp.getTime());
+		dto.setName(name);
+		if (head != null) dto.setHead(head.toDto());
+		
+		return dto;
+	}
 	
 	public String getId() {
 		return id;

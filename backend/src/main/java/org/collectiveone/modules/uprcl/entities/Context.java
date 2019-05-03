@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.bitcoinj.core.Base58;
+import org.collectiveone.modules.uprcl.dtos.ContextDto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -79,6 +80,17 @@ public class Context {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	
+	public ContextDto toDto() {
+		ContextDto dto = new ContextDto();
+		
+		dto.setId(id);
+		dto.setCreator(creator);
+		dto.setNonce(nonce);
+		dto.setTimestamp(timestamp.getTime());
+		
+		return dto;
 	}
 
 	public String toString() {
