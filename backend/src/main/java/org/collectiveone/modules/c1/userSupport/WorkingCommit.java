@@ -47,7 +47,6 @@ public class WorkingCommit {
 	@Type(type = "org.hibernate.type.TextType")
 	private String message;
 	
-
 	@Enumerated(EnumType.STRING)
 	private DataType type;
 	

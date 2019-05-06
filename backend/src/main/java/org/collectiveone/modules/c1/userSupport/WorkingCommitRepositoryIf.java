@@ -13,6 +13,6 @@ public interface WorkingCommitRepositoryIf extends JpaRepository<WorkingCommit, 
 			+ "AND workComm.user.did = :userDid")
 	public WorkingCommit findByUserIdAndPerspectiveId(
 			@Param("userDid") String userDid, 
-			@Param("perspectiveDid") String perspectiveId);
+			@Param("perspectiveId") String perspectiveId);
 	
 }

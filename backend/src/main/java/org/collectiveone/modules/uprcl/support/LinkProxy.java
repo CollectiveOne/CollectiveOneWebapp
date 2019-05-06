@@ -2,11 +2,9 @@ package org.collectiveone.modules.uprcl.support;
 
 import org.collectiveone.modules.uprcl.entities.LinkType;
 
-public class LinkDoubleLinked {
-	
+public class LinkProxy {
 	private LinkType type;
 	private String perspectiveId;
-	private PositionDoubleLinkedList position;
 	
 	public LinkType getType() {
 		return type;
@@ -20,11 +18,5 @@ public class LinkDoubleLinked {
 	public void setPerspectiveId(String perspectiveId) {
 		this.perspectiveId = perspectiveId;
 	}
-	public PositionDoubleLinkedList getPosition() {
-		return position;
-	}
-	public void setPosition(PositionDoubleLinkedList position) {
-		this.position = position;
-	}
-
+	
 }

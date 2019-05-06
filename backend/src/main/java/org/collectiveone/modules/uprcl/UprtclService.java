@@ -8,7 +8,6 @@ import javax.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.collectiveone.modules.c1.data.DataType;
-import org.collectiveone.modules.c1.data.PositionType;
 import org.collectiveone.modules.c1.data.TextContent;
 import org.collectiveone.modules.c1.data.TextContentRepositoryIf;
 import org.collectiveone.modules.c1.userSupport.WorkingCommit;
@@ -24,7 +23,6 @@ import org.collectiveone.modules.uprcl.entities.Content;
 import org.collectiveone.modules.uprcl.entities.Context;
 import org.collectiveone.modules.uprcl.entities.Data;
 import org.collectiveone.modules.uprcl.entities.Link;
-import org.collectiveone.modules.uprcl.entities.LinkType;
 import org.collectiveone.modules.uprcl.entities.Perspective;
 import org.collectiveone.modules.uprcl.entities.PerspectiveType;
 import org.collectiveone.modules.uprcl.repositories.CommitRepositoryIf;
@@ -33,6 +31,7 @@ import org.collectiveone.modules.uprcl.repositories.ContextRepositoryIf;
 import org.collectiveone.modules.uprcl.repositories.DataRepositoryIf;
 import org.collectiveone.modules.uprcl.repositories.LinkRepositoryIf;
 import org.collectiveone.modules.uprcl.repositories.PerspectiveRepositoryIf;
+import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.collectiveone.modules.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +43,9 @@ public class UprtclService {
 	
 	@Autowired
 	private AppUserService appUserService;
+	
+	@Autowired
+	private AppUserRepositoryIf appUserRepository;
 	
 	@Autowired
 	private ContextRepositoryIf contextRepository;
@@ -166,18 +168,21 @@ public class UprtclService {
 		perspective.setTimestamp(new Timestamp(perspectiveDto.getTimestamp()));
 		
 		perspective.setId();
-		
 		perspective = perspectiveRepository.save(perspective);
 		
 		/* perspectives are usually created inside a parent perspective */
 		if (linkDto != null){
-			WorkingCommit parentWorkingCommit = 
-					workingCommitRepository.findByUserIdAndPerspectiveId(requestBy, linkDto.getParentPerspective().getId());
-			
-			Link link = getOrCreateLink(linkDto, requestBy);
-			parentWorkingCommit.getLinks().put(link.getId(), link);
-			
-			parentWorkingCommit = workingCommitRepository.save(parentWorkingCommit);
+			if (linkDto.getParentPerspective() != null) {
+				WorkingCommit parentWorkingCommit = getOrCreateWorkingCommit(requestBy, linkDto.getParentPerspective().getId());
+				
+				/* the perspective was just created, so the ID was not there*/
+				linkDto.getPerspective().setId(perspective.getId());
+				
+				Link link = getOrCreateLink(linkDto, requestBy);
+				parentWorkingCommit.getLinks().put(link.getId(), link);
+				
+				parentWorkingCommit = workingCommitRepository.save(parentWorkingCommit);
+			}
 		}
 		
 		return perspective;
@@ -193,6 +198,11 @@ public class UprtclService {
 		perspectiveDto.setName("DEFAULT");
 		perspectiveDto.setTimestamp(System.currentTimeMillis());
 		perspectiveDto.setType(PerspectiveType.DYNAMIC);
+		
+		if (linkDto == null) {
+			linkDto = new LinkDto();
+			linkDto.setPerspective(perspectiveDto);
+		}
 		
 		return createPerspective(linkDto, requestBy);
 	}
@@ -293,6 +303,7 @@ public class UprtclService {
 		link.setPerspective(perspective);
 		link.setPositionType(linkDto.getPositionType());
 		
+		link.setId();
 		link = linkRepository.save(link);
 		
 		switch (linkDto.getPositionType()) {
@@ -347,6 +358,24 @@ public class UprtclService {
 		data.setId();
 		return dataRepository.save(data);
 	}
+	
+	@Transactional(rollbackOn = Exception.class)
+	public WorkingCommit getOrCreateWorkingCommit(String requestBy, String perspectiveId) throws Exception {
+		WorkingCommit workingCommit = workingCommitRepository.findByUserIdAndPerspectiveId(requestBy, perspectiveId);
+		
+		if (workingCommit != null) {
+			return workingCommit;
+		}
+		
+		workingCommit = new WorkingCommit();
+		
+		workingCommit.setUser(appUserRepository.getOne(requestBy));
+		workingCommit.setPerspective(perspectiveRepository.getOne(perspectiveId));
+		workingCommit.setType(DataType.TEXT);
+		
+		return workingCommitRepository.save(workingCommit);
+	}
+	
 	
 
 }

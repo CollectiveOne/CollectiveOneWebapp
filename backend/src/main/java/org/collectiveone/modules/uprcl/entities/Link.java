@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import org.bitcoinj.core.Base58;
 import org.collectiveone.modules.c1.data.PositionType;
 import org.collectiveone.modules.uprcl.dtos.LinkDto;
-import org.collectiveone.modules.uprcl.support.LinkDoubleLinked;
+import org.collectiveone.modules.uprcl.support.LinkProxyDL;
 import org.collectiveone.modules.uprcl.support.PositionDoubleLinkedList;
 
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -60,8 +60,9 @@ public class Link {
 	
 	@JsonValue
 	public String toJson() throws JsonProcessingException {
-		LinkDoubleLinked linkStd = new LinkDoubleLinked();
+		LinkProxyDL linkStd = new LinkProxyDL();
 		
+		linkStd.setPerspectiveId(parent.getId());
 		linkStd.setPerspectiveId(perspective.getId());
 		
 		PositionDoubleLinkedList position = new PositionDoubleLinkedList();

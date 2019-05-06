@@ -15,6 +15,7 @@ import org.collectiveone.modules.uprcl.dtos.CommitDto;
 import org.collectiveone.modules.uprcl.dtos.ContentDto;
 import org.collectiveone.modules.uprcl.dtos.ContextDto;
 import org.collectiveone.modules.uprcl.dtos.DataDto;
+import org.collectiveone.modules.uprcl.dtos.LinkDto;
 import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
 import org.collectiveone.modules.uprcl.entities.PerspectiveType;
 import org.collectiveone.modules.users.AppUserDto;
@@ -153,7 +154,7 @@ public class TestContextController extends AbstractTest {
         // clean up after each test method
     }
     
-    private PerspectiveDto buildPerspectiveObjects(String creator, String text, Long timestamp) {
+    private LinkDto buildPerspectiveObjects(String creator, String text, Long timestamp, PerspectiveDto parent) {
     	ContextDto context = new ContextDto();
     	
     	context.setCreator(creator);
@@ -185,7 +186,11 @@ public class TestContextController extends AbstractTest {
     	head.setContent(content);
     	perspective.setHead(head);
     	
-    	return perspective;
+    	LinkDto linkDto = new LinkDto();
+    	linkDto.setPerspective(perspective);
+    	linkDto.setParentPerspective(parent);
+    	
+    	return linkDto;
     }
     
     @Test
@@ -194,15 +199,14 @@ public class TestContextController extends AbstractTest {
     	String text = "My First Context";
     	Long timestamp = System.currentTimeMillis();
     	
-    	PerspectiveDto perspective = buildPerspectiveObjects(user1.getDid(), text, timestamp);
-    	String json = gson.toJson(perspective);
+    	LinkDto link = buildPerspectiveObjects(user1.getDid(), text, timestamp, user1.getRootPerspective());
+    	String json = gson.toJson(link);
         MvcResult result = null;
         
         /* create new context and perspective */
         result = this.mockMvc
 	    	.perform(post("/1/p")
 	    	.header("Authorization", "Bearer " + authorizationTokenUser1)
-	    	.param("parentPerspectiveId", user1.getRootPerspective().getId())
 	    	.contentType(MediaType.APPLICATION_JSON)
 	    	.content(json))
 	    	.andReturn();
