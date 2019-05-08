@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @JsonPropertyOrder({"text", "links"})
-public class NodeDataDto extends DataDto implements DataIf {
+public class NodeDataDto implements JsonDataIf {
 	
 	private String text;
 	private List<PositionedLinkDto> links;
@@ -34,10 +34,5 @@ public class NodeDataDto extends DataDto implements DataIf {
 		return objectMapper.writeValueAsString(this);
 	}
 
-	@Override
-	public void setDataJson(String json) throws JsonProcessingException {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

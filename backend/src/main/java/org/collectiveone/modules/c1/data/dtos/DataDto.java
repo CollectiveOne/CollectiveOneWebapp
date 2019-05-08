@@ -2,15 +2,11 @@ package org.collectiveone.modules.c1.data.dtos;
 
 import org.collectiveone.modules.c1.data.DataType;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 public class DataDto {
 	
-	@JsonIgnore
 	private String id;
-	
-	@JsonIgnore
 	private DataType type;
+	private String jsonData;
 	
 	public String getId() {
 		return id;
@@ -24,4 +20,11 @@ public class DataDto {
 	public void setType(DataType type) {
 		this.type = type;
 	}
+	public String getJsonData() {
+		return jsonData;
+	}
+	public void setJsonData(String jsonData) {
+		this.jsonData = jsonData;
+	}
+	
 }

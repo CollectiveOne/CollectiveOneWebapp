@@ -14,7 +14,7 @@ import org.collectiveone.modules.c1.data.NodeData;
 import org.collectiveone.modules.c1.data.NodeDataRepositoryIf;
 import org.collectiveone.modules.c1.data.TextData;
 import org.collectiveone.modules.c1.data.TextDataRepositoryIf;
-import org.collectiveone.modules.c1.data.dtos.DataIf;
+import org.collectiveone.modules.c1.data.dtos.DataDto;
 import org.collectiveone.modules.c1.data.dtos.LinkDto;
 import org.collectiveone.modules.c1.data.dtos.NodeDataDto;
 import org.collectiveone.modules.c1.data.dtos.PositionedLinkDto;
@@ -247,7 +247,7 @@ public class UprtclService {
 	
 	
 	@Transactional(rollbackOn = Exception.class)
-	public Data getOrCreateData(DataIf dataDto, String requestBy) throws Exception {
+	public Data getOrCreateData(DataDto dataDto, String requestBy) throws Exception {
 		Data data = null;
 		
 		if (dataDto.getId() != null) data = dataRepository.findOne(dataDto.getId()); 
@@ -261,7 +261,7 @@ public class UprtclService {
 	
 	
 	@Transactional(rollbackOn = Exception.class)
-	public Data createData(DataIf dataDto) throws Exception {	
+	public Data createData(DataDto dataDto) throws Exception {	
 		
 		Data data = new Data();
 		
@@ -269,7 +269,7 @@ public class UprtclService {
 		
 		case TEXT:
 			data.setType(DataType.TEXT);
-			TextDataDto textDataDto = new ObjectMapper().readValue(dataDto.getDataJson(), TextDataDto.class);
+			TextDataDto textDataDto = new ObjectMapper().readValue(dataDto.getJsonData(), TextDataDto.class);
 			
 			TextData textData = new TextData();
 			textData.setText(textDataDto.getText());
@@ -280,7 +280,7 @@ public class UprtclService {
 			
 		case NODE:
 			data.setType(DataType.NODE);
-			NodeDataDto nodeDataDto = new ObjectMapper().readValue(dataDto.getDataJson(), NodeDataDto.class);
+			NodeDataDto nodeDataDto = new ObjectMapper().readValue(dataDto.getJsonData(), NodeDataDto.class);
 			
 			TextData textDataOnNode = new TextData();
 			textDataOnNode.setText(nodeDataDto.getText());

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @JsonPropertyOrder({ "text" })
-public class TextDataDto extends DataDto implements DataIf {
+public class TextDataDto implements JsonDataIf {
 	
 	private String text;
 

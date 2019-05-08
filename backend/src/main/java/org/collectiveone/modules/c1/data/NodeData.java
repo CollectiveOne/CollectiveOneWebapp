@@ -19,6 +19,7 @@ import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Entity
 @JsonPropertyOrder({ "text" })
@@ -38,7 +39,7 @@ public class NodeData {
 	@OneToMany
 	private List<Link> links = new ArrayList<Link>();
 	
-	public NodeDataDto toDto() {
+	public NodeDataDto toDto() throws JsonProcessingException {
 		NodeDataDto dto = new NodeDataDto();
 		
 		dto.setText(textData.getText());

@@ -14,9 +14,8 @@ import org.bitcoinj.core.Base58;
 import org.collectiveone.modules.c1.data.DataType;
 import org.collectiveone.modules.c1.data.NodeData;
 import org.collectiveone.modules.c1.data.TextData;
-import org.collectiveone.modules.c1.data.dtos.DataIf;
+import org.collectiveone.modules.c1.data.dtos.DataDto;
 import org.collectiveone.modules.c1.data.dtos.NodeDataDto;
-import org.collectiveone.modules.c1.data.dtos.TextDataDto;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -66,20 +65,18 @@ public class Data {
 		return null;
 	}
 	
-	public DataIf toDto() throws JsonProcessingException {
+	public DataDto toDto() throws JsonProcessingException {
 		
-		DataIf dto = null;
+		DataDto dto = new DataDto();
 		
 		switch (type) {
 		
 		case TEXT:
-			dto = new TextDataDto();
-			dto.setText(textData.toDto().getText());
-			
+			dto.setJsonData(textData.toDto().getDataJson());
 		break;
 		
 		case NODE:
-			dto = new NodeDataDto();
+			dto.setJsonData(nodeData.toDto().getDataJson());
 		break;
 		
 		}
