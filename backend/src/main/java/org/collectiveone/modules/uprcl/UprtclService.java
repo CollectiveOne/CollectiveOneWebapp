@@ -8,33 +8,37 @@ import javax.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.collectiveone.modules.c1.data.DataType;
-import org.collectiveone.modules.c1.data.TextContent;
-import org.collectiveone.modules.c1.data.TextContentRepositoryIf;
+import org.collectiveone.modules.c1.data.Link;
+import org.collectiveone.modules.c1.data.LinkRepositoryIf;
+import org.collectiveone.modules.c1.data.NodeData;
+import org.collectiveone.modules.c1.data.NodeDataRepositoryIf;
+import org.collectiveone.modules.c1.data.TextData;
+import org.collectiveone.modules.c1.data.TextDataRepositoryIf;
+import org.collectiveone.modules.c1.data.dtos.DataIf;
+import org.collectiveone.modules.c1.data.dtos.LinkDto;
+import org.collectiveone.modules.c1.data.dtos.NodeDataDto;
+import org.collectiveone.modules.c1.data.dtos.PositionedLinkDto;
+import org.collectiveone.modules.c1.data.dtos.TextDataDto;
 import org.collectiveone.modules.c1.userSupport.WorkingCommit;
 import org.collectiveone.modules.c1.userSupport.WorkingCommitRepositoryIf;
 import org.collectiveone.modules.uprcl.dtos.CommitDto;
-import org.collectiveone.modules.uprcl.dtos.ContentDto;
 import org.collectiveone.modules.uprcl.dtos.ContextDto;
-import org.collectiveone.modules.uprcl.dtos.DataDto;
-import org.collectiveone.modules.uprcl.dtos.LinkDto;
 import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
 import org.collectiveone.modules.uprcl.entities.Commit;
-import org.collectiveone.modules.uprcl.entities.Content;
 import org.collectiveone.modules.uprcl.entities.Context;
 import org.collectiveone.modules.uprcl.entities.Data;
-import org.collectiveone.modules.uprcl.entities.Link;
 import org.collectiveone.modules.uprcl.entities.Perspective;
 import org.collectiveone.modules.uprcl.entities.PerspectiveType;
 import org.collectiveone.modules.uprcl.repositories.CommitRepositoryIf;
-import org.collectiveone.modules.uprcl.repositories.ContentRepositoryIf;
 import org.collectiveone.modules.uprcl.repositories.ContextRepositoryIf;
 import org.collectiveone.modules.uprcl.repositories.DataRepositoryIf;
-import org.collectiveone.modules.uprcl.repositories.LinkRepositoryIf;
 import org.collectiveone.modules.uprcl.repositories.PerspectiveRepositoryIf;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.collectiveone.modules.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class UprtclService {
@@ -57,16 +61,17 @@ public class UprtclService {
 	private CommitRepositoryIf commitRepository; 
 	
 	@Autowired
-	private ContentRepositoryIf contentRepository;
+	private DataRepositoryIf dataRepository;
 	
 	@Autowired
 	private LinkRepositoryIf linkRepository;
 	
 	@Autowired
-	private TextContentRepositoryIf textContentRepository;
+	private TextDataRepositoryIf textDataRepository;
 	
 	@Autowired
-	private DataRepositoryIf dataRepository;
+	private NodeDataRepositoryIf nodeDataRepository;
+	
 	
 	@Autowired
 	private WorkingCommitRepositoryIf workingCommitRepository;
@@ -127,11 +132,6 @@ public class UprtclService {
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public Perspective getPerspective(String perspectiveId) throws Exception {
-		return perspectiveRepository.findOne(perspectiveId);
-	}
-	
-	@Transactional(rollbackOn = Exception.class)
 	public Perspective getOrCreatePerspective(LinkDto linkDto, String requestBy) throws Exception {
 		
 		PerspectiveDto perspectiveDto = linkDto.getPerspective(); 
@@ -172,13 +172,13 @@ public class UprtclService {
 		
 		/* perspectives are usually created inside a parent perspective */
 		if (linkDto != null){
-			if (linkDto.getParentPerspective() != null) {
-				WorkingCommit parentWorkingCommit = getOrCreateWorkingCommit(requestBy, linkDto.getParentPerspective().getId());
+			if (linkDto.getParent() != null) {
+				WorkingCommit parentWorkingCommit = getOrCreateWorkingCommit(requestBy, linkDto.getParent().getId());
 				
 				/* the perspective was just created, so the ID was not there*/
 				linkDto.getPerspective().setId(perspective.getId());
 				
-				Link link = getOrCreateLink(linkDto, requestBy);
+				Link link = createLink(linkDto);
 				parentWorkingCommit.getLinks().put(link.getId(), link);
 				
 				parentWorkingCommit = workingCommitRepository.save(parentWorkingCommit);
@@ -228,8 +228,8 @@ public class UprtclService {
 		commit.setCreator(requestBy);
 		commit.setMessage(commitDto.getMessage());
 		
-		Content content = getOrCreateContent(commitDto.getContent(), requestBy);
-		commit.setContent(content);
+		Data data = getOrCreateData(commitDto.getData(), requestBy);
+		commit.setData(data);
 		
 		for (Map.Entry<String, CommitDto> parentEntry : commitDto.getParents().entrySet()) {
 			
@@ -245,91 +245,15 @@ public class UprtclService {
 		return commit;
 	}
 	
-	@Transactional(rollbackOn = Exception.class)
-	public Content getOrCreateContent(ContentDto contentDto, String requestBy) throws Exception {
-		Content content = null;
-		
-		if (contentDto.getId() != null) content = contentRepository.findOne(contentDto.getId());
-		
-		if (content == null) {
-			content = createContent(contentDto, requestBy);
-		} 
-		
-		return content;
-	}
-		
-	@Transactional(rollbackOn = Exception.class)
-	public Content createContent(ContentDto contentDto, String requestBy) throws Exception {
-		
-		Data data = getOrCreateData(contentDto.getData(), requestBy);
-		
-		Content content = new Content();
-		
-		content.setData(data);
-		
-		for (Map.Entry<String, LinkDto> linkEntry : contentDto.getLinks().entrySet()) {
-			LinkDto linkDto = linkEntry.getValue();
-
-			Link link = getOrCreateLink(linkDto, requestBy);
-			
-			content.getLinks().put(link.getId(), link);
-		}
-		
-		content.setId();
-		
-		return contentRepository.save(content);
-	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public Link getOrCreateLink(LinkDto linkDto, String requestBy) throws Exception {
-		Link link = null;
-		
-		if (linkDto.getId() != null) link = linkRepository.findOne(linkDto.getId());
-		
-		if (link == null) {
-			link = createLink(linkDto, requestBy);
-		} 
-		
-		return link;
-	}
-	
-	public Link createLink(LinkDto linkDto, String requestBy) throws Exception {
-		
-		Perspective perspective = getPerspective(linkDto.getPerspective().getId());
-		
-		Link link = new Link(); 
-		
-		link.setType(linkDto.getType());
-		link.setPerspective(perspective);
-		link.setPositionType(linkDto.getPositionType());
-		
-		link.setId();
-		link = linkRepository.save(link);
-		
-		switch (linkDto.getPositionType()) {
-		
-		case DOUBLE_LINKED_LIST:
-			link.setAfter(getPerspective(linkDto.getAfter().getId()));
-			link.setBefore(getPerspective(linkDto.getBefore().getId()));
-		break;
-		
-		case SINGLE_LINKED_LIST:
-			link.setAfter(getPerspective(linkDto.getAfter().getId()));
-		break;
-		
-		}
-		
-		return link;
-	}
-	
-	@Transactional(rollbackOn = Exception.class)
-	public Data getOrCreateData(DataDto dataDto, String requestBy) throws Exception {
+	public Data getOrCreateData(DataIf dataDto, String requestBy) throws Exception {
 		Data data = null;
 		
 		if (dataDto.getId() != null) data = dataRepository.findOne(dataDto.getId()); 
 		
 		if (data == null) {
-			data = createData(dataDto, requestBy);
+			data = createData(dataDto);
 		} 
 		
 		return data;
@@ -337,7 +261,7 @@ public class UprtclService {
 	
 	
 	@Transactional(rollbackOn = Exception.class)
-	public Data createData(DataDto dataDto, String requestBy) throws Exception {	
+	public Data createData(DataIf dataDto) throws Exception {	
 		
 		Data data = new Data();
 		
@@ -345,9 +269,34 @@ public class UprtclService {
 		
 		case TEXT:
 			data.setType(DataType.TEXT);
-			TextContent textContent = new TextContent(dataDto.getTextContent().getText());
-			textContent = textContentRepository.save(textContent);
-			data.setTextContent(textContent);
+			TextDataDto textDataDto = new ObjectMapper().readValue(dataDto.getDataJson(), TextDataDto.class);
+			
+			TextData textData = new TextData();
+			textData.setText(textDataDto.getText());
+			
+			textData = textDataRepository.save(textData);
+			data.setTextData(textData);
+			break;
+			
+		case NODE:
+			data.setType(DataType.NODE);
+			NodeDataDto nodeDataDto = new ObjectMapper().readValue(dataDto.getDataJson(), NodeDataDto.class);
+			
+			TextData textDataOnNode = new TextData();
+			textDataOnNode.setText(nodeDataDto.getText());
+			textDataOnNode = textDataRepository.save(textDataOnNode);
+			
+			NodeData nodeData = new NodeData();
+			nodeData.setTextData(textDataOnNode);
+			
+			for (PositionedLinkDto linkDto : nodeDataDto.getLinks()) {
+				nodeData.getLinks().add(createLink(linkDto));
+			}
+			
+			nodeData = nodeDataRepository.save(nodeData);
+			
+			data.setNodeData(nodeData);
+			
 			break;
 			
 		default:
@@ -357,6 +306,26 @@ public class UprtclService {
 		
 		data.setId();
 		return dataRepository.save(data);
+	}
+	
+	public Link createLink(LinkDto linkDto) throws Exception {
+		
+		Perspective perspective =perspectiveRepository.getOne(linkDto.getPerspective().getId()); 
+		Perspective parent = perspectiveRepository.getOne(linkDto.getParent().getId());
+		
+		Link link = new Link(); 
+		link.setParent(parent);
+		link.setPerspective(perspective);
+		
+		if (linkDto instanceof PositionedLinkDto) {
+			PositionedLinkDto positionedLinkDto = (PositionedLinkDto) linkDto;
+			link.setAfter(perspectiveRepository.getOne(positionedLinkDto.getPosition().getAfter()));
+			link.setBefore(perspectiveRepository.getOne(positionedLinkDto.getPosition().getBefore()));
+		
+			link = linkRepository.save(link);
+		}
+		
+		return link;
 	}
 	
 	@Transactional(rollbackOn = Exception.class)

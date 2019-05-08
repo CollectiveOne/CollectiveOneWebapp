@@ -1,13 +1,16 @@
-package org.collectiveone.modules.uprcl.dtos;
+package org.collectiveone.modules.c1.data.dtos;
 
 import org.collectiveone.modules.c1.data.DataType;
-import org.collectiveone.modules.c1.data.TextContentDto;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class DataDto {
 	
+	@JsonIgnore
 	private String id;
+	
+	@JsonIgnore
 	private DataType type;
-	private TextContentDto textContent;
 	
 	public String getId() {
 		return id;
@@ -21,11 +24,4 @@ public class DataDto {
 	public void setType(DataType type) {
 		this.type = type;
 	}
-	public TextContentDto getTextContent() {
-		return textContent;
-	}
-	public void setTextContent(TextContentDto textContent) {
-		this.textContent = textContent;
-	}
-	
 }

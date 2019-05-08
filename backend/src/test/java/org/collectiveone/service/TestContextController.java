@@ -11,10 +11,10 @@ import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.c1.data.DataType;
 import org.collectiveone.modules.c1.data.TextContentDto;
+import org.collectiveone.modules.c1.data.dtos.DataDto;
 import org.collectiveone.modules.uprcl.dtos.CommitDto;
 import org.collectiveone.modules.uprcl.dtos.ContentDto;
 import org.collectiveone.modules.uprcl.dtos.ContextDto;
-import org.collectiveone.modules.uprcl.dtos.DataDto;
 import org.collectiveone.modules.uprcl.dtos.LinkDto;
 import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
 import org.collectiveone.modules.uprcl.entities.PerspectiveType;
@@ -181,7 +181,7 @@ public class TestContextController extends AbstractTest {
     	textContent.setText(text);
     	
     	data.setType(DataType.TEXT);
-    	data.setTextContent(textContent);
+    	data.setTextData(textContent);
     	content.setData(data);
     	head.setContent(content);
     	perspective.setHead(head);
@@ -242,7 +242,7 @@ public class TestContextController extends AbstractTest {
         PerspectiveDto perspectiveDto = getResult.getData();
         
         assertEquals("unexpected content",
-        		text, perspectiveDto.getHead().getContent().getData().getTextContent().getText());
+        		text, perspectiveDto.getHead().getContent().getData().getTextData().getText());
 
     }
     

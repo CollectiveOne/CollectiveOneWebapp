@@ -2,7 +2,7 @@ package org.collectiveone.modules.uprcl;
 
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.PostResult;
-import org.collectiveone.modules.uprcl.dtos.LinkDto;
+import org.collectiveone.modules.c1.data.dtos.LinkDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

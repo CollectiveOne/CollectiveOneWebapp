@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
@@ -105,7 +106,7 @@ public class Perspective {
         return head.getId();
     }
 	
-	public PerspectiveDto toDto() {
+	public PerspectiveDto toDto() throws JsonProcessingException {
 		PerspectiveDto dto = new PerspectiveDto();
 		
 		dto.setId(id);

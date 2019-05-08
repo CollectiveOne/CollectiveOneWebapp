@@ -3,6 +3,8 @@ package org.collectiveone.modules.uprcl.dtos;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.collectiveone.modules.c1.data.dtos.DataIf;
+
 public class CommitDto {
 
 	private String id;
@@ -10,7 +12,8 @@ public class CommitDto {
 	private String message;
 	private Long nonce;
 	private SortedMap<String, CommitDto> parents = new TreeMap<String, CommitDto>();
-	private ContentDto content;
+	private DataIf data;
+	
 	
 	public CommitDto() {
 		super();
@@ -61,12 +64,12 @@ public class CommitDto {
 		this.parents = parents;
 	}
 
-	public ContentDto getContent() {
-		return content;
+	public DataIf getData() {
+		return data;
 	}
 
-	public void setContent(ContentDto content) {
-		this.content = content;
+	public void setData(DataIf data) {
+		this.data = data;
 	}
 	
 }

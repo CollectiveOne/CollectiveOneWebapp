@@ -23,6 +23,7 @@ import org.hibernate.annotations.Type;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
@@ -49,7 +50,7 @@ public class Commit {
 	private SortedMap<String, Commit> parents = new TreeMap<String, Commit>();
 	
 	@ManyToOne
-	private Content content;	
+	private Data data;	
 	
 	public Commit() {
 		super();
@@ -70,17 +71,19 @@ public class Commit {
 		return null;
 	}
 	
-	public CommitDto toDto() {
+	public CommitDto toDto() throws JsonProcessingException {
+		
 		CommitDto dto = new CommitDto();
 		
 		dto.setId(id);
-		dto.setContent(content.toDto());
 		dto.setMessage(message);
 		dto.setNonce(nonce);
 		
 		for (Map.Entry<String, Commit> parentEntry : parents.entrySet()) {
 			dto.getParents().put(parentEntry.getKey(), parentEntry.getValue().toDto());
 		}
+		
+		dto.setData(data.toDto());
 		
 		return dto;
 	}
@@ -92,7 +95,7 @@ public class Commit {
 	
 	@JsonGetter("content")
 	public String getContentId() {
-		return content.getId(); 
+		return data.getId(); 
 	}
 
 	public String getId() {
@@ -135,12 +138,12 @@ public class Commit {
 		this.parents = parents;
 	}
 
-	public Content getContent() {
-		return content;
+	public Data getData() {
+		return data;
 	}
 
-	public void setContent(Content content) {
-		this.content = content;
+	public void setData(Data data) {
+		this.data = data;
 	}
 	
 }

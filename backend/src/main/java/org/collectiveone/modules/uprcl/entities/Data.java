@@ -12,10 +12,13 @@ import javax.persistence.Table;
 
 import org.bitcoinj.core.Base58;
 import org.collectiveone.modules.c1.data.DataType;
-import org.collectiveone.modules.c1.data.TextContent;
-import org.collectiveone.modules.uprcl.dtos.DataDto;
+import org.collectiveone.modules.c1.data.NodeData;
+import org.collectiveone.modules.c1.data.TextData;
+import org.collectiveone.modules.c1.data.dtos.DataIf;
+import org.collectiveone.modules.c1.data.dtos.NodeDataDto;
+import org.collectiveone.modules.c1.data.dtos.TextDataDto;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Entity
 @Table(name = "data")
@@ -29,19 +32,25 @@ public class Data {
 	private DataType type;
 	
 	@ManyToOne
-	private TextContent textContent;
+	private TextData textData;
+	
+	@ManyToOne
+	private NodeData nodeData;
 	
 	
 	public String computeId() {
 		try {
 			MessageDigest digestInstance = MessageDigest.getInstance("SHA-256");
-			ObjectMapper objectMapper = new ObjectMapper();
 			
 			String json = "";
 					
 			switch (type) {
 				case TEXT:
-					json = objectMapper.writeValueAsString(textContent);
+					json = textData.toDto().getDataJson();
+				break;
+				
+				case NODE:
+					json = nodeData.toDto().getDataJson();
 				break;
 					
 				default: 
@@ -49,7 +58,6 @@ public class Data {
 			}
 			
 			byte[] hash = digestInstance.digest(json.getBytes());
-			
 			return Base58.encode(hash);	
 				
 		} catch (Exception e) {
@@ -58,17 +66,26 @@ public class Data {
 		return null;
 	}
 	
-	public DataDto toDto() {
-		DataDto dto = new DataDto();
+	public DataIf toDto() throws JsonProcessingException {
 		
-		dto.setId(id);
+		DataIf dto = null;
+		
 		switch (type) {
 		
 		case TEXT:
-			dto.setTextContent(textContent.toDto());
+			dto = new TextDataDto();
+			dto.setText(textData.toDto().getText());
+			
 		break;
 		
-		} 
+		case NODE:
+			dto = new NodeDataDto();
+		break;
+		
+		}
+		
+		dto.setId(id);
+		dto.setType(type);
 		
 		return dto;
 	}
@@ -87,11 +104,18 @@ public class Data {
 	public void setType(DataType type) {
 		this.type = type;
 	}
-	public TextContent getTextContent() {
-		return textContent;
+	public TextData getTextData() {
+		return textData;
 	}
-	public void setTextContent(TextContent textContent) {
-		this.textContent = textContent;
+	public void setTextData(TextData textContent) {
+		this.textData = textContent;
 	}
+	public NodeData getNodeData() {
+		return nodeData;
+	}
+	public void setNodeData(NodeData nodeContent) {
+		this.nodeData = nodeContent;
+	}
+	
 	
 }

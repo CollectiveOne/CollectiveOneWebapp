@@ -17,8 +17,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.c1.data.DataType;
-import org.collectiveone.modules.c1.data.TextContent;
-import org.collectiveone.modules.uprcl.entities.Link;
+import org.collectiveone.modules.c1.data.Link;
+import org.collectiveone.modules.c1.data.TextData;
 import org.collectiveone.modules.uprcl.entities.Perspective;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
@@ -51,12 +51,12 @@ public class WorkingCommit {
 	private DataType type;
 	
 	@ManyToOne
-	private TextContent textContent;
+	private TextData textContent;
 	
 	@OneToMany
 	@MapKey(name="id")
 	@SortNatural
-	private SortedMap<String, Link> links = new TreeMap<String, Link>();
+	private SortedMap<UUID, Link> links = new TreeMap<UUID, Link>();
 	
 
 	public UUID getId() {
@@ -99,19 +99,19 @@ public class WorkingCommit {
 		this.type = type;
 	}
 
-	public TextContent getTextContent() {
+	public TextData getTextContent() {
 		return textContent;
 	}
 
-	public void setTextContent(TextContent textContent) {
+	public void setTextContent(TextData textContent) {
 		this.textContent = textContent;
 	}
 
-	public SortedMap<String, Link> getLinks() {
+	public SortedMap<UUID, Link> getLinks() {
 		return links;
 	}
 
-	public void setLinks(SortedMap<String, Link> links) {
+	public void setLinks(SortedMap<UUID, Link> links) {
 		this.links = links;
 	}
 	

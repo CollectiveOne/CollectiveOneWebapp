@@ -7,15 +7,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import org.collectiveone.modules.c1.data.dtos.TextDataDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
 @JsonPropertyOrder({ "text" })
-public class TextContent {
+public class TextData {
 	
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -27,21 +30,22 @@ public class TextContent {
 
 	private String text;
 	
-	public TextContentDto toDto() {
-		TextContentDto dto = new TextContentDto();
-		
-		dto.setText(text);
-		
-		return dto;
-	}
-	
-	public TextContent() {
+	public TextData() {
 		super();
 	}
 	
-	public TextContent(String text) {
+	public TextData(String text) {
 		super();
 		this.text = text;
+	}
+	
+	public TextDataDto toDto() {
+		TextDataDto dto = new TextDataDto();
+		
+		
+		
+		dto.setText(text);
+		return dto;
 	}
 	
 	public UUID getId() {
