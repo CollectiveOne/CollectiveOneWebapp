@@ -15,7 +15,6 @@ import org.collectiveone.modules.c1.data.DataType;
 import org.collectiveone.modules.c1.data.NodeData;
 import org.collectiveone.modules.c1.data.TextData;
 import org.collectiveone.modules.c1.data.dtos.DataDto;
-import org.collectiveone.modules.c1.data.dtos.NodeDataDto;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -85,6 +84,20 @@ public class Data {
 		dto.setType(type);
 		
 		return dto;
+	}
+	
+	@Override
+	public String toString() {
+		try {
+			return "  id: " + id + "\n" + 
+				   "type: " + type.toString() + "\n" +
+				   "json: " + this.toDto().getJsonData();
+			
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public String getId() {

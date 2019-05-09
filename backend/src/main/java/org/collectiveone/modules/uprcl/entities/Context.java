@@ -92,11 +92,14 @@ public class Context {
 		
 		return dto;
 	}
-
+	
+	
+	@Override
 	public String toString() {
-		return "id: " + id;
+		return "     id: " + id + "\n" +
+			   "creator: " + creator;
 	}
-
+	
 	public String getId() {
 		return id;
 	}

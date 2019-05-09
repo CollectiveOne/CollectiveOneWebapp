@@ -120,6 +120,14 @@ public class Perspective {
 		return dto;
 	}
 	
+	@Override
+	public String toString() {
+		return "   name: " + name + "\n" + 
+			   "     id: " + id + "\n" + 
+			   "context: " + (context != null ? context.getId() : "null") + "\n" +
+			   "   head: " + (head !=null ? head.getId() : "null");
+	}
+	
 	public String getId() {
 		return id;
 	}

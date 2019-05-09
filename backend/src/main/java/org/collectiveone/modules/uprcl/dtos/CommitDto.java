@@ -14,6 +14,12 @@ public class CommitDto {
 	private SortedMap<String, CommitDto> parents = new TreeMap<String, CommitDto>();
 	private DataDto data;
 	
+	@Override
+	public String toString() {
+		return "     id: " + id + "\n" + 
+			   "creator: " + creator + "\n" +
+			   "   data: " + (data != null ? data.getId() : "null");
+	}
 	
 	public CommitDto() {
 		super();

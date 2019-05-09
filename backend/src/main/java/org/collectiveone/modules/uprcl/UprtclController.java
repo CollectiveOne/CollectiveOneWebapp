@@ -1,9 +1,12 @@
 package org.collectiveone.modules.uprcl;
 
 import org.collectiveone.common.BaseController;
+import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.c1.data.dtos.LinkDto;
+import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,16 +20,6 @@ public class UprtclController extends BaseController {
 	private UprtclService uprtclService;
 	
 	
-	/**
-	 * Creates a new context.
-	 * 
-	 * URLParams 
-	 * - (optional) parentPerspectiveId=[UUID]. If not provided, the private perspective of the user is used.
-	 * 
-	 * Content 
-	 * - (required) perspectiveDto JSON (see https://github.com/uprtcl/spec/blob/master/schema.gql) 
-	 * 		 
-	 * */
 	@RequestMapping(path = "/p", method = RequestMethod.POST)
 	public PostResult createPerspectiveWithParent(
 			@RequestBody LinkDto linkDto) throws Exception {
@@ -35,6 +28,16 @@ public class UprtclController extends BaseController {
 				"success", 
 				"contex created", 
 				uprtclService.createPerspective(linkDto, getLoggedUserId()).getId());
+	}
+	
+	@RequestMapping(path = "/p/{perspectiveId}", method = RequestMethod.GET)
+	public GetResult<PerspectiveDto> getPerspective(
+			@PathVariable("perspectiveId") String perspectiveId) throws Exception {
+		
+		return new GetResult<PerspectiveDto>(
+				"success", 
+				"contex created", 
+				uprtclService.getPerspective(perspectiveId, getLoggedUserId()));
 	}
 	
 }	

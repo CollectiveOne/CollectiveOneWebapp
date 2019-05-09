@@ -132,6 +132,11 @@ public class UprtclService {
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
+	public PerspectiveDto getPerspective(String perspectiveId, String requestBy) throws Exception {
+		return perspectiveRepository.findOne(perspectiveId).toDto();
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
 	public Perspective getOrCreatePerspective(LinkDto linkDto, String requestBy) throws Exception {
 		
 		PerspectiveDto perspectiveDto = linkDto.getPerspective(); 
@@ -321,9 +326,9 @@ public class UprtclService {
 			PositionedLinkDto positionedLinkDto = (PositionedLinkDto) linkDto;
 			link.setAfter(perspectiveRepository.getOne(positionedLinkDto.getPosition().getAfter()));
 			link.setBefore(perspectiveRepository.getOne(positionedLinkDto.getPosition().getBefore()));
-		
-			link = linkRepository.save(link);
 		}
+		
+		link = linkRepository.save(link);
 		
 		return link;
 	}

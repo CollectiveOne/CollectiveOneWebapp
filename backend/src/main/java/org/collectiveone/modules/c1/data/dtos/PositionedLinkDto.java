@@ -4,6 +4,12 @@ public class PositionedLinkDto extends LinkDto {
 	
 	private LinkPositionDL position;
 
+	@Override
+	public String toString() {
+		return "parent: {" + parent.toString() + "}, " +
+			   "perspective: {" + perspective.toString() + "}";
+	} 
+	
 	public LinkPositionDL getPosition() {
 		return position;
 	}

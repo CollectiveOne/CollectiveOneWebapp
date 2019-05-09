@@ -10,12 +10,11 @@ import org.collectiveone.AbstractTest;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.c1.data.DataType;
-import org.collectiveone.modules.c1.data.TextContentDto;
 import org.collectiveone.modules.c1.data.dtos.DataDto;
+import org.collectiveone.modules.c1.data.dtos.LinkDto;
+import org.collectiveone.modules.c1.data.dtos.TextDataDto;
 import org.collectiveone.modules.uprcl.dtos.CommitDto;
-import org.collectiveone.modules.uprcl.dtos.ContentDto;
 import org.collectiveone.modules.uprcl.dtos.ContextDto;
-import org.collectiveone.modules.uprcl.dtos.LinkDto;
 import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
 import org.collectiveone.modules.uprcl.entities.PerspectiveType;
 import org.collectiveone.modules.users.AppUserDto;
@@ -38,6 +37,8 @@ import com.auth0.exception.APIException;
 import com.auth0.exception.Auth0Exception;
 import com.auth0.json.auth.TokenHolder;
 import com.auth0.net.AuthRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
@@ -154,7 +155,7 @@ public class TestContextController extends AbstractTest {
         // clean up after each test method
     }
     
-    private LinkDto buildPerspectiveObjects(String creator, String text, Long timestamp, PerspectiveDto parent) {
+    private LinkDto buildPerspectiveObjects(String creator, String text, Long timestamp, PerspectiveDto parent) throws JsonProcessingException {
     	ContextDto context = new ContextDto();
     	
     	context.setCreator(creator);
@@ -175,20 +176,20 @@ public class TestContextController extends AbstractTest {
     	head.setMessage("");
     	head.setNonce(0L);
     	
-    	ContentDto content = new ContentDto();
     	DataDto data = new DataDto();
-    	TextContentDto textContent = new TextContentDto();
-    	textContent.setText(text);
     	
+    	TextDataDto textContent = new TextDataDto();
+    	textContent.setText(text);
+		
     	data.setType(DataType.TEXT);
-    	data.setTextData(textContent);
-    	content.setData(data);
-    	head.setContent(content);
+    	data.setJsonData(textContent.getDataJson());
+    	
+    	head.setData(data);
     	perspective.setHead(head);
     	
     	LinkDto linkDto = new LinkDto();
     	linkDto.setPerspective(perspective);
-    	linkDto.setParentPerspective(parent);
+    	linkDto.setParent(parent);
     	
     	return linkDto;
     }
@@ -196,6 +197,8 @@ public class TestContextController extends AbstractTest {
     @Test
     @Rollback(false)
     public void createContext() throws Exception {
+    	ObjectMapper objectMapper = new ObjectMapper();
+    	
     	String text = "My First Context";
     	Long timestamp = System.currentTimeMillis();
     	
@@ -219,11 +222,11 @@ public class TestContextController extends AbstractTest {
         assertEquals("error creating context: " + postResult.getMessage(),
         		"success", postResult.getResult());
         
-        String perspecitveId1 = postResult.getElementId();        
+        String perspectiveId1 = postResult.getElementId();        
         
         /* read context */
         result = this.mockMvc
-    	    	.perform(get("/1/p/" + perspecitveId1)
+    	    	.perform(get("/1/p/" + perspectiveId1)
     	    	.header("Authorization", "Bearer " + authorizationTokenUser1))
     	    	.andReturn();
         
@@ -241,8 +244,11 @@ public class TestContextController extends AbstractTest {
         
         PerspectiveDto perspectiveDto = getResult.getData();
         
+        TextDataDto textData = objectMapper.readValue(
+        		perspectiveDto.getHead().getData().getJsonData(), TextDataDto.class);
+        
         assertEquals("unexpected content",
-        		text, perspectiveDto.getHead().getContent().getData().getTextData().getText());
+        		text, textData.getText());
 
     }
     

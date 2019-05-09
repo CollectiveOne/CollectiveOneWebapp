@@ -4,8 +4,8 @@ import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
 
 public class LinkDto {
 	
-	private PerspectiveDto parent;
-	private PerspectiveDto perspective;
+	protected PerspectiveDto parent;
+	protected PerspectiveDto perspective;
 		
 	public PerspectiveDto getParent() {
 		return parent;

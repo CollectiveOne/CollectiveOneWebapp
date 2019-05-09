@@ -97,6 +97,13 @@ public class Commit {
 	public String getContentId() {
 		return data.getId(); 
 	}
+	
+	@Override
+	public String toString() {
+		return "     id: " + id + "\n" + 
+			   "creator: " + creator + "\n" +
+			   "   data: " + (data != null ? data.getId() : "null");
+	}
 
 	public String getId() {
 		return id;
