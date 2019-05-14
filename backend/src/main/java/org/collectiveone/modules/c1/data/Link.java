@@ -1,39 +1,47 @@
 package org.collectiveone.modules.c1.data;
 
-import java.util.UUID;
+import java.security.MessageDigest;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.bitcoinj.core.Base58;
+import org.collectiveone.modules.uprcl.entities.Commit;
+import org.collectiveone.modules.uprcl.entities.Data;
 import org.collectiveone.modules.uprcl.entities.Perspective;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.beans.factory.annotation.Value;
 
 @Entity
 @Table(name = "links")
 public class Link {
 	
-	@Id
-	@GeneratedValue(generator = "UUID")
-	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
-		parameters = { @Parameter( name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy") })
-	@Column(name = "id", updatable = false, nullable = false)
-	@JsonIgnore
-	private UUID id;
+	@Value("${UPRTLC_ENDPOINT}")
+	private String UPRTCL_ENPOINT;
 	
-	private String platform;
+	@Id
+	private String id;
+	
+	private LinkType type;
+	
+	private ObjectType objectType;
+	
+	/** External Links */
+	private ExternalLink link;
+	
+	/** Local Links */
+	@ManyToOne
+	private Commit commit;
 	
 	@ManyToOne
-	private Perspective parent;
+	private Data data;
 	
 	@ManyToOne
 	private Perspective perspective;
+	
+	@ManyToOne
+	private Perspective parent;
 	
 	@ManyToOne
 	private Perspective before;
@@ -42,52 +50,120 @@ public class Link {
 	private Perspective after;
 	
 	
-	public UUID getId() {
-		return id;
+	public String computeId() {
+		try {
+			MessageDigest digestInstance = MessageDigest.getInstance("SHA-256");
+			byte[] hash = digestInstance.digest(this.toString().getBytes());
+			return Base58.encode(hash);	
+		} catch (Exception e) {
+			// TODO
+		}
+		return null;
 	}
-
-	public void setId(UUID id) {
-		this.id = id;
+	
+	public Link() {
+		super();
 	}
-
-	public Perspective getPerspective() {
-		return perspective;
+	
+	public Link(String string) {
+		super();
+		
+		this.type = LinkType.EXTERNAL;
+		this.link = new ExternalLink(string);
 	}
-
-	public void setPerspective(Perspective perspective) {
+	
+	public Link(Data data) {
+		super();
+		
+		this.type = LinkType.LOCAL;
+		this.objectType = ObjectType.DATA;
+		this.data = data;
+	}
+	
+	public Link(Commit commit) {
+		super();
+		
+		this.type = LinkType.LOCAL;
+		this.objectType = ObjectType.COMMIT;
+		this.commit = commit;
+	}
+	
+	public Link(Perspective perspective, Perspective parent, Perspective before, Perspective after) {
+		super();
+		
+		this.type = LinkType.LOCAL;
+		this.objectType = ObjectType.PERSPECTIVE;
 		this.perspective = perspective;
-	}
-	
-	public Perspective getParent() {
-		return parent;
-	}
-
-	public void setParent(Perspective parent) {
 		this.parent = parent;
-	}
-	
-	public String getPlatform() {
-		return platform;
-	}
-
-	public void setPlatform(String platform) {
-		this.platform = platform;
-	}
-
-	public Perspective getBefore() {
-		return before;
-	}
-
-	public void setBefore(Perspective before) {
 		this.before = before;
-	}
-
-	public Perspective getAfter() {
-		return after;
-	}
-
-	public void setAfter(Perspective after) {
 		this.after = after;
 	}
 	
+	@Override
+	public String toString() {
+		
+		switch (type) {
+		case EXTERNAL:
+			return this.link.toString();
+		
+		case LOCAL:
+			ExternalLink local = null;
+			
+			switch (objectType) {
+				case DATA:
+					local = new ExternalLink(NetworkId.HTTP, UPRTCL_ENPOINT, data.getId());
+				break;
+				
+				case COMMIT:
+					local = new ExternalLink(NetworkId.HTTP, UPRTCL_ENPOINT, commit.getId());
+				break;
+				
+				case PERSPECTIVE:
+					local = new ExternalLink(NetworkId.HTTP, UPRTCL_ENPOINT, perspective.getId());
+				break;
+			}
+			
+			return local.toString();
+		}
+		
+		return null;
+		
+	}
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId() {
+		this.id = this.computeId();
+	}
+
+	public LinkType getType() {
+		return type;
+	}
+
+	public void setType(LinkType type) {
+		this.type = type;
+	}
+
+	public ExternalLink getLink() {
+		return link;
+	}
+
+	public void setLink(ExternalLink link) {
+		this.link = link;
+	}
+
+	public Commit getCommit() {
+		return commit;
+	}
+
+	public void setCommit(Commit commit) {
+		this.commit = commit;
+	}
+	
+	
+	
+	
+
 }

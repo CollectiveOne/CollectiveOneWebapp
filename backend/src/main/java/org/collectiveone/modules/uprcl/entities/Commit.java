@@ -16,6 +16,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.bitcoinj.core.Base58;
+import org.collectiveone.modules.c1.data.Link;
+import org.collectiveone.modules.c1.data.LinkToCommit;
+import org.collectiveone.modules.c1.data.LinkToData;
 import org.collectiveone.modules.uprcl.dtos.CommitDto;
 import org.hibernate.annotations.SortNatural;
 import org.hibernate.annotations.Type;
@@ -28,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
 @Table(name = "commits")
-@JsonPropertyOrder({ "message", "creator", "nonce", "parents", "content" })
+@JsonPropertyOrder({ "message", "creator", "parents", "dataLink" })
 public class Commit {
 	
 	@Id
@@ -38,8 +41,6 @@ public class Commit {
 	
 	private String creator;
 	
-	private Long nonce;
-	
 	@Lob
 	@Type(type = "org.hibernate.type.TextType")
 	private String message;
@@ -47,10 +48,11 @@ public class Commit {
 	@OneToMany
 	@MapKey(name="id")
 	@SortNatural
-	private SortedMap<String, Commit> parents = new TreeMap<String, Commit>();
+	private SortedMap<String, Link> parentsLinks = new TreeMap<String, Link>();
 	
 	@ManyToOne
-	private Data data;	
+	private Link dataLink;
+	
 	
 	public Commit() {
 		super();
@@ -71,19 +73,18 @@ public class Commit {
 		return null;
 	}
 	
-	public CommitDto toDto() throws JsonProcessingException {
+	public CommitDto toDto(Integer levels) throws JsonProcessingException {
 		
 		CommitDto dto = new CommitDto();
 		
 		dto.setId(id);
 		dto.setMessage(message);
-		dto.setNonce(nonce);
 		
 		for (Map.Entry<String, Commit> parentEntry : parents.entrySet()) {
-			dto.getParents().put(parentEntry.getKey(), parentEntry.getValue().toDto());
+			dto.getParents().put(parentEntry.getKey(), parentEntry.getValue().toDto(0));
 		}
 		
-		dto.setData(data.toDto());
+		dto.setData(data.toDto(levels));
 		
 		return dto;
 	}
@@ -129,28 +130,20 @@ public class Commit {
 		this.message = message;
 	}
 	
-	public Long getNonce() {
-		return nonce;
+	public SortedMap<String, LinkToCommit> getParentsLinks() {
+		return parentsLinks;
 	}
 
-	public void setNonce(Long nonce) {
-		this.nonce = nonce;
+	public void setParentsLinks(SortedMap<String, LinkToCommit> parentsLinks) {
+		this.parentsLinks = parentsLinks;
 	}
 
-	public SortedMap<String, Commit> getParents() {
-		return parents;
+	public LinkToData getDataLink() {
+		return dataLink;
 	}
 
-	public void setParents(SortedMap<String, Commit> parents) {
-		this.parents = parents;
-	}
-
-	public Data getData() {
-		return data;
-	}
-
-	public void setData(Data data) {
-		this.data = data;
+	public void setDataLink(LinkToData dataLink) {
+		this.dataLink = dataLink;
 	}
 	
 }

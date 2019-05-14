@@ -46,6 +46,7 @@ import com.google.gson.Gson;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@SuppressWarnings("serial")
 public class TestContextController extends AbstractTest {
 	
 	private static final Logger logger = LogManager.getLogger(TestContextController.class);
@@ -84,7 +85,6 @@ public class TestContextController extends AbstractTest {
 	
 	private AppUserDto user2;
 	
-	@SuppressWarnings("serial")
 	@Before
     public void setUp() throws Exception {
 		
@@ -197,6 +197,7 @@ public class TestContextController extends AbstractTest {
     @Test
     @Rollback(false)
     public void createContext() throws Exception {
+    	Long start;
     	ObjectMapper objectMapper = new ObjectMapper();
     	
     	String text = "My First Context";
@@ -206,13 +207,18 @@ public class TestContextController extends AbstractTest {
     	String json = gson.toJson(link);
         MvcResult result = null;
         
-        /* create new context and perspective */
+        /** -------------------------
+         *  create perspective 
+         * -------------------------- */
+        start = System.currentTimeMillis();
         result = this.mockMvc
-	    	.perform(post("/1/p")
+	    	.perform(post("/1/l")
 	    	.header("Authorization", "Bearer " + authorizationTokenUser1)
 	    	.contentType(MediaType.APPLICATION_JSON)
 	    	.content(json))
 	    	.andReturn();
+        
+        logger.debug("perspective created in: " + (System.currentTimeMillis() - start)  + " ms") ;
         
         assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
         		200, result.getResponse().getStatus());
@@ -224,18 +230,22 @@ public class TestContextController extends AbstractTest {
         
         String perspectiveId1 = postResult.getElementId();        
         
-        /* read context */
+        /** -------------------------
+         *  read perspective 
+         * -------------------------- */
+        start = System.currentTimeMillis();
         result = this.mockMvc
     	    	.perform(get("/1/p/" + perspectiveId1)
     	    	.header("Authorization", "Bearer " + authorizationTokenUser1))
     	    	.andReturn();
         
+        logger.debug("perspective retrieved in: " + (System.currentTimeMillis() - start)  + " ms") ;
+        
         assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
         		200, result.getResponse().getStatus());
         
         
-		@SuppressWarnings("serial")
-        GetResult<PerspectiveDto> getResult = 
+		GetResult<PerspectiveDto> getResult = 
         		gson.fromJson(result.getResponse().getContentAsString(), 
         				new TypeToken<GetResult<PerspectiveDto>>(){}.getType());
         
@@ -249,6 +259,31 @@ public class TestContextController extends AbstractTest {
         
         assertEquals("unexpected content",
         		text, textData.getText());
+        
+        /** -------------------------
+         *  read root perspective without subperspectives 
+         * -------------------------- */
+        start = System.currentTimeMillis();
+        result = this.mockMvc
+    	    	.perform(get("/1/p/" + user1.getRootPerspective().getId())
+    	    	.param("levels", "0")
+    	    	.header("Authorization", "Bearer " + authorizationTokenUser1))
+    	    	.andReturn();
+        
+        logger.debug("perspective retrieved in: " + (System.currentTimeMillis() - start)  + " ms") ;
+        
+        assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+        
+        
+		getResult = 
+        		gson.fromJson(result.getResponse().getContentAsString(), 
+        				new TypeToken<GetResult<PerspectiveDto>>(){}.getType());
+        
+        assertEquals("error getting context: " + getResult.getMessage(),
+        		"success", getResult.getResult());
+        
+        perspectiveDto = getResult.getData();
 
     }
     

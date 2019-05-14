@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import org.collectiveone.modules.c1.data.dtos.LinkPositionDL;
 import org.collectiveone.modules.c1.data.dtos.NodeDataDto;
 import org.collectiveone.modules.c1.data.dtos.PositionedLinkDto;
+import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -37,17 +38,27 @@ public class NodeData {
 	private TextData textData;
 
 	@OneToMany
-	private List<Link> links = new ArrayList<Link>();
+	private List<LinkToPerspective> links = new ArrayList<LinkToPerspective>();
 	
-	public NodeDataDto toDto() throws JsonProcessingException {
+	public NodeDataDto toDto(Integer levels) throws JsonProcessingException {
 		NodeDataDto dto = new NodeDataDto();
 		
 		dto.setText(textData.getText());
 		
-		for (Link link : links) {
+		for (LinkToPerspective link : links) {
 			PositionedLinkDto linkDto = new PositionedLinkDto();
 			
-			linkDto.setPerspective(link.getPerspective().toDto());
+			/**----------------------------------------------------------------- 
+			 *  																|
+			 *   Most likely this is a recursive call to perspective.toDto()	|
+			 *   but with the child (linked) perspective instead. 	        	|
+			 * 		    														| 
+			 * -----------------------------------------------------------------*/
+			if (levels > 0) {
+			 	linkDto.setPerspective(link.getPerspective().toDto(levels - 1));	
+			} else {
+				linkDto.setPerspective(new PerspectiveDto(link.getPerspective().getId()));
+			}
 			
 			LinkPositionDL position = new LinkPositionDL();
 			position.setAfter(linkDto.getPosition().getAfter());
@@ -73,10 +84,10 @@ public class NodeData {
 	public void setTextData(TextData textData) {
 		this.textData = textData;
 	}
-	public List<Link> getLinks() {
+	public List<LinkToPerspective> getLinks() {
 		return links;
 	}
-	public void setLinks(List<Link> links) {
+	public void setLinks(List<LinkToPerspective> links) {
 		this.links = links;
 	}
 	

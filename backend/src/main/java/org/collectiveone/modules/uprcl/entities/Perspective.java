@@ -1,7 +1,6 @@
 package org.collectiveone.modules.uprcl.entities;
 
 import java.security.MessageDigest;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.bitcoinj.core.Base58;
+import org.collectiveone.modules.c1.data.LinkToCommit;
 import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
 import org.collectiveone.modules.uprcl.support.JacksonViews;
 
@@ -40,9 +40,6 @@ public class Perspective {
 	private String creator;
 	
 	@JsonView(JacksonViews.DynamicPerspective.class)
-	private Timestamp timestamp;
-	
-	@JsonView(JacksonViews.DynamicPerspective.class)
 	private String name;
 	
 	@JsonView(JacksonViews.DynamicPerspective.class)
@@ -51,7 +48,7 @@ public class Perspective {
 	
 	@JsonView(JacksonViews.StaticPerspective.class)
 	@ManyToOne(fetch = FetchType.LAZY)
-	private Commit head;
+	private LinkToCommit commitLink;
 	
 	@JsonView(JacksonViews.DynamicPerspective.class)
 	@Enumerated(EnumType.STRING)
@@ -101,21 +98,24 @@ public class Perspective {
         return context.getId();
     }
 	
-	@JsonGetter("head")
-    public String getHeadId() {
-        return head.getId();
+	@JsonGetter("commit")
+    public String getCommitId() {
+        return commit.getId();
     }
 	
 	public PerspectiveDto toDto() throws JsonProcessingException {
+		return this.toDto(0);
+	}
+	
+	public PerspectiveDto toDto(Integer levels) throws JsonProcessingException {
 		PerspectiveDto dto = new PerspectiveDto();
 		
 		dto.setId(id);
 		dto.setContext(context.toDto());
 		dto.setCreator(creator);
 		dto.setType(type);
-		dto.setTimestamp(timestamp.getTime());
 		dto.setName(name);
-		if (head != null) dto.setHead(head.toDto());
+		if (commit != null) dto.setHead(commit.toDto(levels));
 		
 		return dto;
 	}
@@ -125,7 +125,7 @@ public class Perspective {
 		return "   name: " + name + "\n" + 
 			   "     id: " + id + "\n" + 
 			   "context: " + (context != null ? context.getId() : "null") + "\n" +
-			   "   head: " + (head !=null ? head.getId() : "null");
+			   " commit: " + (commit !=null ? commit.getId() : "null");
 	}
 	
 	public String getId() {
@@ -152,14 +152,6 @@ public class Perspective {
 		this.creator = creator;
 	}
 	
-	public Timestamp getTimestamp() {
-		return timestamp;
-	}
-
-	public void setTimestamp(Timestamp timestamp) {
-		this.timestamp = timestamp;
-	}
-
 	public Context getContext() {
 		return context;
 	}
@@ -168,14 +160,14 @@ public class Perspective {
 		this.context = context;
 	}
 
-	public Commit getHead() {
-		return head;
+	public LinkToCommit getCommitLink() {
+		return commitLink;
 	}
 
-	public void setHead(Commit head) {
-		this.head = head;
+	public void setCommitLink(LinkToCommit commitLink) {
+		this.commitLink = commitLink;
 	}
-	
+
 	public PerspectiveType getType() {
 		return type;
 	}
@@ -191,5 +183,5 @@ public class Perspective {
 	public void setWorkingCommits(List<Commit> workingCommits) {
 		this.workingCommits = workingCommits;
 	}
-	
+
 }

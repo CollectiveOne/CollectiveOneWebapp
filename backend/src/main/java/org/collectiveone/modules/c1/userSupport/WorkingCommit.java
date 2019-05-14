@@ -17,7 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.c1.data.DataType;
-import org.collectiveone.modules.c1.data.Link;
+import org.collectiveone.modules.c1.data.LinkToPerspective;
 import org.collectiveone.modules.c1.data.TextData;
 import org.collectiveone.modules.uprcl.entities.Perspective;
 import org.collectiveone.modules.users.AppUser;
@@ -56,7 +56,7 @@ public class WorkingCommit {
 	@OneToMany
 	@MapKey(name="id")
 	@SortNatural
-	private SortedMap<UUID, Link> links = new TreeMap<UUID, Link>();
+	private SortedMap<UUID, LinkToPerspective> links = new TreeMap<UUID, LinkToPerspective>();
 	
 
 	public UUID getId() {
@@ -107,11 +107,11 @@ public class WorkingCommit {
 		this.textContent = textContent;
 	}
 
-	public SortedMap<UUID, Link> getLinks() {
+	public SortedMap<UUID, LinkToPerspective> getLinks() {
 		return links;
 	}
 
-	public void setLinks(SortedMap<UUID, Link> links) {
+	public void setLinks(SortedMap<UUID, LinkToPerspective> links) {
 		this.links = links;
 	}
 	

@@ -48,7 +48,7 @@ public class Data {
 				break;
 				
 				case NODE:
-					json = nodeData.toDto().getDataJson();
+					json = nodeData.toDto(0).getDataJson();
 				break;
 					
 				default: 
@@ -64,7 +64,7 @@ public class Data {
 		return null;
 	}
 	
-	public DataDto toDto() throws JsonProcessingException {
+	public DataDto toDto(Integer levels) throws JsonProcessingException {
 		
 		DataDto dto = new DataDto();
 		
@@ -75,7 +75,7 @@ public class Data {
 		break;
 		
 		case NODE:
-			dto.setJsonData(nodeData.toDto().getDataJson());
+			dto.setJsonData(nodeData.toDto(levels).getDataJson());
 		break;
 		
 		}
@@ -91,7 +91,7 @@ public class Data {
 		try {
 			return "  id: " + id + "\n" + 
 				   "type: " + type.toString() + "\n" +
-				   "json: " + this.toDto().getJsonData();
+				   "json: " + this.toDto(0).getJsonData();
 			
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
