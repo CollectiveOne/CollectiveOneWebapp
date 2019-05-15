@@ -38,14 +38,14 @@ public class NodeData {
 	private TextData textData;
 
 	@OneToMany
-	private List<LinkToPerspective> links = new ArrayList<LinkToPerspective>();
+	private List<Link> links = new ArrayList<Link>();
 	
 	public NodeDataDto toDto(Integer levels) throws JsonProcessingException {
 		NodeDataDto dto = new NodeDataDto();
 		
 		dto.setText(textData.getText());
 		
-		for (LinkToPerspective link : links) {
+		for (Link link : links) {
 			PositionedLinkDto linkDto = new PositionedLinkDto();
 			
 			/**----------------------------------------------------------------- 
@@ -84,11 +84,12 @@ public class NodeData {
 	public void setTextData(TextData textData) {
 		this.textData = textData;
 	}
-	public List<LinkToPerspective> getLinks() {
+	public List<Link> getLinks() {
 		return links;
 	}
-	public void setLinks(List<LinkToPerspective> links) {
+	public void setLinks(List<Link> links) {
 		this.links = links;
 	}
+	
 	
 }

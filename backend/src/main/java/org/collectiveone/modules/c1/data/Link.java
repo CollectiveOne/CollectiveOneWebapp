@@ -11,21 +11,17 @@ import org.bitcoinj.core.Base58;
 import org.collectiveone.modules.uprcl.entities.Commit;
 import org.collectiveone.modules.uprcl.entities.Data;
 import org.collectiveone.modules.uprcl.entities.Perspective;
-import org.springframework.beans.factory.annotation.Value;
 
 @Entity
 @Table(name = "links")
 public class Link {
-	
-	@Value("${UPRTLC_ENDPOINT}")
-	private String UPRTCL_ENPOINT;
 	
 	@Id
 	private String id;
 	
 	private LinkType type;
 	
-	private ObjectType objectType;
+	private LinkObjectType objectType;
 	
 	/** External Links */
 	private ExternalLink link;
@@ -51,9 +47,13 @@ public class Link {
 	
 	
 	public String computeId() {
+		return computeId(this.toString());
+	}
+	
+	public static String computeId(ExternalLink link) {
 		try {
 			MessageDigest digestInstance = MessageDigest.getInstance("SHA-256");
-			byte[] hash = digestInstance.digest(this.toString().getBytes());
+			byte[] hash = digestInstance.digest(link.toString().getBytes());
 			return Base58.encode(hash);	
 		} catch (Exception e) {
 			// TODO
@@ -76,7 +76,7 @@ public class Link {
 		super();
 		
 		this.type = LinkType.LOCAL;
-		this.objectType = ObjectType.DATA;
+		this.objectType = LinkObjectType.DATA;
 		this.data = data;
 	}
 	
@@ -84,7 +84,7 @@ public class Link {
 		super();
 		
 		this.type = LinkType.LOCAL;
-		this.objectType = ObjectType.COMMIT;
+		this.objectType = LinkObjectType.COMMIT;
 		this.commit = commit;
 	}
 	
@@ -92,7 +92,7 @@ public class Link {
 		super();
 		
 		this.type = LinkType.LOCAL;
-		this.objectType = ObjectType.PERSPECTIVE;
+		this.objectType = LinkObjectType.PERSPECTIVE;
 		this.perspective = perspective;
 		this.parent = parent;
 		this.before = before;
@@ -111,15 +111,18 @@ public class Link {
 			
 			switch (objectType) {
 				case DATA:
-					local = new ExternalLink(NetworkId.HTTP, UPRTCL_ENPOINT, data.getId());
+					local = new ExternalLink();
+					local.setLocalElement(data.getId());
 				break;
 				
 				case COMMIT:
-					local = new ExternalLink(NetworkId.HTTP, UPRTCL_ENPOINT, commit.getId());
+					local = new ExternalLink();
+					local.setLocalElement(commit.getId());
 				break;
 				
 				case PERSPECTIVE:
-					local = new ExternalLink(NetworkId.HTTP, UPRTCL_ENPOINT, perspective.getId());
+					local = new ExternalLink();
+					local.setLocalElement(perspective.getId());
 				break;
 			}
 			
@@ -145,6 +148,54 @@ public class Link {
 	public void setType(LinkType type) {
 		this.type = type;
 	}
+	
+	public LinkObjectType getObjectType() {
+		return objectType;
+	}
+
+	public void setObjectType(LinkObjectType objectType) {
+		this.objectType = objectType;
+	}
+
+	public Data getData() {
+		return data;
+	}
+
+	public void setData(Data data) {
+		this.data = data;
+	}
+
+	public Perspective getPerspective() {
+		return perspective;
+	}
+
+	public void setPerspective(Perspective perspective) {
+		this.perspective = perspective;
+	}
+
+	public Perspective getParent() {
+		return parent;
+	}
+
+	public void setParent(Perspective parent) {
+		this.parent = parent;
+	}
+
+	public Perspective getBefore() {
+		return before;
+	}
+
+	public void setBefore(Perspective before) {
+		this.before = before;
+	}
+
+	public Perspective getAfter() {
+		return after;
+	}
+
+	public void setAfter(Perspective after) {
+		this.after = after;
+	}
 
 	public ExternalLink getLink() {
 		return link;
@@ -162,8 +213,4 @@ public class Link {
 		this.commit = commit;
 	}
 	
-	
-	
-	
-
 }

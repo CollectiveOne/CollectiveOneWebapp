@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.bitcoinj.core.Base58;
+import org.collectiveone.modules.c1.data.Link;
 import org.collectiveone.modules.c1.data.LinkToCommit;
 import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
 import org.collectiveone.modules.uprcl.support.JacksonViews;
@@ -37,6 +38,10 @@ public class Perspective {
 	private String id;
 
 	@JsonView(JacksonViews.DynamicPerspective.class)
+	@Enumerated(EnumType.STRING)
+	private PerspectiveType type;
+	
+	@JsonView(JacksonViews.DynamicPerspective.class)
 	private String creator;
 	
 	@JsonView(JacksonViews.DynamicPerspective.class)
@@ -48,11 +53,7 @@ public class Perspective {
 	
 	@JsonView(JacksonViews.StaticPerspective.class)
 	@ManyToOne(fetch = FetchType.LAZY)
-	private LinkToCommit commitLink;
-	
-	@JsonView(JacksonViews.DynamicPerspective.class)
-	@Enumerated(EnumType.STRING)
-	private PerspectiveType type;
+	private Link headLink;
 	
 	
 	/* working commits are uncommitted changes, there cab be zero or more per user and perspective. */
@@ -100,7 +101,7 @@ public class Perspective {
 	
 	@JsonGetter("commit")
     public String getCommitId() {
-        return commit.getId();
+        return headLink.getId();
     }
 	
 	public PerspectiveDto toDto() throws JsonProcessingException {
@@ -115,7 +116,7 @@ public class Perspective {
 		dto.setCreator(creator);
 		dto.setType(type);
 		dto.setName(name);
-		if (commit != null) dto.setHead(commit.toDto(levels));
+		if (head != null) dto.setHead(head.toDto(levels));
 		
 		return dto;
 	}
@@ -125,7 +126,7 @@ public class Perspective {
 		return "   name: " + name + "\n" + 
 			   "     id: " + id + "\n" + 
 			   "context: " + (context != null ? context.getId() : "null") + "\n" +
-			   " commit: " + (commit !=null ? commit.getId() : "null");
+			   " commit: " + (head !=null ? head.getId() : "null");
 	}
 	
 	public String getId() {
@@ -160,12 +161,12 @@ public class Perspective {
 		this.context = context;
 	}
 
-	public LinkToCommit getCommitLink() {
-		return commitLink;
+	public Link getHeadLink() {
+		return headLink;
 	}
 
-	public void setCommitLink(LinkToCommit commitLink) {
-		this.commitLink = commitLink;
+	public void setHeadLink(Link headLink) {
+		this.headLink = headLink;
 	}
 
 	public PerspectiveType getType() {

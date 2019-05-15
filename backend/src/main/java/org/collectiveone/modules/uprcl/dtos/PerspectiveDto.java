@@ -22,6 +22,15 @@ public class PerspectiveDto {
 			   "   head: " + (head != null ? head.getId() : "null");
 	}
 	
+	public PerspectiveDtoLight toLight() {
+		PerspectiveDtoLight light = new PerspectiveDtoLight();
+		light.setName(name);
+		light.setContextId(context.getId());
+		light.setHeadLink(head.getId());
+		
+		return light;
+	}
+	
 	public PerspectiveDto() {
 		super();
 	}

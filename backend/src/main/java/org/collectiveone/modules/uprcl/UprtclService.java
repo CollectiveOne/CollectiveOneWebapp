@@ -1,6 +1,5 @@
 package org.collectiveone.modules.uprcl;
 
-import java.net.URI;
 import java.sql.Timestamp;
 import java.util.Map;
 
@@ -8,19 +7,19 @@ import javax.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.collectiveone.modules.c1.data.LinkToCommit;
 import org.collectiveone.modules.c1.data.DataType;
+import org.collectiveone.modules.c1.data.ExternalLink;
+import org.collectiveone.modules.c1.data.Link;
+import org.collectiveone.modules.c1.data.LinkObjectType;
 import org.collectiveone.modules.c1.data.LinkRepositoryIf;
-import org.collectiveone.modules.c1.data.NetworkId;
+import org.collectiveone.modules.c1.data.LinkType;
 import org.collectiveone.modules.c1.data.NodeData;
 import org.collectiveone.modules.c1.data.NodeDataRepositoryIf;
-import org.collectiveone.modules.c1.data.LinkToPerspective;
 import org.collectiveone.modules.c1.data.TextData;
 import org.collectiveone.modules.c1.data.TextDataRepositoryIf;
 import org.collectiveone.modules.c1.data.dtos.DataDto;
 import org.collectiveone.modules.c1.data.dtos.LinkDto;
 import org.collectiveone.modules.c1.data.dtos.NodeDataDto;
-import org.collectiveone.modules.c1.data.dtos.PerspectiveDtoLight;
 import org.collectiveone.modules.c1.data.dtos.PositionedLinkDto;
 import org.collectiveone.modules.c1.data.dtos.TextDataDto;
 import org.collectiveone.modules.c1.userSupport.WorkingCommit;
@@ -28,6 +27,7 @@ import org.collectiveone.modules.c1.userSupport.WorkingCommitRepositoryIf;
 import org.collectiveone.modules.uprcl.dtos.CommitDto;
 import org.collectiveone.modules.uprcl.dtos.ContextDto;
 import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
+import org.collectiveone.modules.uprcl.dtos.PerspectiveDtoLight;
 import org.collectiveone.modules.uprcl.entities.Commit;
 import org.collectiveone.modules.uprcl.entities.Context;
 import org.collectiveone.modules.uprcl.entities.Data;
@@ -101,21 +101,21 @@ public class UprtclService {
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public Context getOrCreateContext(ContextDto contextDto, String requestBy, LinkDto linkDto) throws Exception {
+	public Context getOrCreateContext(ContextDto contextDto, String requestBy) throws Exception {
 		
 		Context context = null;
 		
 		if (contextDto.getId() != null) context = contextRepository.findOne(contextDto.getId());
 		
 		if (context == null) {
-			context = createContext(contextDto, requestBy, linkDto);
+			context = createContext(contextDto, requestBy);
 		} 
 		
 		return context;
 	}
 
 	@Transactional(rollbackOn = Exception.class)
-	public Context createContext(ContextDto contextDto, String requestBy, LinkDto linkDto) throws Exception {
+	public Context createContext(ContextDto contextDto, String requestBy) throws Exception {
 		
 		Context context = new Context();
 		
@@ -125,11 +125,6 @@ public class UprtclService {
 		
 		context.setId();
 		context = contextRepository.save(context);
-		
-		for (PerspectiveDto perspectiveDto : contextDto.getPerspectives()) {
-			perspectiveDto.getContext().setId(context.getId());;
-			createPerspective(linkDto, requestBy);
-		}
 		
 		return context;
 		
@@ -141,15 +136,14 @@ public class UprtclService {
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public Perspective getOrCreatePerspective(LinkDto linkDto, String requestBy) throws Exception {
+	public Perspective getOrCreatePerspective(PerspectiveDto perspectiveDto, String requestBy) throws Exception {
 		
-		PerspectiveDto perspectiveDto = linkDto.getPerspective(); 
 		Perspective perspective = null;
 				
 		if (perspectiveDto.getId() != null) perspective = perspectiveRepository.findOne(perspectiveDto.getId());
 		
 		if (perspective == null) {
-			perspective = createPerspective(linkDto, requestBy);
+			perspective = createPerspective(perspectiveDto, requestBy);
 		} 
 		
 		return perspective;
@@ -160,23 +154,31 @@ public class UprtclService {
 		
 		Context context = contextRepository.getOne(perspectiveDto.getContextId());
 		if (context == null) throw new Exception("context not found");
+
+		ExternalLink externalLink = new ExternalLink(perspectiveDto.getHeadLink());
 		
-		LinkToCommit commitLink = getCommitLink(perspectiveDto.getCommitLink());
+		if (externalLink.isLocal()) {
+			Link headLink = linkRepository.getOne(Link.computeId(externalLink).toString()));	
+		} else {
+			
+		}
 		
-		Perspective perspective = createPerspective(perspectiveDto, context, requestBy);
+		if (headLink == null) throw new Exception("commit not found");
 		
+		Perspective perspective = createPerspective(perspectiveDto, context, headLink, requestBy);
 
 		return perspective;
 	}
 	
+	
 	@Transactional(rollbackOn = Exception.class)
-	public Perspective createPerspective(PerspectiveDtoLight perspectiveDto, Context context, LinkToCommit headLink, String requestBy) throws Exception {
+	public Perspective createPerspective(PerspectiveDtoLight perspectiveDto, Context context, Link headLink, String requestBy) throws Exception {
 		Perspective perspective = new Perspective();
 		
 		perspective.setCreator(requestBy);
 		perspective.setName(perspectiveDto.getName());
 		perspective.setContext(context);
-		perspective.setHead(headLink);
+		perspective.setHeadLink(headLink);
 		perspective.setType(perspectiveDto.getType() != null ? perspectiveDto.getType() : PerspectiveType.DYNAMIC);
 		
 		perspective.setId();
@@ -187,28 +189,17 @@ public class UprtclService {
 	
 	
 	@Transactional(rollbackOn = Exception.class)
-	public Perspective createPerspective(LinkDto linkDto, String requestBy) throws Exception {
+	public Perspective createPerspective(PerspectiveDto perspectiveDto, String requestBy) throws Exception {
 		
-		PerspectiveDto perspectiveDto = linkDto.getPerspective();
+		Context context = getOrCreateContext(perspectiveDto.getContext(), requestBy);
+		Commit head = getOrCreateCommit(perspectiveDto.getHead(), requestBy);
 		
-		Context context = getOrCreateContext(perspectiveDto.getContext(), requestBy, linkDto);
+		Link headLink = new Link();
 		
-		Perspective perspective = createPerspective(perspectiveDto, context, requestBy);
+		headLink.setType(LinkType.LOCAL);
+		headLink.setCommit(head);
 		
-		/* perspectives are usually created inside a parent perspective */
-		if (linkDto != null){
-			if (linkDto.getParent() != null) {
-				WorkingCommit parentWorkingCommit = getOrCreateWorkingCommit(requestBy, linkDto.getParent().getId());
-				
-				/* the perspective was just created, so the ID was not there*/
-				linkDto.getPerspective().setId(perspective.getId());
-				
-				LinkToPerspective link = createLink(linkDto);
-				parentWorkingCommit.getLinks().put(link.getId(), link);
-				
-				parentWorkingCommit = workingCommitRepository.save(parentWorkingCommit);
-			}
-		}
+		Perspective perspective = createPerspective(perspectiveDto.toLight(), context, headLink, requestBy);
 		
 		return perspective;
 	}
@@ -224,22 +215,36 @@ public class UprtclService {
 		perspectiveDto.setTimestamp(System.currentTimeMillis());
 		perspectiveDto.setType(PerspectiveType.DYNAMIC);
 		
-		if (linkDto == null) {
-			linkDto = new LinkDto();
-			linkDto.setPerspective(perspectiveDto);
-		}
-		
-		return createPerspective(linkDto, requestBy);
+		return createPerspective(perspectiveDto, requestBy);
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public Link getOrCreateCommitLink(String commitLinkString) throws Exception {
-		Link commitLink = null;
+	public Link getOrCreateCommitLink(String commitLinkString, String requestBy, CommitDto commitDto) throws Exception {
+		ExternalLink externalLink = new ExternalLink(commitLinkString);
 		
+		Link commitLink = linkRepository.getOne(Link.computeId(externalLink.toString()));
 		
+		if (commitLink != null) {
+			return commitLink;
+		} 
+	
+		commitLink = new Link();
 		
-		NetworkId network = NetworkId.valueOf(uri.getScheme());
-		String networkAddresss = uri.getAuthority(); 
+		if (externalLink.isLocal()) {
+			commitLink.setType(LinkType.LOCAL);
+			commitLink.setObjectType(LinkObjectType.COMMIT);
+			
+			Commit commit = commitRepository.getOne(externalLink.getElement());
+			commitLink.setCommit(commit);
+			
+		} else {
+			commitLink.setType(LinkType.EXTERNAL);
+			commitLink.setLink(externalLink);
+		}
+		
+		commitLink = linkRepository.save(commitLink);
+
+		return commitLink; 
 	}
 	
 	
@@ -344,12 +349,12 @@ public class UprtclService {
 		return dataRepository.save(data);
 	}
 	
-	public LinkToPerspective createLink(LinkDto linkDto) throws Exception {
+	public Link createLink(LinkDto linkDto) throws Exception {
 		
 		Perspective perspective =perspectiveRepository.getOne(linkDto.getPerspective().getId()); 
 		Perspective parent = perspectiveRepository.getOne(linkDto.getParent().getId());
 		
-		LinkToPerspective link = new LinkToPerspective(); 
+		Link link = new Link(); 
 		link.setParent(parent);
 		link.setPerspective(perspective);
 		
