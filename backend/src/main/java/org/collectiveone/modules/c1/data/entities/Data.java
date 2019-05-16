@@ -1,4 +1,4 @@
-package org.collectiveone.modules.uprcl.entities;
+package org.collectiveone.modules.c1.data.entities;
 
 import java.security.MessageDigest;
 
@@ -11,10 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.bitcoinj.core.Base58;
-import org.collectiveone.modules.c1.data.DataType;
-import org.collectiveone.modules.c1.data.NodeData;
-import org.collectiveone.modules.c1.data.TextData;
 import org.collectiveone.modules.c1.data.dtos.DataDto;
+import org.collectiveone.modules.c1.data.enums.DataType;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -48,7 +46,7 @@ public class Data {
 				break;
 				
 				case NODE:
-					json = nodeData.toDto(0).getDataJson();
+					json = nodeData.toDto().getDataJson();
 				break;
 					
 				default: 
@@ -64,7 +62,7 @@ public class Data {
 		return null;
 	}
 	
-	public DataDto toDto(Integer levels) throws JsonProcessingException {
+	public DataDto toDto() throws JsonProcessingException {
 		
 		DataDto dto = new DataDto();
 		
@@ -75,7 +73,7 @@ public class Data {
 		break;
 		
 		case NODE:
-			dto.setJsonData(nodeData.toDto(levels).getDataJson());
+			dto.setJsonData(nodeData.toDto().getDataJson());
 		break;
 		
 		}
@@ -91,7 +89,7 @@ public class Data {
 		try {
 			return "  id: " + id + "\n" + 
 				   "type: " + type.toString() + "\n" +
-				   "json: " + this.toDto(0).getJsonData();
+				   "json: " + this.toDto().getJsonData();
 			
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block

@@ -1,6 +1,6 @@
 package org.collectiveone.modules.c1.data.dtos;
 
-import org.collectiveone.modules.c1.data.DataType;
+import org.collectiveone.modules.c1.data.enums.DataType;
 
 public class DataDto {
 	

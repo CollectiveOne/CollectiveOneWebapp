@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class NodeDataDto implements JsonDataIf {
 	
 	private String text;
-	private List<PositionedLinkDto> links;
+	private List<LinkDto> links;
 
 	public String getText() {
 		return text;
@@ -20,11 +20,11 @@ public class NodeDataDto implements JsonDataIf {
 		this.text = text;
 	}
 
-	public List<PositionedLinkDto> getLinks() {
+	public List<LinkDto> getLinks() {
 		return links;
 	}
 
-	public void setLinks(List<PositionedLinkDto> links) {
+	public void setLinks(List<LinkDto> links) {
 		this.links = links;
 	}
 

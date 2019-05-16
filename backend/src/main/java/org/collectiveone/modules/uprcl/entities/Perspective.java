@@ -1,29 +1,22 @@
 package org.collectiveone.modules.uprcl.entities;
 
 import java.security.MessageDigest;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.bitcoinj.core.Base58;
-import org.collectiveone.modules.c1.data.Link;
-import org.collectiveone.modules.c1.data.LinkToCommit;
+import org.collectiveone.modules.c1.data.entities.ExternalLink;
 import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
-import org.collectiveone.modules.uprcl.support.JacksonViews;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -37,23 +30,15 @@ public class Perspective {
 	@JsonIgnore
 	private String id;
 
-	@JsonView(JacksonViews.DynamicPerspective.class)
-	@Enumerated(EnumType.STRING)
-	private PerspectiveType type;
+	private String creatorId;
+
+	private Timestamp timestamp;
 	
-	@JsonView(JacksonViews.DynamicPerspective.class)
-	private String creator;
+	private String contextId;
 	
-	@JsonView(JacksonViews.DynamicPerspective.class)
 	private String name;
 	
-	@JsonView(JacksonViews.DynamicPerspective.class)
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Context context;
-	
-	@JsonView(JacksonViews.StaticPerspective.class)
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Link headLink;
+	private ExternalLink headLink;
 	
 	
 	/* working commits are uncommitted changes, there cab be zero or more per user and perspective. */
@@ -67,24 +52,7 @@ public class Perspective {
 			MessageDigest digestInstance = MessageDigest.getInstance("SHA-256");
 			ObjectMapper objectMapper = new ObjectMapper();
 			
-			String json = "";
-			
-			switch (type) {
-			
-			case DYNAMIC: 
-				json = objectMapper
-				.writerWithView(JacksonViews.DynamicPerspective.class)
-				.writeValueAsString(this);	
-			break;
-				
-			case STATIC:
-				json = objectMapper
-				.writerWithView(JacksonViews.StaticPerspective.class)
-				.writeValueAsString(this);	
-			break;
-			
-			}
-			
+			String json = objectMapper.writeValueAsString(this);	
 			byte[] hash = digestInstance.digest(json.getBytes());
 			
 			return Base58.encode(hash);	
@@ -94,16 +62,6 @@ public class Perspective {
 		return null;
 	}
 	
-	@JsonGetter("context")
-    public String getContextId() {
-        return context.getId();
-    }
-	
-	@JsonGetter("commit")
-    public String getCommitId() {
-        return headLink.getId();
-    }
-	
 	public PerspectiveDto toDto() throws JsonProcessingException {
 		return this.toDto(0);
 	}
@@ -112,21 +70,21 @@ public class Perspective {
 		PerspectiveDto dto = new PerspectiveDto();
 		
 		dto.setId(id);
-		dto.setContext(context.toDto());
-		dto.setCreator(creator);
-		dto.setType(type);
+		dto.setCreatorId(creatorId);
+		dto.setTimestamp(timestamp.getTime());
+		dto.setContextId(contextId);
 		dto.setName(name);
-		if (head != null) dto.setHead(head.toDto(levels));
+		dto.setHeadLink(headLink != null ? headLink.toString() : null);
 		
 		return dto;
 	}
 	
 	@Override
 	public String toString() {
-		return "   name: " + name + "\n" + 
-			   "     id: " + id + "\n" + 
-			   "context: " + (context != null ? context.getId() : "null") + "\n" +
-			   " commit: " + (head !=null ? head.getId() : "null");
+		return "     name: " + name + "\n" + 
+			   "       id: " + id + "\n" + 
+			   "contextId: " + contextId + "\n" +
+			   " headLink: " + headLink;
 	}
 	
 	public String getId() {
@@ -145,36 +103,28 @@ public class Perspective {
 		this.name = name;
 	}
 
-	public String getCreator() {
-		return creator;
+	public String getCreatorId() {
+		return creatorId;
 	}
 
-	public void setCreator(String creator) {
-		this.creator = creator;
-	}
-	
-	public Context getContext() {
-		return context;
+	public void setCreatorId(String creatorId) {
+		this.creatorId = creatorId;
 	}
 
-	public void setContext(Context context) {
-		this.context = context;
+	public Timestamp getTimestamp() {
+		return timestamp;
 	}
 
-	public Link getHeadLink() {
-		return headLink;
+	public void setTimestamp(Timestamp timestamp) {
+		this.timestamp = timestamp;
 	}
 
-	public void setHeadLink(Link headLink) {
-		this.headLink = headLink;
+	public String getContextId() {
+		return contextId;
 	}
 
-	public PerspectiveType getType() {
-		return type;
-	}
-
-	public void setType(PerspectiveType type) {
-		this.type = type;
+	public void setContextId(String contextId) {
+		this.contextId = contextId;
 	}
 
 	public List<Commit> getWorkingCommits() {
@@ -184,5 +134,14 @@ public class Perspective {
 	public void setWorkingCommits(List<Commit> workingCommits) {
 		this.workingCommits = workingCommits;
 	}
+
+	public ExternalLink getHeadLink() {
+		return headLink;
+	}
+
+	public void setHeadLink(ExternalLink headLink) {
+		this.headLink = headLink;
+	}
+	
 
 }

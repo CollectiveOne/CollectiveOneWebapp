@@ -1,29 +1,22 @@
 package org.collectiveone.modules.uprcl.entities;
 
 import java.security.MessageDigest;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapKey;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.bitcoinj.core.Base58;
-import org.collectiveone.modules.c1.data.Link;
-import org.collectiveone.modules.c1.data.LinkToCommit;
-import org.collectiveone.modules.c1.data.LinkToData;
+import org.collectiveone.modules.c1.data.entities.ExternalLink;
 import org.collectiveone.modules.uprcl.dtos.CommitDto;
-import org.hibernate.annotations.SortNatural;
 import org.hibernate.annotations.Type;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -39,21 +32,19 @@ public class Commit {
 	@JsonIgnore
 	private String id;
 	
-	private String creator;
+	private String creatorId;
+	
+	private Timestamp timestamp;
 	
 	@Lob
 	@Type(type = "org.hibernate.type.TextType")
 	private String message;
 	
-	@OneToMany
-	@MapKey(name="id")
-	@SortNatural
-	private SortedMap<String, Link> parentsLinks = new TreeMap<String, Link>();
+	@ElementCollection
+	private List<ExternalLink> parentsLinks = new ArrayList<ExternalLink>();
 	
-	@ManyToOne
-	private Link dataLink;
-	
-	
+	private ExternalLink dataLink;
+		
 	public Commit() {
 		super();
 	}
@@ -73,37 +64,29 @@ public class Commit {
 		return null;
 	}
 	
-	public CommitDto toDto(Integer levels) throws JsonProcessingException {
+	public CommitDto toDto() throws JsonProcessingException {
 		
 		CommitDto dto = new CommitDto();
 		
 		dto.setId(id);
+		dto.setCreatorId(creatorId);
+		dto.setTimestamp(timestamp.getTime());
 		dto.setMessage(message);
 		
-		for (Map.Entry<String, Commit> parentEntry : parents.entrySet()) {
-			dto.getParents().put(parentEntry.getKey(), parentEntry.getValue().toDto(0));
+		for (ExternalLink parent : parentsLinks) {
+			dto.getParentsLinks().add(parent.toString());
 		}
 		
-		dto.setData(data.toDto(levels));
+		dto.setDataLink(dataLink.toString());
 		
 		return dto;
 	}
 	
-	@JsonGetter("parents")
-	public String getParentsArray() {
-		return Arrays.toString(parents.keySet().toArray()); 
-	}
-	
-	@JsonGetter("content")
-	public String getContentId() {
-		return data.getId(); 
-	}
-	
 	@Override
 	public String toString() {
-		return "     id: " + id + "\n" + 
-			   "creator: " + creator + "\n" +
-			   "   data: " + (data != null ? data.getId() : "null");
+		return "       id: " + id + "\n" + 
+			   "creatorId: " + creatorId + "\n" +
+			   " dataLink: " + dataLink.toString();
 	}
 
 	public String getId() {
@@ -114,12 +97,20 @@ public class Commit {
 		this.id = this.computeId();
 	}
 
-	public String getCreator() {
-		return creator;
+	public String getCreatorId() {
+		return creatorId;
 	}
 
-	public void setCreator(String creator) {
-		this.creator = creator;
+	public void setCreatorId(String creatorId) {
+		this.creatorId = creatorId;
+	}
+
+	public Timestamp getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Timestamp timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	public String getMessage() {
@@ -130,19 +121,19 @@ public class Commit {
 		this.message = message;
 	}
 	
-	public SortedMap<String, LinkToCommit> getParentsLinks() {
+	public List<ExternalLink> getParentsLinks() {
 		return parentsLinks;
 	}
 
-	public void setParentsLinks(SortedMap<String, LinkToCommit> parentsLinks) {
+	public void setParentsLinks(List<ExternalLink> parentsLinks) {
 		this.parentsLinks = parentsLinks;
 	}
 
-	public LinkToData getDataLink() {
+	public ExternalLink getDataLink() {
 		return dataLink;
 	}
 
-	public void setDataLink(LinkToData dataLink) {
+	public void setDataLink(ExternalLink dataLink) {
 		this.dataLink = dataLink;
 	}
 	

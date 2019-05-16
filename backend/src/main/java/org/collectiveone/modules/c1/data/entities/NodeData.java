@@ -1,29 +1,27 @@
-package org.collectiveone.modules.c1.data;
+package org.collectiveone.modules.c1.data.entities;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
-import org.collectiveone.modules.c1.data.dtos.LinkPositionDL;
+import org.collectiveone.modules.c1.data.dtos.LinkDto;
 import org.collectiveone.modules.c1.data.dtos.NodeDataDto;
-import org.collectiveone.modules.c1.data.dtos.PositionedLinkDto;
-import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Entity
-@JsonPropertyOrder({ "text" })
+@Table(name = "node_data")
 public class NodeData {
 	
 	@Id
@@ -37,34 +35,20 @@ public class NodeData {
 	@ManyToOne 
 	private TextData textData;
 
-	@OneToMany
+	@ElementCollection
 	private List<Link> links = new ArrayList<Link>();
 	
-	public NodeDataDto toDto(Integer levels) throws JsonProcessingException {
+	public NodeDataDto toDto() throws JsonProcessingException {
 		NodeDataDto dto = new NodeDataDto();
 		
 		dto.setText(textData.getText());
 		
 		for (Link link : links) {
-			PositionedLinkDto linkDto = new PositionedLinkDto();
+			LinkDto linkDto = new LinkDto();
 			
-			/**----------------------------------------------------------------- 
-			 *  																|
-			 *   Most likely this is a recursive call to perspective.toDto()	|
-			 *   but with the child (linked) perspective instead. 	        	|
-			 * 		    														| 
-			 * -----------------------------------------------------------------*/
-			if (levels > 0) {
-			 	linkDto.setPerspective(link.getPerspective().toDto(levels - 1));	
-			} else {
-				linkDto.setPerspective(new PerspectiveDto(link.getPerspective().getId()));
-			}
-			
-			LinkPositionDL position = new LinkPositionDL();
-			position.setAfter(linkDto.getPosition().getAfter());
-			position.setBefore(linkDto.getPosition().getBefore());
-			
-			linkDto.setPosition(position);
+			linkDto.setLink(link.getLink().toString());
+			linkDto.setAfter(link.getAfter().toString());
+			linkDto.setBefore(link.getBefore().toString());
 			
 			dto.getLinks().add(linkDto);	
 		}

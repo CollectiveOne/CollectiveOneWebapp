@@ -1,35 +1,28 @@
 package org.collectiveone.modules.c1.data.dtos;
 
-import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
-
-import com.fasterxml.jackson.annotation.JsonGetter;
-
 public class LinkDto {
 	
-	protected PerspectiveDto parent;
-	protected PerspectiveDto perspective;
+	private String link;
+	private String before;
+	private String after;
 	
-	@JsonGetter("parent")
-	public String parentForJsonGetter() {
-		return parent.getId();
+	public String getLink() {
+		return link;
 	}
-	
-	@JsonGetter("perspective")
-	public String perspectiveForJsonGetter() {
-		return perspective.getId();
+	public void setLink(String link) {
+		this.link = link;
 	}
-		
-	public PerspectiveDto getParent() {
-		return parent;
+	public String getBefore() {
+		return before;
 	}
-	public void setParent(PerspectiveDto parent) {
-		this.parent = parent;
+	public void setBefore(String before) {
+		this.before = before;
 	}
-	public PerspectiveDto getPerspective() {
-		return perspective;
+	public String getAfter() {
+		return after;
 	}
-	public void setPerspective(PerspectiveDto perspective) {
-		this.perspective = perspective;
+	public void setAfter(String after) {
+		this.after = after;
 	}
 	
 }

@@ -1,42 +1,23 @@
 package org.collectiveone.modules.uprcl.dtos;
 
-import org.collectiveone.modules.c1.views.ViewDto;
-import org.collectiveone.modules.uprcl.entities.PerspectiveType;
-
 public class PerspectiveDto {
 	
 	private String id;
-	private ContextDto context;
-	private String creator;
+	private String creatorId;
 	private Long timestamp;
-	private ViewDto view;
+	private String contextId;
 	private String name;
-	private CommitDto head;
-	private PerspectiveType type;
-	
-	@Override
-	public String toString() {
-		return "   name: " + name + "\n" +
-			   "     id: " + id  + "\n" + 
-			   "context: " + (context != null ? context.getId() : "null")  + "\n" +
-			   "   head: " + (head != null ? head.getId() : "null");
-	}
-	
-	public PerspectiveDtoLight toLight() {
-		PerspectiveDtoLight light = new PerspectiveDtoLight();
-		light.setName(name);
-		light.setContextId(context.getId());
-		light.setHeadLink(head.getId());
-		
-		return light;
-	}
+	private String headLink;
 	
 	public PerspectiveDto() {
 		super();
 	}
-	public PerspectiveDto(String id) {
+	public PerspectiveDto(String contextId, String name, String headLink) {
 		super();
-		this.id = id;
+		this.timestamp = System.currentTimeMillis();
+		this.contextId = contextId;
+		this.name = name;
+		this.headLink = headLink;
 	}
 	public String getId() {
 		return id;
@@ -44,17 +25,11 @@ public class PerspectiveDto {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public ContextDto getContext() {
-		return context;
+	public String getCreatorId() {
+		return creatorId;
 	}
-	public void setContext(ContextDto context) {
-		this.context = context;
-	}
-	public String getCreator() {
-		return creator;
-	}
-	public void setCreator(String creator) {
-		this.creator = creator;
+	public void setCreatorId(String creatorId) {
+		this.creatorId = creatorId;
 	}
 	public Long getTimestamp() {
 		return timestamp;
@@ -62,11 +37,11 @@ public class PerspectiveDto {
 	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
 	}
-	public ViewDto getView() {
-		return view;
+	public String getContextId() {
+		return contextId;
 	}
-	public void setView(ViewDto view) {
-		this.view = view;
+	public void setContextId(String contextId) {
+		this.contextId = contextId;
 	}
 	public String getName() {
 		return name;
@@ -74,18 +49,11 @@ public class PerspectiveDto {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public CommitDto getHead() {
-		return head;
+	public String getHeadLink() {
+		return headLink;
 	}
-	public void setHead(CommitDto head) {
-		this.head = head;
+	public void setHeadLink(String headLink) {
+		this.headLink = headLink;
 	}
-	public PerspectiveType getType() {
-		return type;
-	}
-	public void setType(PerspectiveType type) {
-		this.type = type;
-	}
-	
 	
 }

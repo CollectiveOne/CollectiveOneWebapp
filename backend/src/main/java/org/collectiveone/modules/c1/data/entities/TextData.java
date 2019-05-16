@@ -1,4 +1,4 @@
-package org.collectiveone.modules.c1.data;
+package org.collectiveone.modules.c1.data.entities;
 
 import java.util.UUID;
 
@@ -6,18 +6,16 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import org.collectiveone.modules.c1.data.dtos.TextDataDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
-@JsonPropertyOrder({ "text" })
+@Table(name = "text_data")
 public class TextData {
 	
 	@Id
@@ -41,8 +39,6 @@ public class TextData {
 	
 	public TextDataDto toDto() {
 		TextDataDto dto = new TextDataDto();
-		
-		
 		
 		dto.setText(text);
 		return dto;

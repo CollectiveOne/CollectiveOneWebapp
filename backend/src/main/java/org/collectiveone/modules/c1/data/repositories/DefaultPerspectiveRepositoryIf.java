@@ -1,7 +1,8 @@
-package org.collectiveone.modules.c1.userSupport;
+package org.collectiveone.modules.c1.data.repositories;
 
 import java.util.UUID;
 
+import org.collectiveone.modules.c1.data.entities.DefaultPerspective;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

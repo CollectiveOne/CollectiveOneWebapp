@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 public interface PerspectiveRepositoryIf extends JpaRepository<Perspective, String> {
 	
 	@Query("SELECT persp.id FROM Perspective persp "
-			+ "WHERE persp.context.id = :contextId")
+			+ "WHERE persp.contextId = :contextId")
 	public String findIdOfOldestOfContext(
 			@Param("contextId") String contextId);
 }

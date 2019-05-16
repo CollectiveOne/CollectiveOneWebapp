@@ -1,16 +1,11 @@
-package org.collectiveone.modules.c1.data;
+package org.collectiveone.modules.c1.data.entities;
 
 import javax.persistence.Embeddable;
-import javax.persistence.Transient;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.collectiveone.modules.c1.data.enums.NetworkId;
 
 @Embeddable
 public class ExternalLink {
-	
-	@Transient
-	@Value("${UPRTLC_ENDPOINT}")
-	private String UPRTCL_ENPOINT;
 	
 	private NetworkId network;
 	private String networkAddress;
@@ -34,14 +29,9 @@ public class ExternalLink {
 		this.element = parts[1].substring(lastBar + 1);
 	}
 	
-	public void setLocalElement(String element) {
-		this.network = NetworkId.HTTP;
-		this.networkAddress = UPRTCL_ENPOINT;
-		this.element = element;
-	}
-	
-	public Boolean isLocal() {
-		return (network == NetworkId.HTTP) && (networkAddress == UPRTCL_ENPOINT);
+	@Override
+	public String toString() {
+		return this.network + "://" + this.networkAddress + "/" + this.element;
 	}
 	
 	public NetworkId getNetwork() {

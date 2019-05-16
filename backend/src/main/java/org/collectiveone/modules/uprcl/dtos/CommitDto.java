@@ -1,45 +1,62 @@
 package org.collectiveone.modules.uprcl.dtos;
 
-import java.util.SortedMap;
-import java.util.TreeMap;
-
-import org.collectiveone.modules.c1.data.dtos.DataDto;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommitDto {
 
 	private String id;
-	private String creator;
+	private String creatorId;
+	private Long timestamp;
 	private String message;
-	private Long nonce;
-	private SortedMap<String, CommitDto> parents = new TreeMap<String, CommitDto>();
-	private DataDto data;
+	private List<String> parentsLinks = new ArrayList<String>();
+	private String dataLink;
 	
 	@Override
 	public String toString() {
-		return "     id: " + id + "\n" + 
-			   "creator: " + creator + "\n" +
-			   "   data: " + (data != null ? data.getId() : "null");
+		return "       id: " + id + "\n" + 
+			   "creatorId: " + creatorId + "\n" +
+			   " dataLink: " + dataLink;
 	}
 	
 	public CommitDto() {
 		super();
 	}
-	
-	public CommitDto(String message) {
+
+	public CommitDto(String message, List<String> parentsLinks, String dataLink) {
 		super();
+		this.timestamp = System.currentTimeMillis();
 		this.message = message;
+		this.parentsLinks = parentsLinks;
+		this.dataLink = dataLink;
 	}
-	
+
 	public String getId() {
 		return id;
 	}
 	
-	public String getCreator() {
-		return creator;
+	public String getCreatorId() {
+		return creatorId;
 	}
 
-	public void setCreator(String creator) {
-		this.creator = creator;
+	public void setCreatorId(String creatorId) {
+		this.creatorId = creatorId;
+	}
+
+	public Long getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Long timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public List<String> getParentsLinks() {
+		return parentsLinks;
+	}
+
+	public void setParentsLinks(List<String> parentsLinks) {
+		this.parentsLinks = parentsLinks;
 	}
 
 	public void setId(String id) {
@@ -54,28 +71,12 @@ public class CommitDto {
 		this.message = message;
 	}
 	
-	public Long getNonce() {
-		return nonce;
+	public String getDataLink() {
+		return dataLink;
 	}
 
-	public void setNonce(Long nonce) {
-		this.nonce = nonce;
+	public void setDataLink(String dataLink) {
+		this.dataLink = dataLink;
 	}
 
-	public SortedMap<String, CommitDto> getParents() {
-		return parents;
-	}
-
-	public void setParents(SortedMap<String, CommitDto> parents) {
-		this.parents = parents;
-	}
-
-	public DataDto getData() {
-		return data;
-	}
-
-	public void setData(DataDto data) {
-		this.data = data;
-	}
-	
 }

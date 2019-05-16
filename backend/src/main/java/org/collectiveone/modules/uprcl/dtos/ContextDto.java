@@ -19,7 +19,10 @@ public class ContextDto {
 
 	public ContextDto() {
 		super();
+		this.timestamp = System.currentTimeMillis();
+		this.nonce = 0L;
 	}
+	
 	public ContextDto(String id) {
 		super();
 		this.id = id;

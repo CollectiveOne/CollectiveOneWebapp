@@ -1,4 +1,4 @@
-package org.collectiveone.modules.c1.userSupport;
+package org.collectiveone.modules.c1.data.entities;
 
 import java.util.UUID;
 
@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import org.collectiveone.modules.uprcl.entities.Context;
 import org.collectiveone.modules.uprcl.entities.Perspective;
@@ -15,6 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
+@Table(name = "default_perspectives")
 public class DefaultPerspective {
 	
 	@Id

@@ -6,8 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.ECKey;
-import org.collectiveone.modules.c1.userSupport.DefaultPerspective;
-import org.collectiveone.modules.c1.userSupport.DefaultPerspectiveRepositoryIf;
+import org.collectiveone.modules.c1.data.entities.DefaultPerspective;
+import org.collectiveone.modules.c1.data.repositories.DefaultPerspectiveRepositoryIf;
 import org.collectiveone.modules.uprcl.UprtclService;
 import org.collectiveone.modules.uprcl.entities.Context;
 import org.collectiveone.modules.uprcl.entities.Perspective;
@@ -101,9 +101,10 @@ public class AppUserService {
 			
 			/* each user has one and only one context associated to his identity */
 			Perspective userPerspective = uprtclService.getOrCreateUserContext(appUser.getDid());
-			appUser.setContext(userPerspective.getContext());
+			Context context = uprtclService.getContext(userPerspective.getContextId());
+			appUser.setContext(context);
 			
-			logger.debug("user root context id: {}", userPerspective.getContext().getId().toString());
+			logger.debug("user root context id: {}", context.getId().toString());
 				 
 			appUser = appUserRepository.save(appUser);
 			

@@ -10,7 +10,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.c1.userSupport.DefaultPerspective;
+import org.collectiveone.modules.c1.data.entities.DefaultPerspective;
 import org.collectiveone.modules.uprcl.entities.Context;
 import org.collectiveone.modules.users.nannies.DIDNanny;
 
