@@ -1,5 +1,8 @@
 package org.collectiveone.modules.c1.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.collectiveone.modules.c1.data.dtos.DataDto;
@@ -7,16 +10,17 @@ import org.collectiveone.modules.c1.data.dtos.LinkDto;
 import org.collectiveone.modules.c1.data.dtos.NodeDataDto;
 import org.collectiveone.modules.c1.data.dtos.TextDataDto;
 import org.collectiveone.modules.c1.data.entities.Data;
+import org.collectiveone.modules.c1.data.entities.Draft;
 import org.collectiveone.modules.c1.data.entities.ExternalLink;
 import org.collectiveone.modules.c1.data.entities.Link;
 import org.collectiveone.modules.c1.data.entities.NodeData;
 import org.collectiveone.modules.c1.data.entities.TextData;
-import org.collectiveone.modules.c1.data.entities.Draft;
 import org.collectiveone.modules.c1.data.enums.DataType;
 import org.collectiveone.modules.c1.data.repositories.DataRepositoryIf;
+import org.collectiveone.modules.c1.data.repositories.DraftRepositoryIf;
 import org.collectiveone.modules.c1.data.repositories.NodeDataRepositoryIf;
 import org.collectiveone.modules.c1.data.repositories.TextDataRepositoryIf;
-import org.collectiveone.modules.c1.data.repositories.DraftRepositoryIf;
+import org.collectiveone.modules.uprcl.UprtclService;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +29,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class DataService {
+	
+	@Autowired
+	private UprtclService uprtclService;
 	
 	@Autowired
 	private AppUserRepositoryIf appUserRepository;
@@ -45,6 +52,17 @@ public class DataService {
 	@Transactional(rollbackOn = Exception.class)
 	public DataDto getDataDto(String dataId) throws Exception {
 		return dataRepository.findOne(dataId).toDto();
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
+	public List<String> createDatas(List<DataDto> dataDtos) throws Exception {
+		List<String> datasIds = new ArrayList<String>();
+		
+		for (DataDto dataDto : dataDtos) {
+			datasIds.add(uprtclService.getLocalLink(createData(dataDto).getId()).toString());
+		}
+		
+		return datasIds;
 	}
 
 	@Transactional(rollbackOn = Exception.class)

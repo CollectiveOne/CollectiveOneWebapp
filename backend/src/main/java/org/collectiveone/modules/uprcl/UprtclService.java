@@ -1,6 +1,8 @@
 package org.collectiveone.modules.uprcl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -65,6 +67,17 @@ public class UprtclService {
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
+	public List<String> createContexts(List<ContextDto> contextDtos, String requestBy) throws Exception {
+		List<String> contextIds = new ArrayList<String>();
+		
+		for (ContextDto contextDto : contextDtos) {
+			contextIds.add(createContext(contextDto, requestBy).getId());
+		}
+		
+		return contextIds;
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
 	public Context createContext(ContextDto contextDto, String requestBy) throws Exception {
 		
 		Context context = new Context();
@@ -97,6 +110,17 @@ public class UprtclService {
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
+	public List<String> createPerspectives(List<PerspectiveDto> perspectiveDtos, String requestBy) throws Exception {
+		List<String> perspectiveLinks = new ArrayList<String>();
+		
+		for (PerspectiveDto perspectiveDto : perspectiveDtos) {
+			perspectiveLinks.add(getLocalLink(createPerspective(perspectiveDto, requestBy).getId()).toString());
+		}
+		
+		return perspectiveLinks;
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
 	public Perspective createPerspective(PerspectiveDto perspectiveDto, String requestBy) throws Exception {
 		
 		Perspective perspective = new Perspective();
@@ -125,6 +149,17 @@ public class UprtclService {
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
+	public List<String> createCommits(List<CommitDto> commitDtos, String requestBy) throws Exception {
+		List<String> commitsLinks = new ArrayList<String>();
+		
+		for (CommitDto commitDto : commitDtos) {
+			commitsLinks.add(getLocalLink(createCommit(commitDto, requestBy).getId()).toString());
+		}
+		
+		return commitsLinks;
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
 	public Commit createCommit(CommitDto commitDto, String requestBy) throws Exception {
 
 		Commit commit = new Commit();
@@ -149,11 +184,11 @@ public class UprtclService {
 	
 	
 	public ExternalLink getLocalLink(String elementId) {
-		return new ExternalLink(NetworkId.HTTP + "://" + UPRTCL_ENPOINT + "/" + elementId);
+		return new ExternalLink(NetworkId.http + "://" + UPRTCL_ENPOINT + "/" + elementId);
 	}
 	
 	public Boolean isLocalLink(ExternalLink link) {
-		return (link.getNetwork() == NetworkId.HTTP) && (link.getNetworkAddress() == UPRTCL_ENPOINT);
+		return (link.getNetwork() == NetworkId.http) && (link.getNetworkAddress() == UPRTCL_ENPOINT);
 	}
 
 }

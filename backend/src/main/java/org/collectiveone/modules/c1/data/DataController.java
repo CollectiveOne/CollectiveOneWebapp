@@ -1,10 +1,11 @@
 package org.collectiveone.modules.c1.data;
 
+import java.util.List;
+
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.c1.data.dtos.DataDto;
-import org.collectiveone.modules.uprcl.UprtclService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,20 +20,17 @@ public class DataController extends BaseController {
 	@Autowired
 	private DataService dataService;
 	
-	@Autowired
-	private UprtclService uprtclService;
-	
 	
 	@RequestMapping(path = "/data", method = RequestMethod.POST)
 	public PostResult createContext(
-			@RequestBody DataDto dataDto) throws Exception {
+			@RequestBody List<DataDto> dataDtos) throws Exception {
 		
-		String dataId = dataService.createData(dataDto).getId(); 
+		List<String> dataLinks = dataService.createDatas(dataDtos); 
 		
 		return new PostResult(
 				"success", 
 				"contex created",
-				uprtclService.getLocalLink(dataId).toString());
+				dataLinks);
 	}
 	
 	@RequestMapping(path = "/data/{dataId}", method = RequestMethod.GET)

@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -155,8 +156,8 @@ public class TestContextController extends AbstractTest {
         // clean up after each test method
     }
     
-    private String createData(DataDto dataDto, String auth) throws Exception {
-    	String json = gson.toJson(dataDto);
+    private List<String> createData(DataDto dataDto, String auth) throws Exception {
+    	String json = gson.toJson(Arrays.asList(dataDto));
     	MvcResult result = 
     		this.mockMvc
 	    	.perform(post("/1/data")
@@ -173,11 +174,11 @@ public class TestContextController extends AbstractTest {
         assertEquals("error creating context: " + postResult.getMessage(),
         		"success", postResult.getResult());
         
-        return postResult.getElementId();        
+        return postResult.getElementIds();        
     }
     
-    private String createCommit(CommitDto commitDto, String auth) throws Exception {
-    	String json = gson.toJson(commitDto);
+    private List<String> createCommit(CommitDto commitDto, String auth) throws Exception {
+    	String json = gson.toJson(Arrays.asList(commitDto));
     	MvcResult result = 
     		this.mockMvc
 	    	.perform(post("/1/commit")
@@ -194,11 +195,11 @@ public class TestContextController extends AbstractTest {
         assertEquals("error creating context: " + postResult.getMessage(),
         		"success", postResult.getResult());
         
-        return postResult.getElementId();        
+        return postResult.getElementIds();        
     }
     
-    private String createPerspective(PerspectiveDto perspectiveDto, String auth) throws Exception {
-    	String json = gson.toJson(perspectiveDto);
+    private List<String> createPerspective(PerspectiveDto perspectiveDto, String auth) throws Exception {
+    	String json = gson.toJson(Arrays.asList(perspectiveDto));
     	MvcResult result = 
     		this.mockMvc
 	    	.perform(post("/1/persp")
@@ -215,11 +216,11 @@ public class TestContextController extends AbstractTest {
         assertEquals("error creating context: " + postResult.getMessage(),
         		"success", postResult.getResult());
         
-        return postResult.getElementId();        
+        return postResult.getElementIds();        
     }
     
-    private String createContext(ContextDto contextDto, String auth) throws Exception {
-    	String json = gson.toJson(contextDto);
+    private List<String> createContext(ContextDto contextDto, String auth) throws Exception {
+    	String json = gson.toJson(Arrays.asList(contextDto));
     	MvcResult result = 
     		this.mockMvc
 	    	.perform(post("/1/ctx")
@@ -236,7 +237,7 @@ public class TestContextController extends AbstractTest {
         assertEquals("error creating context: " + postResult.getMessage(),
         		"success", postResult.getResult());
         
-        return postResult.getElementId();        
+        return postResult.getElementIds();        
     }
     
     private DataDto newTextData(String text) throws JsonProcessingException {
@@ -261,19 +262,19 @@ public class TestContextController extends AbstractTest {
     	List<String> commitLinks = new ArrayList<String>();
     	List<String> perspectiveLinks = new ArrayList<String>();
     	
-    	contextIds.add(createContext(
+    	contextIds.addAll(createContext(
     			new ContextDto(),
     			authorizationTokenUser1));
     	
-    	dataLinks.add(createData(
+    	dataLinks.addAll(createData(
     			newTextData("My first context"), 
     			authorizationTokenUser1));
     	
-    	commitLinks.add(createCommit(
+    	commitLinks.addAll(createCommit(
     			new CommitDto("message 01", new ArrayList<String>(), dataLinks.get(0)),
     			authorizationTokenUser1));
     	
-    	perspectiveLinks.add(createPerspective(
+    	perspectiveLinks.addAll(createPerspective(
     			new PerspectiveDto(contextIds.get(0), "my perspective", commitLinks.get(0)),
     			authorizationTokenUser1));
     	

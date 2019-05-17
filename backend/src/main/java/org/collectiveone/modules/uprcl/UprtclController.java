@@ -1,5 +1,7 @@
 package org.collectiveone.modules.uprcl;
 
+import java.util.List;
+
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
@@ -22,14 +24,14 @@ public class UprtclController extends BaseController {
 		
 	@RequestMapping(path = "/ctx", method = RequestMethod.POST)
 	public PostResult createContext(
-			@RequestBody ContextDto contextDto) throws Exception {
+			@RequestBody List<ContextDto> contextDtos) throws Exception {
 		
-		String contextId = uprtclService.createContext(contextDto, getLoggedUserId()).getId();
+		List<String> contextIds = uprtclService.createContexts(contextDtos, getLoggedUserId());
 		
 		return new PostResult(
 				"success", 
 				"contex created", 
-				contextId);
+				contextIds);
 	}
 	
 	@RequestMapping(path = "/ctx/{contextId}", method = RequestMethod.GET)
@@ -44,14 +46,14 @@ public class UprtclController extends BaseController {
 	
 	@RequestMapping(path = "/persp", method = RequestMethod.POST)
 	public PostResult createPerspective(
-			@RequestBody PerspectiveDto perspectiveDto) throws Exception {
+			@RequestBody List<PerspectiveDto> perspectiveDtos) throws Exception {
 		
-		String perspectiveId = uprtclService.createPerspective(perspectiveDto, getLoggedUserId()).getId();
+		List<String> perspectivesLinks = uprtclService.createPerspectives(perspectiveDtos, getLoggedUserId());
 		
 		return new PostResult(
 				"success", 
 				"perspective created", 
-				uprtclService.getLocalLink(perspectiveId).toString());
+				perspectivesLinks);
 	}
 	
 	@RequestMapping(path = "/persp/{perspectiveId}", method = RequestMethod.GET)
@@ -66,14 +68,14 @@ public class UprtclController extends BaseController {
 	
 	@RequestMapping(path = "/commit", method = RequestMethod.POST)
 	public PostResult createCommit(
-			@RequestBody CommitDto commitDto) throws Exception {
+			@RequestBody List<CommitDto> commitDtos) throws Exception {
 		
-		String commitId = uprtclService.createCommit(commitDto, getLoggedUserId()).getId();
+		List<String> commitLinks = uprtclService.createCommits(commitDtos, getLoggedUserId());
 		
 		return new PostResult(
 				"success", 
 				"commit created", 
-				uprtclService.getLocalLink(commitId).toString());
+				commitLinks);
 	}
 	
 	@RequestMapping(path = "/commit/{commitId}", method = RequestMethod.GET)

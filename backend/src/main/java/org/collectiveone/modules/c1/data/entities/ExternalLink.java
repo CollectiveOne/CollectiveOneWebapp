@@ -1,12 +1,15 @@
 package org.collectiveone.modules.c1.data.entities;
 
 import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 import org.collectiveone.modules.c1.data.enums.NetworkId;
 
 @Embeddable
 public class ExternalLink {
 	
+	@Enumerated(EnumType.STRING)
 	private NetworkId network;
 	private String networkAddress;
 	private String element;

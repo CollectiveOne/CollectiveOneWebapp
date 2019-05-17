@@ -1,14 +1,17 @@
 package org.collectiveone.common.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PostResult {
 	String result;
 	String message;
-	String elementId;
+	List<String> elementIds = new ArrayList<String>();
 	
-	public PostResult(String _result, String _message, String _elementId) {
+	public PostResult(String _result, String _message, List<String> _elementIds) {
 		result = _result;
 		message = _message;
-		elementId = _elementId;
+		elementIds = _elementIds;
 	}
 
 	public String getResult() {
@@ -27,13 +30,12 @@ public class PostResult {
 		this.message = message;
 	}
 
-	public String getElementId() {
-		return elementId;
+	public List<String> getElementIds() {
+		return elementIds;
 	}
 
-	public void setElementId(String elementId) {
-		this.elementId = elementId;
+	public void setElementIds(List<String> elementIds) {
+		this.elementIds = elementIds;
 	}
-	
 	
 }
