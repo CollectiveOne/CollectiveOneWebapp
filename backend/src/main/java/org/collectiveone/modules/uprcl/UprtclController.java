@@ -1,5 +1,6 @@
 package org.collectiveone.modules.uprcl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.collectiveone.common.BaseController;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -64,6 +66,17 @@ public class UprtclController extends BaseController {
 				"success", 
 				"perspective created", 
 				uprtclService.getPerspectiveDto(perspectiveId));
+	}
+	
+	@RequestMapping(path = "/persp/{perspectiveId}", method = RequestMethod.PUT)
+	public PostResult updatePerspective(
+			@PathVariable("perspectiveId") String perspectiveId, 
+			@RequestParam("headLink") String headLink) throws Exception {
+		
+		return new PostResult(
+				"success", 
+				"perspective created", 
+				Arrays.asList(uprtclService.updatePerspective(perspectiveId, headLink)));
 	}
 	
 	@RequestMapping(path = "/commit", method = RequestMethod.POST)

@@ -17,6 +17,7 @@ import org.collectiveone.modules.c1.data.entities.ExternalLink;
 import org.collectiveone.modules.uprcl.dtos.CommitDto;
 import org.hibernate.annotations.Type;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -49,19 +50,32 @@ public class Commit {
 		super();
 	}
 	
-	public String computeId() {
-		try {
-			MessageDigest digestInstance = MessageDigest.getInstance("SHA-256");
-			ObjectMapper objectMapper = new ObjectMapper();
-			
-			String json = objectMapper.writeValueAsString(this);
-			byte[] hash = digestInstance.digest(json.getBytes());
-			
-			return Base58.encode(hash);	
-		} catch (Exception e) {
-			// TODO
+	public String computeId() throws Exception {
+		
+		MessageDigest digestInstance = MessageDigest.getInstance("SHA-256");
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		String json = objectMapper.writeValueAsString(this);
+		byte[] hash = digestInstance.digest(json.getBytes());
+		
+		return Base58.encode(hash);	
+	
+	}
+	
+	@JsonGetter("parentsLinks")
+	public String parentsLinksJson() throws Exception {
+		List<String> links = new ArrayList<String>();
+		for (ExternalLink parentLink : parentsLinks) {
+			links.add(parentLink.toString());
 		}
-		return null;
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = objectMapper.writeValueAsString(links);
+		return json;
+	}
+	
+	@JsonGetter("dataLink")
+	public String dataLinkJson() {
+		return dataLink != null ? dataLink.toString() : null;
 	}
 	
 	public CommitDto toDto() throws JsonProcessingException {
@@ -93,7 +107,7 @@ public class Commit {
 		return id;
 	}
 
-	public void setId() {
+	public void setId() throws Exception {
 		this.id = this.computeId();
 	}
 

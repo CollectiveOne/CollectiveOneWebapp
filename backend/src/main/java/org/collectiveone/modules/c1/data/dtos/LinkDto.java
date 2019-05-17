@@ -6,6 +6,14 @@ public class LinkDto {
 	private String before;
 	private String after;
 	
+	public LinkDto() {
+		super();
+	}
+	
+	public LinkDto(String link) {
+		super();
+		this.link = link;
+	}
 	public String getLink() {
 		return link;
 	}

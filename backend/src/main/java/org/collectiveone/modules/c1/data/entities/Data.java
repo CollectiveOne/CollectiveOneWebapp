@@ -34,32 +34,27 @@ public class Data {
 	private NodeData nodeData;
 	
 	
-	public String computeId() {
-		try {
-			MessageDigest digestInstance = MessageDigest.getInstance("SHA-256");
-			
-			String json = "";
-					
-			switch (type) {
-				case TEXT:
-					json = textData.toDto().getDataJson();
-				break;
+	public String computeId() throws Exception {
+		
+		MessageDigest digestInstance = MessageDigest.getInstance("SHA-256");
+		
+		String json = "";
 				
-				case NODE:
-					json = nodeData.toDto().getDataJson();
-				break;
-					
-				default: 
-					throw new Exception("unexpected type: " + type.toString());
-			}
+		switch (type) {
+			case TEXT:
+				json = textData.toDto().getDataJson();
+			break;
 			
-			byte[] hash = digestInstance.digest(json.getBytes());
-			return Base58.encode(hash);	
+			case NODE:
+				json = nodeData.toDto().getDataJson();
+			break;
 				
-		} catch (Exception e) {
-			// TODO
+			default: 
+				throw new Exception("unexpected type: " + type.toString());
 		}
-		return null;
+		
+		byte[] hash = digestInstance.digest(json.getBytes());
+		return Base58.encode(hash);	
 	}
 	
 	public DataDto toDto() throws JsonProcessingException {
@@ -102,7 +97,7 @@ public class Data {
 		return id;
 	}
 
-	public void setId() {
+	public void setId() throws Exception {
 		this.id = this.computeId();
 	}
 

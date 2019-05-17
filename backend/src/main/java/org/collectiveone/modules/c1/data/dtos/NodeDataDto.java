@@ -1,5 +1,6 @@
 package org.collectiveone.modules.c1.data.dtos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -10,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class NodeDataDto implements JsonDataIf {
 	
 	private String text;
-	private List<LinkDto> links;
+	private List<LinkDto> links = new ArrayList<LinkDto>();
 
 	public String getText() {
 		return text;

@@ -3,6 +3,7 @@ package org.collectiveone.service;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +15,10 @@ import org.collectiveone.AbstractTest;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.c1.data.dtos.DataDto;
+import org.collectiveone.modules.c1.data.dtos.LinkDto;
+import org.collectiveone.modules.c1.data.dtos.NodeDataDto;
 import org.collectiveone.modules.c1.data.dtos.TextDataDto;
+import org.collectiveone.modules.c1.data.entities.ExternalLink;
 import org.collectiveone.modules.c1.data.enums.DataType;
 import org.collectiveone.modules.uprcl.dtos.CommitDto;
 import org.collectiveone.modules.uprcl.dtos.ContextDto;
@@ -240,14 +244,152 @@ public class TestContextController extends AbstractTest {
         return postResult.getElementIds();        
     }
     
+    private ContextDto getContext(String contextId) throws Exception {
+    	MvcResult result = 
+        		this.mockMvc
+    	    	.perform(get("/1/ctx/" + contextId))
+    	    	.andReturn();
+    	
+		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+	    		200, result.getResponse().getStatus());
+         
+ 		GetResult<ContextDto> getResult = 
+        		gson.fromJson(result.getResponse().getContentAsString(), 
+         				new TypeToken<GetResult<ContextDto>>(){}.getType());
+         
+        assertEquals("error getting perspective: " + getResult.getMessage(),
+        		"success", getResult.getResult());
+         
+        return getResult.getData();
+    }
+    
+    private PerspectiveDto getPerspective(String perspectiveLink) throws Exception {
+    	ExternalLink link = new ExternalLink(perspectiveLink);
+    	
+    	MvcResult result = 
+        		this.mockMvc
+    	    	.perform(get("/1/persp/" + link.getElement()))
+    	    	.andReturn();
+    	
+		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+	    		200, result.getResponse().getStatus());
+         
+ 		GetResult<PerspectiveDto> getResult = 
+        		gson.fromJson(result.getResponse().getContentAsString(), 
+         				new TypeToken<GetResult<PerspectiveDto>>(){}.getType());
+         
+        assertEquals("error getting perspective: " + getResult.getMessage(),
+        		"success", getResult.getResult());
+         
+        return getResult.getData();
+    }
+    
+    private CommitDto getCommit(String commitLink) throws Exception {
+    	ExternalLink link = new ExternalLink(commitLink);
+    	
+    	MvcResult result = 
+        		this.mockMvc
+    	    	.perform(get("/1/commit/" + link.getElement()))
+    	    	.andReturn();
+    	
+		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+	    		200, result.getResponse().getStatus());
+         
+ 		GetResult<CommitDto> getResult = 
+        		gson.fromJson(result.getResponse().getContentAsString(), 
+         				new TypeToken<GetResult<CommitDto>>(){}.getType());
+         
+        assertEquals("error getting commit: " + getResult.getMessage(),
+        		"success", getResult.getResult());
+         
+        return getResult.getData();
+    }
+    
+    private TextDataDto getTextData(String link,  String auth) throws Exception {
+    	ExternalLink extLink = new ExternalLink(link);
+    	
+    	MvcResult result = 
+        		this.mockMvc
+    	    	.perform(get("/1/data/" + extLink.getElement()))
+    	    	.andReturn();
+    	
+		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+	    		200, result.getResponse().getStatus());
+         
+ 		GetResult<DataDto> getResult = 
+        		gson.fromJson(result.getResponse().getContentAsString(), 
+         				new TypeToken<GetResult<DataDto>>(){}.getType());
+         
+        assertEquals("error getting context: " + getResult.getMessage(),
+        		"success", getResult.getResult());
+         
+        return gson.fromJson(getResult.getData().getJsonData(), TextDataDto.class);
+    }
+    
+    private NodeDataDto getNodeData(String link) throws Exception {
+    	ExternalLink extLink = new ExternalLink(link);
+    	
+    	MvcResult result = 
+        		this.mockMvc
+    	    	.perform(get("/1/data/" + extLink.getElement()))
+    	    	.andReturn();
+    	
+		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+	    		200, result.getResponse().getStatus());
+         
+ 		GetResult<DataDto> getResult = 
+        		gson.fromJson(result.getResponse().getContentAsString(), 
+         				new TypeToken<GetResult<DataDto>>(){}.getType());
+         
+        assertEquals("error getting context: " + getResult.getMessage(),
+        		"success", getResult.getResult());
+         
+        return gson.fromJson(getResult.getData().getJsonData(), NodeDataDto.class);
+    }
+    
+    
+    private String commitToPerspective(String perspectiveLink, String commitLink, String auth) throws Exception {
+    	ExternalLink link = new ExternalLink(perspectiveLink);
+    	
+    	MvcResult result = 
+    		this.mockMvc
+	    	.perform(put("/1/persp/" + link.getElement())
+	    	.param("headLink", commitLink)
+	    	.header("Authorization", "Bearer " + auth))
+	    	.andReturn();
+    	
+    	assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+        
+        PostResult postResult = gson.fromJson(result.getResponse().getContentAsString(), PostResult.class); 
+        
+        assertEquals("error creating context: " + postResult.getMessage(),
+        		"success", postResult.getResult());
+        
+        return postResult.getElementIds().get(0);        
+    }
+    
     private DataDto newTextData(String text) throws JsonProcessingException {
     	DataDto data = new DataDto();
+    	data.setType(DataType.TEXT);
     	
     	TextDataDto textContent = new TextDataDto();
     	textContent.setText(text);
 		
-    	data.setType(DataType.TEXT);
     	data.setJsonData(textContent.getDataJson());
+    	
+    	return data;    	
+    }
+    
+    private DataDto newNodeData(String text, List<LinkDto> links) throws JsonProcessingException {
+    	DataDto data = new DataDto();
+    	data.setType(DataType.NODE);
+    	
+    	NodeDataDto nodeContent = new NodeDataDto();
+    	nodeContent.setText(text);
+    	nodeContent.setLinks(links);
+		
+    	data.setJsonData(nodeContent.getDataJson());
     	
     	return data;    	
     }
@@ -262,6 +404,8 @@ public class TestContextController extends AbstractTest {
     	List<String> commitLinks = new ArrayList<String>();
     	List<String> perspectiveLinks = new ArrayList<String>();
     	
+    	
+    	/* creates a context and fill it with one perspective/commit/data triplet */
     	contextIds.addAll(createContext(
     			new ContextDto(),
     			authorizationTokenUser1));
@@ -277,6 +421,31 @@ public class TestContextController extends AbstractTest {
     	perspectiveLinks.addAll(createPerspective(
     			new PerspectiveDto(contextIds.get(0), "my perspective", commitLinks.get(0)),
     			authorizationTokenUser1));
+    	
+    	
+    	/* add the just created context (perspective) as subcontext of user 1 root */
+    	dataLinks.addAll(createData(
+    			newNodeData(
+    					getTextData(dataLinks.get(0), authorizationTokenUser1).getText(), 
+    					Arrays.asList(new LinkDto(perspectiveLinks.get(0)))), 
+    			authorizationTokenUser1));
+    	
+    	commitLinks.addAll(createCommit(
+    			new CommitDto("added subcontext", Arrays.asList(commitLinks.get(0)), dataLinks.get(1)),
+    			authorizationTokenUser1));
+    	
+    	commitToPerspective(user1.getRootPerspectiveLink(), commitLinks.get(1), authorizationTokenUser1);
+    	
+    	/* get root perspective */
+    	PerspectiveDto perspective = getPerspective(user1.getRootPerspectiveLink());
+    	CommitDto commit = getCommit(perspective.getHeadLink());
+    	NodeDataDto data = getNodeData(commit.getDataLink());
+    	
+    	assertEquals("unexpected number of subperspectives", 
+    			perspectiveLinks.size(), 1);
+    	
+    	assertEquals("unexpected subperspective id", 
+    			perspectiveLinks.get(0), data.getLinks().get(0).getLink());
     	
 
     }

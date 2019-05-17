@@ -98,8 +98,8 @@ public class DataService {
 				Link link = new Link();
 				
 				link.setLink(new ExternalLink(linkDto.getLink()));
-				link.setBefore(new ExternalLink(linkDto.getBefore()));
-				link.setAfter(new ExternalLink(linkDto.getAfter()));
+				link.setBefore(linkDto.getBefore() != null ? new ExternalLink(linkDto.getBefore()) : null);
+				link.setAfter(linkDto.getAfter() != null ? new ExternalLink(linkDto.getAfter()) : null);
 				
 				nodeData.getLinks().add(link);
 			}

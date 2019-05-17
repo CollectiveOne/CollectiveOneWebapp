@@ -35,11 +35,11 @@ public class DataController extends BaseController {
 	
 	@RequestMapping(path = "/data/{dataId}", method = RequestMethod.GET)
 	public GetResult<DataDto> getData(
-			@PathVariable("contextId") String contextId) throws Exception {
+			@PathVariable("dataId") String dataId) throws Exception {
 		
 		return new GetResult<DataDto>(
 				"success", 
 				"contex created", 
-				dataService.getDataDto(contextId));
+				dataService.getDataDto(dataId));
 	}	
 }	

@@ -63,10 +63,6 @@ public class Perspective {
 	}
 	
 	public PerspectiveDto toDto() throws JsonProcessingException {
-		return this.toDto(0);
-	}
-	
-	public PerspectiveDto toDto(Integer levels) throws JsonProcessingException {
 		PerspectiveDto dto = new PerspectiveDto();
 		
 		dto.setId(id);

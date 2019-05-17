@@ -47,8 +47,8 @@ public class NodeData {
 			LinkDto linkDto = new LinkDto();
 			
 			linkDto.setLink(link.getLink().toString());
-			linkDto.setAfter(link.getAfter().toString());
-			linkDto.setBefore(link.getBefore().toString());
+			linkDto.setAfter(link.getAfter() != null ? link.getAfter().toString() : null);
+			linkDto.setBefore(link.getBefore() != null ? link.getBefore().toString() : null);
 			
 			dto.getLinks().add(linkDto);	
 		}

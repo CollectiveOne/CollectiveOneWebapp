@@ -71,8 +71,7 @@ public class AppUserService {
 		AppUserDto appUserDto = user.toDto();
 		
 		/* inject root perspective */
-		appUserDto.setRootPerspective(
-				getDefaultRootPerspective(user.getDid()).toDto());
+		appUserDto.setRootPerspectiveLink(getDefaultRootPerspectiveLink(user.getDid()));
 		
 		return appUserDto;
 	}
@@ -143,9 +142,8 @@ public class AppUserService {
 	
 	
 	@Transactional(rollbackOn = Exception.class)
-	public Perspective getDefaultRootPerspective(String userDid) throws Exception {
-		return perspectiveRepository.findOne(
-				getDefaultRootPerspectiveId(userDid));
+	public String getDefaultRootPerspectiveLink(String userDid) throws Exception {
+		return uprtclService.getLocalLink(getDefaultRootPerspectiveId(userDid)).toString();
 	}
 	
 	@Transactional(rollbackOn = Exception.class)

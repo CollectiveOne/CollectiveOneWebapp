@@ -121,6 +121,13 @@ public class UprtclService {
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
+	public String updatePerspective(String perspectiveId, String headLink) throws Exception {
+		Perspective perspective = perspectiveRepository.findOne(perspectiveId);
+		perspective.setHeadLink(new ExternalLink(headLink));
+		return getLocalLink(perspectiveRepository.save(perspective).getId()).toString();
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
 	public Perspective createPerspective(PerspectiveDto perspectiveDto, String requestBy) throws Exception {
 		
 		Perspective perspective = new Perspective();
