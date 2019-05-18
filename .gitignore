@@ -2,3 +2,14 @@
 /npm-debug.log
 /compileAndCopy.sh
 /mvnw
+backend/.vscode/launch.json
+.settings/org.eclipse.core.resources.prefs
+.settings/org.eclipse.m2e.core.prefs
+backend/.settings/org.eclipse.jdt.core.prefs
+backend/.settings/org.eclipse.jdt.core.prefs
+frontend/.project
+frontend/.settings/org.eclipse.core.resources.prefs
+frontend/.settings/org.eclipse.jdt.apt.core.prefs
+frontend/.settings/org.eclipse.jdt.core.prefs
+frontend/.settings/org.eclipse.m2e.core.prefs
+frontend/.classpath

@@ -18,7 +18,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Entity
 @Table(name = "data")
-public class Data {
+public class Data implements DataIf {
 	
 	@Id
 	@Column(name = "id", updatable = false, nullable = false, unique = true)

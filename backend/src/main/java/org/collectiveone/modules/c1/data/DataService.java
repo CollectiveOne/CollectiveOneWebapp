@@ -6,10 +6,12 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.collectiveone.modules.c1.data.dtos.DataDto;
+import org.collectiveone.modules.c1.data.dtos.DraftDto;
 import org.collectiveone.modules.c1.data.dtos.LinkDto;
 import org.collectiveone.modules.c1.data.dtos.NodeDataDto;
 import org.collectiveone.modules.c1.data.dtos.TextDataDto;
 import org.collectiveone.modules.c1.data.entities.Data;
+import org.collectiveone.modules.c1.data.entities.DataIf;
 import org.collectiveone.modules.c1.data.entities.Draft;
 import org.collectiveone.modules.c1.data.entities.ExternalLink;
 import org.collectiveone.modules.c1.data.entities.Link;
@@ -34,10 +36,10 @@ public class DataService {
 	private UprtclService uprtclService;
 	
 	@Autowired
-	private AppUserRepositoryIf appUserRepository;
+	private DataRepositoryIf dataRepository;
 	
 	@Autowired
-	private DataRepositoryIf dataRepository;
+	private DraftRepositoryIf draftRepository;
 	
 	@Autowired
 	private TextDataRepositoryIf textDataRepository;
@@ -45,13 +47,18 @@ public class DataService {
 	@Autowired
 	private NodeDataRepositoryIf nodeDataRepository;
 	
-	
 	@Autowired
-	private DraftRepositoryIf workingCommitRepository;
+	private AppUserRepositoryIf appUserRepository;
+	
 	
 	@Transactional(rollbackOn = Exception.class)
 	public DataDto getDataDto(String dataId) throws Exception {
 		return dataRepository.findOne(dataId).toDto();
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
+	public DataDto getDraftDto(String elementId, String requestBy) throws Exception {
+		return draftRepository.findByUserIdAndElementId(requestBy, elementId).toDataDto();
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
@@ -64,11 +71,39 @@ public class DataService {
 		
 		return datasIds;
 	}
-
+	
+	@Transactional(rollbackOn = Exception.class)
+	public void createDrafts(List<DraftDto> draftDtos, String requestBy) throws Exception {
+		for (DraftDto draftDto : draftDtos) {
+			createDraft(draftDto, requestBy);
+		}
+	}
+	
+	
 	@Transactional(rollbackOn = Exception.class)
 	public Data createData(DataDto dataDto) throws Exception {	
 		
-		Data data = new Data();
+		Data data= new Data();
+		setCustomData(data, dataDto);
+		data.setId();
+		
+		return dataRepository.save(data);
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
+	public Draft createDraft(DraftDto draftDto, String requestBy) throws Exception {	
+		
+		Draft draft = new Draft();
+		
+		draft.setUser(appUserRepository.getOne(requestBy));
+		draft.setElementId(draftDto.getElementId());
+		
+		setCustomData(draft, draftDto.getData());
+		
+		return draftRepository.save(draft);
+	}
+	
+	private void setCustomData(DataIf data, DataDto dataDto) throws Exception {
 		
 		switch (dataDto.getType()) {
 		
@@ -114,26 +149,6 @@ public class DataService {
 			throw new Exception();
 			
 		}
-		
-		data.setId();
-		return dataRepository.save(data);
-	}
-	
-	@Transactional(rollbackOn = Exception.class)
-	public Draft getOrCreateDraft(String requestBy, String elementId) throws Exception {
-		Draft draft = workingCommitRepository.findByUserIdAndElementId(requestBy, elementId);
-		
-		if (draft != null) {
-			return draft;
-		}
-		
-		draft = new Draft();
-		
-		draft.setUser(appUserRepository.getOne(requestBy));
-		draft.setElementId(elementId);
-		draft.setType(DataType.TEXT);
-		
-		return workingCommitRepository.save(draft);
 	}
 	
 }

@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.c1.data.dtos.DataDto;
 import org.collectiveone.modules.c1.data.enums.DataType;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
@@ -18,7 +19,7 @@ import org.hibernate.annotations.Parameter;
 
 @Entity
 @Table(name = "drafts")
-public class Draft {
+public class Draft implements DataIf {
 	
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -41,6 +42,26 @@ public class Draft {
 	@ManyToOne
 	private NodeData nodeData;
 	
+	public DataDto toDataDto() throws Exception {
+			
+		DataDto dto = new DataDto();
+		
+		switch (type) {
+		
+		case TEXT:
+			dto.setJsonData(textData.toDto().getDataJson());
+		break;
+		
+		case NODE:
+			dto.setJsonData(nodeData.toDto().getDataJson());
+		break;
+		
+		}
+		
+		dto.setType(type);
+		
+		return dto;
+	}
 
 	public UUID getId() {
 		return id;
