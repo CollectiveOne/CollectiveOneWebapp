@@ -1,6 +1,5 @@
 package org.collectiveone.modules.uprcl.entities;
 
-import java.security.MessageDigest;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -8,24 +7,25 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.bitcoinj.core.Base58;
+import org.collectiveone.modules.ipld.IpldService;
 import org.collectiveone.modules.uprcl.dtos.ContextDto;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
 @Table(name = "contexts")
-@JsonPropertyOrder({ "creator", "timestamp", "nonce" })
+@JsonPropertyOrder({ "creatorId", "timestamp", "nonce" })
 public class Context {
 	
 	@Id
 	@Column(name = "id", updatable = false, nullable = false, unique = true)
 	@JsonIgnore
-	private String id;
+	private byte[] id;
 	
-	private String creator;
+	private String creatorId;
 	
 	private Timestamp timestamp;
 	
@@ -35,26 +35,27 @@ public class Context {
 		super();
 	}
 	
+	@JsonGetter("timestamp")
+	public String timestampJson() {
+		return timestamp != null ? String.valueOf(timestamp.getTime()) : "0"; 
+	}
+	
+	@JsonGetter("nonce")
+	public String nonceJson() {
+		return nonce != null ? nonce.toString() : "0"; 
+	}
+	
 	public Context(String creator, Timestamp timestamp, Long nonce) {
 		super();
-		this.creator = creator;
+		this.creatorId = creator;
 		this.timestamp = timestamp;
 		this.nonce = nonce;
 	}
 	
-	public String computeId() {
-		try {
-			MessageDigest digestInstance = MessageDigest.getInstance("SHA-256");
-			ObjectMapper objectMapper = new ObjectMapper();
-			
-			String json = objectMapper.writeValueAsString(this);
-			byte[] hash = digestInstance.digest(json.getBytes());
-			
-			return Base58.encode(hash);	
-		} catch (Exception e) {
-			// TODO
-		}
-		return null;
+	public byte[] computeId(io.ipfs.multihash.Multihash.Type t) throws Exception {
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = objectMapper.writeValueAsString(this);
+		return IpldService.hash(json, t);
 	}
 
 	@Override
@@ -85,8 +86,8 @@ public class Context {
 	public ContextDto toDto() {
 		ContextDto dto = new ContextDto();
 		
-		dto.setId(id);
-		dto.setCreator(creator);
+		dto.setId(IpldService.decode(id));
+		dto.setCreatorId(creatorId);
 		dto.setNonce(nonce);
 		dto.setTimestamp(timestamp.getTime());
 		
@@ -96,24 +97,24 @@ public class Context {
 	
 	@Override
 	public String toString() {
-		return "     id: " + id + "\n" +
-			   "creator: " + creator;
+		return "     id: " + IpldService.decode(id) + "\n" +
+			   "creator: " + creatorId;
 	}
 	
-	public String getId() {
+	public byte[] getId() {
 		return id;
 	}
 
-	public void setId() {
-		this.id = this.computeId();
+	public void setId(io.ipfs.multihash.Multihash.Type t) throws Exception {
+		this.id = this.computeId(t);
 	}
 
-	public String getCreator() {
-		return creator;
+	public String getCreatorId() {
+		return creatorId;
 	}
 
-	public void setCreator(String creator) {
-		this.creator = creator;
+	public void setCreatorId(String creatorId) {
+		this.creatorId = creatorId;
 	}
 
 	public Timestamp getTimestamp() {

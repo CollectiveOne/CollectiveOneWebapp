@@ -31,7 +31,7 @@ public class Draft implements DataIf {
 	@ManyToOne
 	private AppUser user;
 	
-	private String elementId;
+	private byte[] elementId;
 	
 	@Enumerated(EnumType.STRING)
 	private DataType type;
@@ -79,11 +79,11 @@ public class Draft implements DataIf {
 		this.user = user;
 	}
 
-	public String getElementId() {
+	public byte[] getElementId() {
 		return elementId;
 	}
 
-	public void setElementId(String elementId) {
+	public void setElementId(byte[] elementId) {
 		this.elementId = elementId;
 	}
 

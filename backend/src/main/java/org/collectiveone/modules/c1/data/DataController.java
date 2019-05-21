@@ -1,12 +1,14 @@
 package org.collectiveone.modules.c1.data;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.c1.data.dtos.DataDto;
 import org.collectiveone.modules.c1.data.dtos.DraftDto;
+import org.collectiveone.modules.ipld.IpldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,15 +26,17 @@ public class DataController extends BaseController {
 	
 	
 	@RequestMapping(path = "/data", method = RequestMethod.POST)
-	public PostResult createContext(
+	public PostResult createData(
 			@RequestBody List<DataDto> dataDtos) throws Exception {
 		
-		List<String> dataLinks = dataService.createDatas(dataDtos); 
+		List<byte[]> dataIds = dataService.createDatas(dataDtos); 
 		
 		return new PostResult(
 				"success", 
 				"contex created",
-				dataLinks);
+				dataIds
+					.stream().map(id -> IpldService.decode(id))
+					.collect(Collectors.toList()));
 	}
 	
 	@RequestMapping(path = "/data/{dataId}", method = RequestMethod.GET)
@@ -42,7 +46,7 @@ public class DataController extends BaseController {
 		return new GetResult<DataDto>(
 				"success", 
 				"contex created", 
-				dataService.getDataDto(dataId));
+				dataService.getDataDto(IpldService.encode(dataId).toBytes()));
 	}	
 	
 	@RequestMapping(path = "/draft", method = RequestMethod.PUT)
@@ -64,6 +68,6 @@ public class DataController extends BaseController {
 		return new GetResult<DataDto>(
 				"success", 
 				"contex created", 
-				dataService.getDraftDto(elementId, getLoggedUserId()));
+				dataService.getDraftDto(IpldService.encode(elementId).toBytes(), getLoggedUserId()));
 	}	
 }	

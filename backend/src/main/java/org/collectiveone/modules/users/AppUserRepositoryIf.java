@@ -13,7 +13,7 @@ public interface AppUserRepositoryIf extends JpaRepository<AppUser, String> {
 	
 	@Query("SELECT user.context.id FROM AppUser user "
 			+ "WHERE user.did = :userDid")
-	public String getContextId(
+	public byte[] getContextId(
 			@Param("userDid") String userDid);
 	
 }

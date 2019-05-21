@@ -1,6 +1,5 @@
 package org.collectiveone.modules.uprcl.entities;
 
-import java.security.MessageDigest;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
-import org.bitcoinj.core.Base58;
-import org.collectiveone.modules.c1.data.entities.ExternalLink;
+import org.collectiveone.modules.ipld.IpldService;
 import org.collectiveone.modules.uprcl.dtos.CommitDto;
 import org.hibernate.annotations.Type;
 
@@ -25,13 +23,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
 @Table(name = "commits")
-@JsonPropertyOrder({ "message", "creator", "parents", "dataLink" })
+@JsonPropertyOrder({ "creatorId", "timestamp", "message", "parentsIds", "dataId" })
 public class Commit {
 	
 	@Id
 	@Column(name = "id", updatable = false, nullable = false, unique = true)
 	@JsonIgnore
-	private String id;
+	private byte[] id;
 	
 	private String creatorId;
 	
@@ -42,56 +40,55 @@ public class Commit {
 	private String message;
 	
 	@ElementCollection
-	private List<ExternalLink> parentsLinks = new ArrayList<ExternalLink>();
+	private List<byte[]> parentsIds = new ArrayList<byte[]>();
 	
-	private ExternalLink dataLink;
+	private byte[] dataId;
 		
 	public Commit() {
 		super();
 	}
 	
-	public String computeId() throws Exception {
-		
-		MessageDigest digestInstance = MessageDigest.getInstance("SHA-256");
+	public byte[] computeId(io.ipfs.multihash.Multihash.Type t) throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
-		
 		String json = objectMapper.writeValueAsString(this);
-		byte[] hash = digestInstance.digest(json.getBytes());
-		
-		return Base58.encode(hash);	
-	
+		return IpldService.hash(json, t);	
 	}
 	
-	@JsonGetter("parentsLinks")
-	public String parentsLinksJson() throws Exception {
-		List<String> links = new ArrayList<String>();
-		for (ExternalLink parentLink : parentsLinks) {
-			links.add(parentLink.toString());
+	@JsonGetter("parentsIds")
+	public String parentsIdsJson() throws Exception {
+		List<String> ids = new ArrayList<String>();
+		for (byte[] parentId : parentsIds) {
+			ids.add(IpldService.decode(parentId));
 		}
 		ObjectMapper objectMapper = new ObjectMapper();
-		String json = objectMapper.writeValueAsString(links);
+		String json = objectMapper.writeValueAsString(ids);
 		return json;
 	}
 	
-	@JsonGetter("dataLink")
-	public String dataLinkJson() {
-		return dataLink != null ? dataLink.toString() : null;
+	@JsonGetter("dataId")
+	public String dataIdJson() {
+		return IpldService.decode(dataId);
+	}
+	
+	@JsonGetter("timestamp")
+	public String timestampJson() {
+		return timestamp != null ? String.valueOf(timestamp.getTime()) : "0"; 
 	}
 	
 	public CommitDto toDto() throws JsonProcessingException {
 		
 		CommitDto dto = new CommitDto();
 		
-		dto.setId(id);
+		dto.setId(IpldService.decode(id));
 		dto.setCreatorId(creatorId);
 		dto.setTimestamp(timestamp.getTime());
 		dto.setMessage(message);
 		
-		for (ExternalLink parent : parentsLinks) {
-			dto.getParentsLinks().add(parent.toString());
+		for (byte[] parent : parentsIds) {
+			dto.getParentsIds().add(IpldService.decode(parent));
 		}
 		
-		dto.setDataLink(dataLink.toString());
+		dto.setDataId(IpldService.decode(dataId));
 		
 		return dto;
 	}
@@ -100,15 +97,15 @@ public class Commit {
 	public String toString() {
 		return "       id: " + id + "\n" + 
 			   "creatorId: " + creatorId + "\n" +
-			   " dataLink: " + dataLink.toString();
+			   " dataLink: " + IpldService.decode(dataId);
 	}
 
-	public String getId() {
+	public byte[] getId() {
 		return id;
 	}
 
-	public void setId() throws Exception {
-		this.id = this.computeId();
+	public void setId(io.ipfs.multihash.Multihash.Type t) throws Exception {
+		this.id = this.computeId(t);
 	}
 
 	public String getCreatorId() {
@@ -134,21 +131,21 @@ public class Commit {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
-	public List<ExternalLink> getParentsLinks() {
-		return parentsLinks;
+
+	public List<byte[]> getParentsIds() {
+		return parentsIds;
 	}
 
-	public void setParentsLinks(List<ExternalLink> parentsLinks) {
-		this.parentsLinks = parentsLinks;
+	public void setParentsIds(List<byte[]> parentsIds) {
+		this.parentsIds = parentsIds;
 	}
 
-	public ExternalLink getDataLink() {
-		return dataLink;
+	public byte[] getDataId() {
+		return dataId;
 	}
 
-	public void setDataLink(ExternalLink dataLink) {
-		this.dataLink = dataLink;
+	public void setDataId(byte[] dataId) {
+		this.dataId = dataId;
 	}
 	
 }

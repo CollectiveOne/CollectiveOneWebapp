@@ -9,11 +9,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface DefaultPerspectiveRepositoryIf extends JpaRepository<DefaultPerspective, UUID> {
 	
-	@Query("SELECT dft FROM DefaultPerspective dft "
+	@Query("SELECT dft.perspective.id FROM DefaultPerspective dft "
 			+ "WHERE dft.context.id = :contextId "
 			+ "AND dft.user.did = :userDid")
-	public String getDefaultOfUser(
+	public byte[] getDefaultOfUser(
 			@Param("userDid") String userDid,
-			@Param("contextId") String contextId);
+			@Param("contextId") byte[] contextId);
 	
 }

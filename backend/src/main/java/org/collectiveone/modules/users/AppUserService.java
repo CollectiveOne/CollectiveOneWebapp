@@ -4,7 +4,6 @@ import javax.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.ECKey;
 import org.collectiveone.modules.c1.data.entities.DefaultPerspective;
 import org.collectiveone.modules.c1.data.repositories.DefaultPerspectiveRepositoryIf;
@@ -24,6 +23,8 @@ import com.auth0.client.mgmt.ManagementAPI;
 import com.auth0.exception.APIException;
 import com.auth0.exception.Auth0Exception;
 import com.auth0.json.mgmt.users.User;
+
+import io.ipfs.multibase.Base58;
 
 @Service
 public class AppUserService {
@@ -147,14 +148,14 @@ public class AppUserService {
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public String getDefaultRootPerspectiveId(String userDid) throws Exception {
+	public byte[] getDefaultRootPerspectiveId(String userDid) throws Exception {
 		return getDefaultPerspectiveId(userDid, appUserRepository.getContextId(userDid));
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public String getDefaultPerspectiveId(String userDid, String contextId) throws Exception {
+	public byte[] getDefaultPerspectiveId(String userDid, byte[] contextId) throws Exception {
 		
-		String perspectiveId = defaultPerspectiveRepository.getDefaultOfUser(userDid, contextId);
+		byte[] perspectiveId = defaultPerspectiveRepository.getDefaultOfUser(userDid, contextId);
 		
 		if (perspectiveId != null) {
 			return perspectiveId;
@@ -167,11 +168,11 @@ public class AppUserService {
 		Context context = contextRepository.getOne(contextId);
 		defaultPerspective.setContext(context);
 		
-		String referenceId = null;
+		byte[] referenceId = null;
 		
 		/* use the default perspective of the context creator as first candidate */
 		if (referenceId == null) {
-			referenceId = defaultPerspectiveRepository.getDefaultOfUser(context.getCreator(), context.getId());	
+			referenceId = defaultPerspectiveRepository.getDefaultOfUser(context.getCreatorId(), context.getId());	
 		}
 		
 		/* use the oldest perspective as second candidate */

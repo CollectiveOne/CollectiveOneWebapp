@@ -2,10 +2,13 @@ package org.collectiveone.modules.uprcl;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.bitcoinj.core.Base58;
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.ipld.IpldService;
 import org.collectiveone.modules.uprcl.dtos.CommitDto;
 import org.collectiveone.modules.uprcl.dtos.ContextDto;
 import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
@@ -23,27 +26,49 @@ public class UprtclController extends BaseController {
 	
 	@Autowired
 	private UprtclService uprtclService;
-		
+	
 	@RequestMapping(path = "/ctx", method = RequestMethod.POST)
 	public PostResult createContext(
 			@RequestBody List<ContextDto> contextDtos) throws Exception {
 		
-		List<String> contextIds = uprtclService.createContexts(contextDtos, getLoggedUserId());
+		List<byte[]> contextIds = uprtclService.createContexts(contextDtos, getLoggedUserId());
 		
 		return new PostResult(
 				"success", 
 				"contex created", 
-				contextIds);
+				contextIds
+					.stream().map(id -> IpldService.decode(id))
+					.collect(Collectors.toList()));
 	}
 	
 	@RequestMapping(path = "/ctx/{contextId}", method = RequestMethod.GET)
 	public GetResult<ContextDto> getContext(
-			@PathVariable("contextId") String contextId) throws Exception {
+			@PathVariable("contextId") String contextCid) throws Exception {
 		
 		return new GetResult<ContextDto>(
 				"success", 
 				"contex created", 
-				uprtclService.getContextDto(contextId));
+				uprtclService.getContextDto(IpldService.encode(contextCid).toBytes()));
+	}
+	
+	@RequestMapping(path = "/ctxId", method = RequestMethod.PUT)
+	public GetResult<String> getContext(
+			@RequestBody ContextDto contextDto) throws Exception {
+		
+		return new GetResult<String>(
+				"success", 
+				"contex created", 
+				Base58.encode(uprtclService.getContextId(contextDto)));
+	}
+	
+	@RequestMapping(path = "/ctxPersps", method = RequestMethod.GET)
+	public GetResult<List<PerspectiveDto>> getContextPerspectives(
+			@PathVariable("contextId") String contextId) throws Exception {
+		
+		return new GetResult<List<PerspectiveDto>>(
+				"success", 
+				"contex created", 
+				uprtclService.getContextPerspectives(contextId));
 	}
 	
 	@RequestMapping(path = "/persp", method = RequestMethod.POST)
@@ -65,30 +90,33 @@ public class UprtclController extends BaseController {
 		return new GetResult<PerspectiveDto>(
 				"success", 
 				"perspective created", 
-				uprtclService.getPerspectiveDto(perspectiveId));
+				uprtclService.getPerspectiveDto(IpldService.encode(perspectiveId).toBytes()));
 	}
 	
 	@RequestMapping(path = "/persp/{perspectiveId}", method = RequestMethod.PUT)
 	public PostResult updatePerspective(
 			@PathVariable("perspectiveId") String perspectiveId, 
-			@RequestParam("headLink") String headLink) throws Exception {
+			@RequestParam("headId") String headId) throws Exception {
 		
 		return new PostResult(
 				"success", 
 				"perspective created", 
-				Arrays.asList(uprtclService.updatePerspective(perspectiveId, headLink)));
+				Arrays.asList(uprtclService.updatePerspective(
+						IpldService.encode(perspectiveId).toBytes(), 
+						IpldService.encode(headId).toBytes())));
 	}
+	
 	
 	@RequestMapping(path = "/commit", method = RequestMethod.POST)
 	public PostResult createCommit(
 			@RequestBody List<CommitDto> commitDtos) throws Exception {
 		
-		List<String> commitLinks = uprtclService.createCommits(commitDtos, getLoggedUserId());
+		List<String> commitIds = uprtclService.createCommits(commitDtos, getLoggedUserId());
 		
 		return new PostResult(
 				"success", 
 				"commit created", 
-				commitLinks);
+				commitIds);
 	}
 	
 	@RequestMapping(path = "/commit/{commitId}", method = RequestMethod.GET)
@@ -98,7 +126,7 @@ public class UprtclController extends BaseController {
 		return new GetResult<CommitDto>(
 				"success", 
 				"commit created", 
-				uprtclService.getCommitDto(commitId));
+				uprtclService.getCommitDto(IpldService.encode(commitId).toBytes()));
 	}
 	
 }	

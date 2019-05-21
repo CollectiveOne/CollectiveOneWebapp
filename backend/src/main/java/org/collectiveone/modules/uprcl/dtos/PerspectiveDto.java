@@ -7,17 +7,17 @@ public class PerspectiveDto {
 	private Long timestamp;
 	private String contextId;
 	private String name;
-	private String headLink;
+	private String headId;
 	
 	public PerspectiveDto() {
 		super();
 	}
-	public PerspectiveDto(String contextId, String name, String headLink) {
+	public PerspectiveDto(String contextId, String name, String headId) {
 		super();
 		this.timestamp = System.currentTimeMillis();
 		this.contextId = contextId;
 		this.name = name;
-		this.headLink = headLink;
+		this.headId = headId;
 	}
 	public String getId() {
 		return id;
@@ -49,11 +49,11 @@ public class PerspectiveDto {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getHeadLink() {
-		return headLink;
+	public String getHeadId() {
+		return headId;
 	}
-	public void setHeadLink(String headLink) {
-		this.headLink = headLink;
+	public void setHeadId(String headId) {
+		this.headId = headId;
 	}
 	
 }

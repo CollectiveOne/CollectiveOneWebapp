@@ -22,18 +22,21 @@ import org.collectiveone.modules.c1.data.repositories.DataRepositoryIf;
 import org.collectiveone.modules.c1.data.repositories.DraftRepositoryIf;
 import org.collectiveone.modules.c1.data.repositories.NodeDataRepositoryIf;
 import org.collectiveone.modules.c1.data.repositories.TextDataRepositoryIf;
-import org.collectiveone.modules.uprcl.UprtclService;
+import org.collectiveone.modules.ipld.IpldService;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.ipfs.multihash.Multihash.Type;
+
 @Service
 public class DataService {
 	
-	@Autowired
-	private UprtclService uprtclService;
+	@Value("${UPRTLC_DFT_MULTIHASH_TYPE}")
+	private Type UPRTCL_DFT_TYPE;
 	
 	@Autowired
 	private DataRepositoryIf dataRepository;
@@ -52,21 +55,21 @@ public class DataService {
 	
 	
 	@Transactional(rollbackOn = Exception.class)
-	public DataDto getDataDto(String dataId) throws Exception {
-		return dataRepository.findOne(dataId).toDto();
+	public DataDto getDataDto(byte[] dataId) throws Exception {
+		return dataRepository.getOne(dataId).toDto();
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public DataDto getDraftDto(String elementId, String requestBy) throws Exception {
+	public DataDto getDraftDto(byte[] elementId, String requestBy) throws Exception {
 		return draftRepository.findByUserIdAndElementId(requestBy, elementId).toDataDto();
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public List<String> createDatas(List<DataDto> dataDtos) throws Exception {
-		List<String> datasIds = new ArrayList<String>();
+	public List<byte[]> createDatas(List<DataDto> dataDtos) throws Exception {
+		List<byte[]> datasIds = new ArrayList<byte[]>();
 		
 		for (DataDto dataDto : dataDtos) {
-			datasIds.add(uprtclService.getLocalLink(createData(dataDto).getId()).toString());
+			datasIds.add(createData(dataDto).getId());
 		}
 		
 		return datasIds;
@@ -85,7 +88,7 @@ public class DataService {
 		
 		Data data= new Data();
 		setCustomData(data, dataDto);
-		data.setId();
+		data.setId(UPRTCL_DFT_TYPE);
 		
 		return dataRepository.save(data);
 	}
@@ -96,7 +99,7 @@ public class DataService {
 		Draft draft = new Draft();
 		
 		draft.setUser(appUserRepository.getOne(requestBy));
-		draft.setElementId(draftDto.getElementId());
+		draft.setElementId(IpldService.encode(draftDto.getElementId()).toBytes());
 		
 		setCustomData(draft, draftDto.getData());
 		

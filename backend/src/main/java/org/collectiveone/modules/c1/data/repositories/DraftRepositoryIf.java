@@ -14,6 +14,6 @@ public interface DraftRepositoryIf extends JpaRepository<Draft, UUID> {
 			+ "AND dft.user.did = :userDid")
 	public Draft findByUserIdAndElementId(
 			@Param("userDid") String userDid, 
-			@Param("elementId") String elementId);
+			@Param("elementId") byte[] elementId);
 	
 }

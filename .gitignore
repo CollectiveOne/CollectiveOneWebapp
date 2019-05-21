@@ -3,6 +3,7 @@
 /compileAndCopy.sh
 /mvnw
 backend/.vscode/launch.json
+backend/dbgui.odb
 .settings/org.eclipse.core.resources.prefs
 .settings/org.eclipse.m2e.core.prefs
 backend/.settings/org.eclipse.jdt.core.prefs

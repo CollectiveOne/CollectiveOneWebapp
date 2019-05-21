@@ -3,11 +3,14 @@ package org.collectiveone.modules.uprcl;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.bitcoinj.core.Base58;
 import org.collectiveone.modules.c1.data.entities.ExternalLink;
 import org.collectiveone.modules.c1.data.enums.NetworkId;
+import org.collectiveone.modules.ipld.IpldService;
 import org.collectiveone.modules.uprcl.dtos.CommitDto;
 import org.collectiveone.modules.uprcl.dtos.ContextDto;
 import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
@@ -21,11 +24,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import io.ipfs.cid.Cid;
+import io.ipfs.multibase.Multibase;
+import io.ipfs.multihash.Multihash.Type;
+
 @Service
 public class UprtclService {
 	
 	@Value("${UPRTLC_ENDPOINT}")
 	private String UPRTCL_ENPOINT;
+	
+	@Value("${UPRTLC_DFT_MULTIHASH_TYPE}")
+	private Type UPRTCL_DFT_TYPE;
 	
 	@Autowired
 	private ContextRepositoryIf contextRepository;
@@ -43,11 +53,11 @@ public class UprtclService {
 		
 		Context context = new Context();
 		
-		context.setCreator(did);
+		context.setCreatorId(did);
 		context.setNonce(0L);
 		context.setTimestamp(new Timestamp(0L));
 		
-		context.setId();
+		context.setId(UPRTCL_DFT_TYPE);
 		context = contextRepository.save(context);
 		
 		/* create one empty perspective */
@@ -57,18 +67,42 @@ public class UprtclService {
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public Context getContext(String contextId) throws Exception {
-		return contextRepository.findOne(contextId);
+	public Context getContext(byte[] contextId) throws Exception {
+		return contextRepository.getOne(contextId);
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public ContextDto getContextDto(String contextId) throws Exception {
-		return contextRepository.findOne(contextId).toDto();
+	public byte[] getContextId(ContextDto contextDto) throws Exception {
+		Context context = new Context();
+		
+		context.setCreatorId(contextDto.getCreatorId());
+		context.setNonce(contextDto.getNonce());
+		context.setTimestamp(new Timestamp(contextDto.getTimestamp()));
+		context.setId(UPRTCL_DFT_TYPE);
+		
+		return context.getId();
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public List<String> createContexts(List<ContextDto> contextDtos, String requestBy) throws Exception {
-		List<String> contextIds = new ArrayList<String>();
+	public List<PerspectiveDto> getContextPerspectives(String contextId) throws Exception {
+		return perspectiveRepository
+				.findByContextId(contextId)
+				.stream()
+				.map(p -> {
+					try { return p.toDto(); } 
+					catch (Exception e) { e.printStackTrace(); }
+					return null;
+				}).collect(Collectors.toList());
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
+	public ContextDto getContextDto(byte[] contextId) throws Exception {
+		return contextRepository.getOne(contextId).toDto();
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
+	public List<byte[]> createContexts(List<ContextDto> contextDtos, String requestBy) throws Exception {
+		List<byte[]> contextIds = new ArrayList<byte[]>();
 		
 		for (ContextDto contextDto : contextDtos) {
 			contextIds.add(createContext(contextDto, requestBy).getId());
@@ -80,31 +114,69 @@ public class UprtclService {
 	@Transactional(rollbackOn = Exception.class)
 	public Context createContext(ContextDto contextDto, String requestBy) throws Exception {
 		
-		Context context = new Context();
+		Boolean clone = false;
+		if (contextDto.getId() != null && contextDto.getCreatorId() != null) {
+			clone = true;
+		}
 		
-		context.setCreator(requestBy);
+		Context context = null;
+		
+		if (clone) {
+			Cid cid = IpldService.encode(contextDto.getId());
+			context = contextRepository.getOne(cid.toBytes());
+		}
+		
+		if (context == null) {
+			context = new Context();
+		}
+		
+		if (clone) {
+			context.setCreatorId(contextDto.getCreatorId());
+			context.setTimestamp(new Timestamp(contextDto.getTimestamp()));
+		} else {
+			context.setCreatorId(requestBy);
+			context.setTimestamp(new Timestamp(
+					contextDto.getTimestamp() != null ? contextDto.getTimestamp() : System.currentTimeMillis()));
+		}
+		
 		context.setNonce(contextDto.getNonce());
-		context.setTimestamp(new Timestamp(
-				contextDto.getTimestamp() != null ? contextDto.getTimestamp() : System.currentTimeMillis()));
 		
-		context.setId();
+		if (clone) {
+			/* Use the same hash type and base encoding to have the same 
+			 * id string */	
+			
+			Cid existingCid = IpldService.encode(contextDto.getId());
+			context.setId(existingCid.getType());
+			
+			/* validate the ID is as expected */
+			if (!context.getId().equals(existingCid.toBytes())) {
+				throw new Exception(
+						"object ID inconsistent, expecting \"" 
+						+ context.getId() 
+						+ "\" but it was \"" 
+						+ Multibase.encode(Multibase.encoding(contextDto.getId()), existingCid.toBytes()) + "\"");
+			}
+		} else {
+			context.setId(UPRTCL_DFT_TYPE);
+		}
+		
 		context = contextRepository.save(context);
 		
 		return context;
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public PerspectiveDto getPerspectiveDto(String perspectiveId) throws Exception {
-		return perspectiveRepository.findOne(perspectiveId).toDto();
+	public PerspectiveDto getPerspectiveDto(byte[] perspectiveId) throws Exception {
+		return perspectiveRepository.getOne(perspectiveId).toDto();
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public Perspective createEmptyPerspective(String contextId, String requestBy) throws Exception {
+	public Perspective createEmptyPerspective(byte[] contextId, String requestBy) throws Exception {
 		PerspectiveDto perspectiveDto = new PerspectiveDto();
 		
-		perspectiveDto.setContextId(contextId);
+		perspectiveDto.setContextId(IpldService.decode(contextId));
 		perspectiveDto.setName("default");
-		perspectiveDto.setHeadLink(null);
+		perspectiveDto.setHeadId(null);
 		
 		return createPerspective(perspectiveDto, requestBy);
 	}
@@ -121,49 +193,65 @@ public class UprtclService {
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public String updatePerspective(String perspectiveId, String headLink) throws Exception {
-		Perspective perspective = perspectiveRepository.findOne(perspectiveId);
-		perspective.setHeadLink(new ExternalLink(headLink));
+	public String updatePerspective(byte[] perspectiveId, byte[] headId) throws Exception {
+		Perspective perspective = perspectiveRepository.getOne(perspectiveId);
+		perspective.setHeadId(headId);
 		return getLocalLink(perspectiveRepository.save(perspective).getId()).toString();
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
 	public Perspective createPerspective(PerspectiveDto perspectiveDto, String requestBy) throws Exception {
 		
-		Perspective perspective = new Perspective();
-
-		perspective.setCreatorId(requestBy);
+		Boolean clone = false;
+		if (perspectiveDto.getId() != null && perspectiveDto.getCreatorId() != null) {
+			clone = true;
+		}
 		
-		perspective.setTimestamp(new Timestamp(
-				perspectiveDto.getTimestamp() != null ? perspectiveDto.getTimestamp() : System.currentTimeMillis()));
+		Perspective perspective = null;
 		
-		perspective.setContextId(perspectiveDto.getContextId());
+		if (clone) {
+			Cid cid = IpldService.encode(perspectiveDto.getId());
+			perspective = perspectiveRepository.getOne(cid.toBytes());
+		}
+		
+		if (perspective == null) {
+			perspective = new Perspective();
+		}
+		
+		if (clone) {
+			perspective.setCreatorId(perspectiveDto.getCreatorId());
+			perspective.setTimestamp(new Timestamp(perspectiveDto.getTimestamp()));
+		} else {
+			perspective.setCreatorId(requestBy);
+			perspective.setTimestamp(new Timestamp(
+					perspectiveDto.getTimestamp() != null ? perspectiveDto.getTimestamp() : System.currentTimeMillis()));
+		}
+		
+		if (perspectiveDto.getContextId() != null) perspective.setContextId(IpldService.encode(perspectiveDto.getContextId()).toBytes());
 		perspective.setName(perspectiveDto.getName());
 		
-		perspective.setHeadLink(
-				perspectiveDto.getHeadLink() != null ? 
-						new ExternalLink(perspectiveDto.getHeadLink()) : null);
+		if (perspectiveDto.getHeadId() != null) perspective.setHeadId(IpldService.encode(perspectiveDto.getHeadId()).toBytes());
 		
-		perspective.setId();
+		perspective.setId(UPRTCL_DFT_TYPE);
 		perspective = perspectiveRepository.save(perspective);
 
 		return perspective;
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public CommitDto getCommitDto(String commitId) throws Exception {
-		return commitRepository.findOne(commitId).toDto();
+	public CommitDto getCommitDto(byte[] commitId) throws Exception {
+		return commitRepository.getOne(commitId).toDto();
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
 	public List<String> createCommits(List<CommitDto> commitDtos, String requestBy) throws Exception {
-		List<String> commitsLinks = new ArrayList<String>();
+		List<String> commitsIds = new ArrayList<String>();
 		
 		for (CommitDto commitDto : commitDtos) {
-			commitsLinks.add(getLocalLink(createCommit(commitDto, requestBy).getId()).toString());
+			commitsIds.add(IpldService.decode(createCommit(commitDto, requestBy).getId()));
 		}
 		
-		return commitsLinks;
+		return commitsIds;
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
@@ -177,21 +265,21 @@ public class UprtclService {
 		
 		commit.setMessage(commitDto.getMessage());
 		
-		for (String parent : commitDto.getParentsLinks()) {
-			commit.getParentsLinks().add(new ExternalLink(parent));	
+		for (String parentIdString : commitDto.getParentsIds()) {
+			commit.getParentsIds().add(IpldService.encode(parentIdString).toBytes());	
 		}
 
-		commit.setDataLink(new ExternalLink(commitDto.getDataLink()));
+		commit.setDataId(IpldService.encode(commitDto.getDataId()).toBytes());
+		commit.setId(UPRTCL_DFT_TYPE);
 		
-		commit.setId();
 		commit = commitRepository.save(commit);
 		
 		return commit;
 	}
 	
 	
-	public ExternalLink getLocalLink(String elementId) {
-		return new ExternalLink(NetworkId.http + "://" + UPRTCL_ENPOINT + "/" + elementId);
+	public ExternalLink getLocalLink(byte[] elementId) {
+		return new ExternalLink(NetworkId.http + "://" + UPRTCL_ENPOINT + "/" + IpldService.decode(elementId));
 	}
 	
 	public Boolean isLocalLink(ExternalLink link) {

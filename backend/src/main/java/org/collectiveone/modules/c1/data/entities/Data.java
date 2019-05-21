@@ -1,7 +1,5 @@
 package org.collectiveone.modules.c1.data.entities;
 
-import java.security.MessageDigest;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,9 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.bitcoinj.core.Base58;
 import org.collectiveone.modules.c1.data.dtos.DataDto;
 import org.collectiveone.modules.c1.data.enums.DataType;
+import org.collectiveone.modules.ipld.IpldService;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -22,7 +20,7 @@ public class Data implements DataIf {
 	
 	@Id
 	@Column(name = "id", updatable = false, nullable = false, unique = true)
-	private String id;
+	private byte[] id;
 
 	@Enumerated(EnumType.STRING)
 	private DataType type;
@@ -34,9 +32,7 @@ public class Data implements DataIf {
 	private NodeData nodeData;
 	
 	
-	public String computeId() throws Exception {
-		
-		MessageDigest digestInstance = MessageDigest.getInstance("SHA-256");
+	public byte[] computeId(io.ipfs.multihash.Multihash.Type t) throws Exception {
 		
 		String json = "";
 				
@@ -53,8 +49,7 @@ public class Data implements DataIf {
 				throw new Exception("unexpected type: " + type.toString());
 		}
 		
-		byte[] hash = digestInstance.digest(json.getBytes());
-		return Base58.encode(hash);	
+		return IpldService.hash(json, t);	
 	}
 	
 	public DataDto toDto() throws JsonProcessingException {
@@ -73,7 +68,7 @@ public class Data implements DataIf {
 		
 		}
 		
-		dto.setId(id);
+		dto.setId(IpldService.decode(id));
 		dto.setType(type);
 		
 		return dto;
@@ -93,12 +88,12 @@ public class Data implements DataIf {
 		return null;
 	}
 	
-	public String getId() {
+	public byte[] getId() {
 		return id;
 	}
 
-	public void setId() throws Exception {
-		this.id = this.computeId();
+	public void setId(io.ipfs.multihash.Multihash.Type t) throws Exception {
+		this.id = this.computeId(t);
 	}
 
 	public DataType getType() {

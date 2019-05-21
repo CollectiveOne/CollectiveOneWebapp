@@ -285,12 +285,10 @@ public class TestContextController extends AbstractTest {
         return getResult.getData();
     }
     
-    private CommitDto getCommit(String commitLink) throws Exception {
-    	ExternalLink link = new ExternalLink(commitLink);
-    	
+    private CommitDto getCommit(String commitId) throws Exception {
     	MvcResult result = 
         		this.mockMvc
-    	    	.perform(get("/1/commit/" + link.getElement()))
+    	    	.perform(get("/1/commit/" + commitId))
     	    	.andReturn();
     	
 		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
@@ -306,12 +304,10 @@ public class TestContextController extends AbstractTest {
         return getResult.getData();
     }
     
-    private TextDataDto getTextData(String link,  String auth) throws Exception {
-    	ExternalLink extLink = new ExternalLink(link);
-    	
+    private TextDataDto getTextData(String dataId,  String auth) throws Exception {
     	MvcResult result = 
         		this.mockMvc
-    	    	.perform(get("/1/data/" + extLink.getElement()))
+    	    	.perform(get("/1/data/" + dataId))
     	    	.andReturn();
     	
 		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
@@ -327,12 +323,10 @@ public class TestContextController extends AbstractTest {
         return gson.fromJson(getResult.getData().getJsonData(), TextDataDto.class);
     }
     
-    private NodeDataDto getNodeData(String link) throws Exception {
-    	ExternalLink extLink = new ExternalLink(link);
-    	
+    private NodeDataDto getNodeData(String dataId) throws Exception {
     	MvcResult result = 
         		this.mockMvc
-    	    	.perform(get("/1/data/" + extLink.getElement()))
+    	    	.perform(get("/1/data/" + dataId))
     	    	.andReturn();
     	
 		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
@@ -348,14 +342,13 @@ public class TestContextController extends AbstractTest {
         return gson.fromJson(getResult.getData().getJsonData(), NodeDataDto.class);
     }
     
-    
-    private String commitToPerspective(String perspectiveLink, String commitLink, String auth) throws Exception {
+    private String commitToPerspective(String perspectiveLink, String commitId, String auth) throws Exception {
     	ExternalLink link = new ExternalLink(perspectiveLink);
     	
     	MvcResult result = 
     		this.mockMvc
 	    	.perform(put("/1/persp/" + link.getElement())
-	    	.param("headLink", commitLink)
+	    	.param("headId", commitId)
 	    	.header("Authorization", "Bearer " + auth))
 	    	.andReturn();
     	
@@ -411,10 +404,12 @@ public class TestContextController extends AbstractTest {
     	return data;    	
     }
     
-    private DraftDto newTextDraft(String persctiveLink, DataDto data) {
+    private DraftDto newTextDraft(String perspectiveLink, DataDto data) {
+    	ExternalLink link = new ExternalLink(perspectiveLink);
+    	
     	DraftDto draft = new DraftDto();
     	
-    	draft.setElementId(persctiveLink);
+    	draft.setElementId(link.getElement());
     	draft.setData(data);
     	
     	return draft;    	
@@ -422,15 +417,17 @@ public class TestContextController extends AbstractTest {
     
     private NodeDataDto getNodeDataOfPerspective(String perspectiveLink) throws Exception {
     	PerspectiveDto perspective = getPerspective(perspectiveLink);
-    	CommitDto commit = getCommit(perspective.getHeadLink());
-    	return getNodeData(commit.getDataLink());
+    	CommitDto commit = getCommit(perspective.getHeadId());
+    	return getNodeData(commit.getDataId());
     }
     
     private TextDataDto getTextDataDraft(String perspectiveLink, String auth) throws Exception {
+    	ExternalLink link = new ExternalLink(perspectiveLink);
+    	
     	MvcResult result = 
         		this.mockMvc
     	    	.perform(get("/1/draft")
-    	    	.param("elementId", perspectiveLink)
+    	    	.param("elementId", link.getElement())
     	    	.header("Authorization", "Bearer " + auth))
     	    	.andReturn();
     	
@@ -478,32 +475,32 @@ public class TestContextController extends AbstractTest {
     			new ContextDto(),
     			authorizationTokenUser1);
     	
-    	String dataLink01 = createData(
+    	String dataId01 = createData(
     			newTextData("data 01"), 
     			authorizationTokenUser1);
     	
-    	String commitLink01 = createCommit(
-    			new CommitDto("message 01", new ArrayList<String>(), dataLink01),
+    	String commitId01 = createCommit(
+    			new CommitDto("message 01", new ArrayList<String>(), dataId01),
     			authorizationTokenUser1);
     	
     	String perspectiveLink01 = createPerspective(
-    			new PerspectiveDto(contextId01, "perspective 01", commitLink01),
+    			new PerspectiveDto(contextId01, "perspective 01", commitId01),
     			authorizationTokenUser1);
     	
     	
     	/* add the just created context (perspective) as subcontext of user 1 root */
-    	String dataLink02 = createData(
+    	String dataId02 = createData(
     			newNodeData(
-    					getTextData(dataLink01, authorizationTokenUser1).getText(), 
+    					getTextData(dataId01, authorizationTokenUser1).getText(), 
     					Arrays.asList(new LinkDto(perspectiveLink01))), 
     			authorizationTokenUser1);
     	
     	/* commit this to the root perspective */
-    	String commitLink02 = createCommit(
-    			new CommitDto("added subcontext", Arrays.asList(commitLink01), dataLink02),
+    	String commitId02 = createCommit(
+    			new CommitDto("added subcontext", Arrays.asList(commitId01), dataId02),
     			authorizationTokenUser1);
     	
-    	commitToPerspective(user1.getRootPerspectiveLink(), commitLink02, authorizationTokenUser1);
+    	commitToPerspective(user1.getRootPerspectiveLink(), commitId02, authorizationTokenUser1);
     	
     	/* get root perspective */
     	NodeDataDto data01 = getNodeDataOfPerspective(user1.getRootPerspectiveLink());

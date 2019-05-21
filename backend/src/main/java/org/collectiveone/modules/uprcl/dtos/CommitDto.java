@@ -9,26 +9,26 @@ public class CommitDto {
 	private String creatorId;
 	private Long timestamp;
 	private String message;
-	private List<String> parentsLinks = new ArrayList<String>();
-	private String dataLink;
+	private List<String> parentsIds = new ArrayList<String>();
+	private String dataId;
 	
 	@Override
 	public String toString() {
 		return "       id: " + id + "\n" + 
 			   "creatorId: " + creatorId + "\n" +
-			   " dataLink: " + dataLink;
+			   " dataLink: " + dataId;
 	}
 	
 	public CommitDto() {
 		super();
 	}
 
-	public CommitDto(String message, List<String> parentsLinks, String dataLink) {
+	public CommitDto(String message, List<String> parentsIds, String dataId) {
 		super();
 		this.timestamp = System.currentTimeMillis();
 		this.message = message;
-		this.parentsLinks = parentsLinks;
-		this.dataLink = dataLink;
+		this.parentsIds = parentsIds;
+		this.dataId = dataId;
 	}
 
 	public String getId() {
@@ -51,12 +51,12 @@ public class CommitDto {
 		this.timestamp = timestamp;
 	}
 
-	public List<String> getParentsLinks() {
-		return parentsLinks;
+	public List<String> getParentsIds() {
+		return parentsIds;
 	}
 
-	public void setParentsLinks(List<String> parentsLinks) {
-		this.parentsLinks = parentsLinks;
+	public void setParentsIds(List<String> parentsIds) {
+		this.parentsIds = parentsIds;
 	}
 
 	public void setId(String id) {
@@ -70,13 +70,13 @@ public class CommitDto {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+
+	public String getDataId() {
+		return dataId;
+	}
+
+	public void setDataId(String dataId) {
+		this.dataId = dataId;
+	}
 	
-	public String getDataLink() {
-		return dataLink;
-	}
-
-	public void setDataLink(String dataLink) {
-		this.dataLink = dataLink;
-	}
-
 }

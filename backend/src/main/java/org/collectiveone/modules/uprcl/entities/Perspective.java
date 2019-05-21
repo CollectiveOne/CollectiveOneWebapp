@@ -1,6 +1,5 @@
 package org.collectiveone.modules.uprcl.entities;
 
-import java.security.MessageDigest;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,33 +11,35 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.bitcoinj.core.Base58;
-import org.collectiveone.modules.c1.data.entities.ExternalLink;
+import org.collectiveone.modules.ipld.IpldService;
 import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.ipfs.multihash.Multihash.Type;
 
 @Entity
 @Table(name = "perspectives")
-@JsonPropertyOrder({ "creator", "name", "context", "type", "head" })
+@JsonPropertyOrder({ "creatorId", "timestamp", "contextId", "name", "headId" })
 public class Perspective {
 
 	@Id
 	@Column(name = "id", updatable = false, nullable = false, unique = true)
 	@JsonIgnore
-	private String id;
+	private byte[] id;
 
 	private String creatorId;
 
 	private Timestamp timestamp;
 	
-	private String contextId;
+	private byte[] contextId;
 	
 	private String name;
 	
-	private ExternalLink headLink;
+	private byte[] headId;
 	
 	
 	/* working commits are uncommitted changes, there cab be zero or more per user and perspective. */
@@ -46,31 +47,41 @@ public class Perspective {
 	@JsonIgnore
 	private List<Commit> workingCommits = new ArrayList<Commit>();
 
-	
-	public String computeId() {
-		try {
-			MessageDigest digestInstance = MessageDigest.getInstance("SHA-256");
-			ObjectMapper objectMapper = new ObjectMapper();
-			
-			String json = objectMapper.writeValueAsString(this);	
-			byte[] hash = digestInstance.digest(json.getBytes());
-			
-			return Base58.encode(hash);	
-		} catch (Exception e) {
-			// TODO
-		}
-		return null;
+	@JsonGetter("timestamp")
+	public String timestampJson() {
+		return timestamp != null ? String.valueOf(timestamp.getTime()) : "0"; 
 	}
 	
-	public PerspectiveDto toDto() throws JsonProcessingException {
+	@JsonGetter("contextId")
+	public String contextIdJson() {
+		return IpldService.decode(contextId);
+	}
+	
+	@JsonGetter("name")
+	public String nameJson() {
+		return name != null ? name : ""; 
+	}
+	
+	@JsonGetter("headId")
+	public String headIdJson() {
+		return IpldService.decode(headId);
+	}
+	
+	public byte[] computeId(io.ipfs.multihash.Multihash.Type t) throws Exception {
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = objectMapper.writeValueAsString(this);	
+		return IpldService.hash(json, t);
+	}
+	
+	public PerspectiveDto toDto() throws Exception {
 		PerspectiveDto dto = new PerspectiveDto();
 		
-		dto.setId(id);
+		dto.setId(Base58.encode(id));
 		dto.setCreatorId(creatorId);
 		dto.setTimestamp(timestamp.getTime());
-		dto.setContextId(contextId);
+		dto.setContextId(IpldService.decode(contextId));
 		dto.setName(name);
-		dto.setHeadLink(headLink != null ? headLink.toString() : null);
+		dto.setHeadId(IpldService.decode(headId));
 		
 		return dto;
 	}
@@ -78,17 +89,17 @@ public class Perspective {
 	@Override
 	public String toString() {
 		return "     name: " + name + "\n" + 
-			   "       id: " + id + "\n" + 
-			   "contextId: " + contextId + "\n" +
-			   " headLink: " + headLink;
+			   "       id: " + IpldService.decode(id) + "\n" + 
+			   "contextId: " + IpldService.decode(contextId) + "\n" +
+			   " headLink: " + IpldService.decode(headId);
 	}
 	
-	public String getId() {
+	public byte[] getId() {
 		return id;
 	}
 	
-	public void setId() {
-		this.id = this.computeId();
+	public void setId(Type t) throws Exception {
+		this.id = this.computeId(t);
 	}
 	
 	public String getName() {
@@ -115,11 +126,11 @@ public class Perspective {
 		this.timestamp = timestamp;
 	}
 
-	public String getContextId() {
+	public byte[] getContextId() {
 		return contextId;
 	}
 
-	public void setContextId(String contextId) {
+	public void setContextId(byte[] contextId) {
 		this.contextId = contextId;
 	}
 
@@ -131,13 +142,12 @@ public class Perspective {
 		this.workingCommits = workingCommits;
 	}
 
-	public ExternalLink getHeadLink() {
-		return headLink;
+	public byte[] getHeadId() {
+		return headId;
 	}
 
-	public void setHeadLink(ExternalLink headLink) {
-		this.headLink = headLink;
+	public void setHeadId(byte[] headId) {
+		this.headId = headId;
 	}
-	
 
 }
