@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ContextDto {
 	private String id;
-	private String creator;
+	private String creatorId;
 	private Long timestamp;
 	private Long nonce;
 	private List<PerspectiveDto> perspectives = new ArrayList<PerspectiveDto>();
@@ -14,7 +14,7 @@ public class ContextDto {
 	@Override
 	public String toString() {
 		return "     id: " + id + "\n" + 
-			   "creator: " + creator;
+			   "creator: " + creatorId;
 	}
 
 	public ContextDto() {
@@ -33,11 +33,11 @@ public class ContextDto {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getCreator() {
-		return creator;
+	public String getCreatorId() {
+		return creatorId;
 	}
-	public void setCreator(String creator) {
-		this.creator = creator;
+	public void setCreatorId(String creator) {
+		this.creatorId = creator;
 	}
 	public Long getTimestamp() {
 		return timestamp;

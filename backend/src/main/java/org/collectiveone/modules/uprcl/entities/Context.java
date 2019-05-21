@@ -1,6 +1,5 @@
 package org.collectiveone.modules.uprcl.entities;
 
-import java.security.MessageDigest;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -8,12 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.bitcoinj.core.Base58;
+import org.collectiveone.modules.ipld.Ipld;
 import org.collectiveone.modules.uprcl.dtos.ContextDto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.ipfs.multibase.Multibase.Base;
 
 @Entity
 @Table(name = "contexts")
@@ -42,19 +43,10 @@ public class Context {
 		this.nonce = nonce;
 	}
 	
-	public String computeId() {
-		try {
-			MessageDigest digestInstance = MessageDigest.getInstance("SHA-256");
-			ObjectMapper objectMapper = new ObjectMapper();
-			
-			String json = objectMapper.writeValueAsString(this);
-			byte[] hash = digestInstance.digest(json.getBytes());
-			
-			return Base58.encode(hash);	
-		} catch (Exception e) {
-			// TODO
-		}
-		return null;
+	public String computeId(io.ipfs.multihash.Multihash.Type t, Base b) throws Exception {
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = objectMapper.writeValueAsString(this);
+		return Ipld.hash(json, t, b);
 	}
 
 	@Override
@@ -86,7 +78,7 @@ public class Context {
 		ContextDto dto = new ContextDto();
 		
 		dto.setId(id);
-		dto.setCreator(creator);
+		dto.setCreatorId(creator);
 		dto.setNonce(nonce);
 		dto.setTimestamp(timestamp.getTime());
 		
@@ -104,8 +96,8 @@ public class Context {
 		return id;
 	}
 
-	public void setId() {
-		this.id = this.computeId();
+	public void setId(io.ipfs.multihash.Multihash.Type t, Base b) throws Exception {
+		this.id = this.computeId(t, b);
 	}
 
 	public String getCreator() {

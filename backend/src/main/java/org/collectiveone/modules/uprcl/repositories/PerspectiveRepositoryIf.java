@@ -1,5 +1,7 @@
 package org.collectiveone.modules.uprcl.repositories;
 
+import java.util.List;
+
 import org.collectiveone.modules.uprcl.entities.Perspective;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,4 +13,6 @@ public interface PerspectiveRepositoryIf extends JpaRepository<Perspective, Stri
 			+ "WHERE persp.contextId = :contextId")
 	public String findIdOfOldestOfContext(
 			@Param("contextId") String contextId);
+	
+	public List<Perspective> findByContextId(String contextId);
 }

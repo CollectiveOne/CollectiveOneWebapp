@@ -3,11 +3,13 @@ package org.collectiveone.modules.uprcl;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import org.collectiveone.modules.c1.data.entities.ExternalLink;
 import org.collectiveone.modules.c1.data.enums.NetworkId;
+import org.collectiveone.modules.ipld.Ipld;
 import org.collectiveone.modules.uprcl.dtos.CommitDto;
 import org.collectiveone.modules.uprcl.dtos.ContextDto;
 import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
@@ -21,11 +23,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import io.ipfs.cid.Cid;
+import io.ipfs.multibase.Multibase;
+import io.ipfs.multibase.Multibase.Base;
+import io.ipfs.multihash.Multihash.Type;
+
 @Service
 public class UprtclService {
 	
 	@Value("${UPRTLC_ENDPOINT}")
 	private String UPRTCL_ENPOINT;
+	
+	@Value("${UPRTLC_DFT_BASE}")
+	private Base UPRTCL_DFT_BASE;
+	
+	@Value("${UPRTLC_DFT_BASE}")
+	private Type UPRTCL_DFT_TYPE;
 	
 	@Autowired
 	private ContextRepositoryIf contextRepository;
@@ -47,7 +60,7 @@ public class UprtclService {
 		context.setNonce(0L);
 		context.setTimestamp(new Timestamp(0L));
 		
-		context.setId();
+		context.setId(UPRTCL_DFT_TYPE, UPRTCL_DFT_BASE);
 		context = contextRepository.save(context);
 		
 		/* create one empty perspective */
@@ -59,6 +72,30 @@ public class UprtclService {
 	@Transactional(rollbackOn = Exception.class)
 	public Context getContext(String contextId) throws Exception {
 		return contextRepository.findOne(contextId);
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
+	public String getContextId(ContextDto contextDto) throws Exception {
+		Context context = new Context();
+		
+		context.setCreator(contextDto.getCreatorId());
+		context.setNonce(contextDto.getNonce());
+		context.setTimestamp(new Timestamp(contextDto.getTimestamp()));
+		context.setId(UPRTCL_DFT_TYPE, UPRTCL_DFT_BASE);
+		
+		return context.getId();
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
+	public List<PerspectiveDto> getContextPerspectives(String contextId) throws Exception {
+		return perspectiveRepository
+				.findByContextId(contextId)
+				.stream()
+				.map(p -> {
+					try { return p.toDto(); } 
+					catch (Exception e) { e.printStackTrace(); }
+					return null;
+				}).collect(Collectors.toList());
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
@@ -80,14 +117,48 @@ public class UprtclService {
 	@Transactional(rollbackOn = Exception.class)
 	public Context createContext(ContextDto contextDto, String requestBy) throws Exception {
 		
-		Context context = new Context();
+		Boolean clone = false;
+		if (contextDto.getId() != null && contextDto.getCreatorId() != null) {
+			clone = true;
+		}
 		
-		context.setCreator(requestBy);
+		Context context = null;
+		
+		if (clone) {
+			context = contextRepository.getOne(contextDto.getId());
+		}
+		
+		if (context == null) {
+			context = new Context();
+		}
+		
+		if (clone) {
+			context.setCreator(contextDto.getCreatorId());
+			context.setTimestamp(new Timestamp(contextDto.getTimestamp()));
+		} else {
+			context.setCreator(requestBy);
+			context.setTimestamp(new Timestamp(
+					contextDto.getTimestamp() != null ? contextDto.getTimestamp() : System.currentTimeMillis()));
+		}
+		
 		context.setNonce(contextDto.getNonce());
-		context.setTimestamp(new Timestamp(
-				contextDto.getTimestamp() != null ? contextDto.getTimestamp() : System.currentTimeMillis()));
 		
-		context.setId();
+		if (clone) {
+			/* Use the same hash type and base encoding to have the same 
+			 * id string */	
+			String existingId = contextDto.getId();
+			context.setId(
+					Ipld.parse(existingId).getType(), 
+					Multibase.encoding(existingId));
+			
+			if (!context.getId().equals(existingId)) {
+				throw new Exception(
+						"object ID inconsistent, expecting \"" 
+						+ context.getId() 
+						+ "\" but it was \"" + existingId + "\"");
+			}
+		}
+		
 		context = contextRepository.save(context);
 		
 		return context;

@@ -24,7 +24,7 @@ public class DataController extends BaseController {
 	
 	
 	@RequestMapping(path = "/data", method = RequestMethod.POST)
-	public PostResult createContext(
+	public PostResult createData(
 			@RequestBody List<DataDto> dataDtos) throws Exception {
 		
 		List<String> dataLinks = dataService.createDatas(dataDtos); 

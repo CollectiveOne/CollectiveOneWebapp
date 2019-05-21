@@ -1,6 +1,5 @@
 package org.collectiveone.modules.uprcl.entities;
 
-import java.security.MessageDigest;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
-import org.bitcoinj.core.Base58;
 import org.collectiveone.modules.c1.data.entities.ExternalLink;
+import org.collectiveone.modules.ipld.Ipld;
 import org.collectiveone.modules.uprcl.dtos.CommitDto;
 import org.hibernate.annotations.Type;
 
@@ -22,6 +21,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.ipfs.multibase.Multibase.Base;
 
 @Entity
 @Table(name = "commits")
@@ -50,16 +51,10 @@ public class Commit {
 		super();
 	}
 	
-	public String computeId() throws Exception {
-		
-		MessageDigest digestInstance = MessageDigest.getInstance("SHA-256");
+	public String computeId(io.ipfs.multihash.Multihash.Type t, Base b) throws Exception {
 		ObjectMapper objectMapper = new ObjectMapper();
-		
 		String json = objectMapper.writeValueAsString(this);
-		byte[] hash = digestInstance.digest(json.getBytes());
-		
-		return Base58.encode(hash);	
-	
+		return Ipld.hash(json, t, b);	
 	}
 	
 	@JsonGetter("parentsLinks")
@@ -107,8 +102,8 @@ public class Commit {
 		return id;
 	}
 
-	public void setId() throws Exception {
-		this.id = this.computeId();
+	public void setId(io.ipfs.multihash.Multihash.Type t, Base b) throws Exception {
+		this.id = this.computeId(t, b);
 	}
 
 	public String getCreatorId() {
