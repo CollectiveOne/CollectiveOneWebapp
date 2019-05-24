@@ -15,6 +15,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.ipfs.multibase.Multibase.Base;
+
 @Entity
 @Table(name = "contexts")
 @JsonPropertyOrder({ "creatorId", "timestamp", "nonce" })

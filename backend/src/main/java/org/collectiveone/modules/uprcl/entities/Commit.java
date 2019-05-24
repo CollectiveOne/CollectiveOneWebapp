@@ -21,6 +21,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.ipfs.multibase.Multibase.Base;
+
 @Entity
 @Table(name = "commits")
 @JsonPropertyOrder({ "creatorId", "timestamp", "message", "parentsIds", "dataId" })

@@ -71,6 +71,26 @@ public class UprtclController extends BaseController {
 				uprtclService.getContextPerspectives(contextId));
 	}
 	
+	@RequestMapping(path = "/ctxId", method = RequestMethod.PUT)
+	public GetResult<String> getContext(
+			@RequestBody ContextDto contextDto) throws Exception {
+		
+		return new GetResult<String>(
+				"success", 
+				"contex created", 
+				uprtclService.getContextId(contextDto));
+	}
+	
+	@RequestMapping(path = "/ctxPersps", method = RequestMethod.GET)
+	public GetResult<List<PerspectiveDto>> getContextPerspectives(
+			@PathVariable("contextId") String contextId) throws Exception {
+		
+		return new GetResult<List<PerspectiveDto>>(
+				"success", 
+				"contex created", 
+				uprtclService.getContextPerspectives(contextId));
+	}
+	
 	@RequestMapping(path = "/persp", method = RequestMethod.POST)
 	public PostResult createPerspective(
 			@RequestBody List<PerspectiveDto> perspectiveDtos) throws Exception {
