@@ -1,8 +1,9 @@
-package org.collectiveone.modules.uprcl.dtos;
+package org.collectiveone.modules.uprtcl.dtos;
 
 public class PerspectiveDto {
 	
 	private String id;
+	private String origin;
 	private String creatorId;
 	private Long timestamp;
 	private String contextId;
@@ -24,6 +25,12 @@ public class PerspectiveDto {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public String getOrigin() {
+		return origin;
+	}
+	public void setOrigin(String origin) {
+		this.origin = origin;
 	}
 	public String getCreatorId() {
 		return creatorId;

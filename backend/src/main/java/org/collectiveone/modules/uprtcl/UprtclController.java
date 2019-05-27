@@ -1,4 +1,4 @@
-package org.collectiveone.modules.uprcl;
+package org.collectiveone.modules.uprtcl;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,9 +9,9 @@ import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.ipld.IpldService;
-import org.collectiveone.modules.uprcl.dtos.CommitDto;
-import org.collectiveone.modules.uprcl.dtos.ContextDto;
-import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
+import org.collectiveone.modules.uprtcl.dtos.CommitDto;
+import org.collectiveone.modules.uprtcl.dtos.ContextDto;
+import org.collectiveone.modules.uprtcl.dtos.PerspectiveDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;

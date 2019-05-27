@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.uprcl.entities.Context;
+import org.collectiveone.modules.uprtcl.entities.Context;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;

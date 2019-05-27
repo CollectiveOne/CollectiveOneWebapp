@@ -1,4 +1,4 @@
-package org.collectiveone.modules.uprcl.entities;
+package org.collectiveone.modules.uprtcl.entities;
 
 import java.sql.Timestamp;
 
@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.ipld.IpldService;
-import org.collectiveone.modules.uprcl.dtos.ContextDto;
+import org.collectiveone.modules.uprtcl.dtos.ContextDto;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;

@@ -1,4 +1,4 @@
-package org.collectiveone.modules.uprcl.entities;
+package org.collectiveone.modules.uprtcl.entities;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.ipld.IpldService;
-import org.collectiveone.modules.uprcl.dtos.CommitDto;
+import org.collectiveone.modules.uprtcl.dtos.CommitDto;
 import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonGetter;

@@ -1,4 +1,4 @@
-package org.collectiveone.modules.uprcl.entities;
+package org.collectiveone.modules.uprtcl.entities;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 import org.bitcoinj.core.Base58;
 import org.collectiveone.modules.ipld.IpldService;
-import org.collectiveone.modules.uprcl.dtos.PerspectiveDto;
+import org.collectiveone.modules.uprtcl.dtos.PerspectiveDto;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,7 +23,7 @@ import io.ipfs.multihash.Multihash.Type;
 
 @Entity
 @Table(name = "perspectives")
-@JsonPropertyOrder({ "creatorId", "timestamp", "contextId", "name", "headId" })
+@JsonPropertyOrder({ "creatorId", "origin", "timestamp", "contextId", "name", "headId" })
 public class Perspective {
 
 	@Id
@@ -31,6 +31,8 @@ public class Perspective {
 	@JsonIgnore
 	private byte[] id;
 
+	private String origin;
+	
 	private String creatorId;
 
 	private Timestamp timestamp;
@@ -77,6 +79,7 @@ public class Perspective {
 		PerspectiveDto dto = new PerspectiveDto();
 		
 		dto.setId(Base58.encode(id));
+		dto.setOrigin(origin);
 		dto.setCreatorId(creatorId);
 		dto.setTimestamp(timestamp.getTime());
 		dto.setContextId(IpldService.decode(contextId));
@@ -102,6 +105,14 @@ public class Perspective {
 		this.id = this.computeId(t);
 	}
 	
+	public String getOrigin() {
+		return origin;
+	}
+
+	public void setOrigin(String origin) {
+		this.origin = origin;
+	}
+
 	public String getName() {
 		return name;
 	}

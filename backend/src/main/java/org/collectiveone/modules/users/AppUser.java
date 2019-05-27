@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.c1.data.entities.DefaultPerspective;
-import org.collectiveone.modules.uprcl.entities.Context;
+import org.collectiveone.modules.uprtcl.entities.Context;
 import org.collectiveone.modules.users.nannies.DIDNanny;
 
 @Entity

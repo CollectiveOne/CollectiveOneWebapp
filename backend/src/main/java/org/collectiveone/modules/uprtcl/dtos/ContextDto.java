@@ -1,4 +1,4 @@
-package org.collectiveone.modules.uprcl.dtos;
+package org.collectiveone.modules.uprtcl.dtos;
 
 import java.util.ArrayList;
 import java.util.List;
