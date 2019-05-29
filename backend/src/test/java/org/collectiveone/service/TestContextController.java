@@ -19,8 +19,9 @@ import org.collectiveone.modules.c1.data.dtos.DraftDto;
 import org.collectiveone.modules.c1.data.dtos.LinkDto;
 import org.collectiveone.modules.c1.data.dtos.NodeDataDto;
 import org.collectiveone.modules.c1.data.dtos.TextDataDto;
-import org.collectiveone.modules.c1.data.entities.ExternalLink;
 import org.collectiveone.modules.c1.data.enums.DataType;
+import org.collectiveone.modules.c1.views.ElementViewType;
+import org.collectiveone.modules.c1.views.ViewDto;
 import org.collectiveone.modules.uprtcl.dtos.CommitDto;
 import org.collectiveone.modules.uprtcl.dtos.ContextDto;
 import org.collectiveone.modules.uprtcl.dtos.PerspectiveDto;
@@ -264,12 +265,11 @@ public class TestContextController extends AbstractTest {
         return getResult.getData();
     }
     
-    private PerspectiveDto getPerspective(String perspectiveLink) throws Exception {
-    	ExternalLink link = new ExternalLink(perspectiveLink);
+    private PerspectiveDto getPerspective(String perspectiveId) throws Exception {
     	
     	MvcResult result = 
         		this.mockMvc
-    	    	.perform(get("/1/persp/" + link.getElement()))
+    	    	.perform(get("/1/persp/" + perspectiveId))
     	    	.andReturn();
     	
 		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
@@ -342,12 +342,11 @@ public class TestContextController extends AbstractTest {
         return gson.fromJson(getResult.getData().getJsonData(), NodeDataDto.class);
     }
     
-    private String commitToPerspective(String perspectiveLink, String commitId, String auth) throws Exception {
-    	ExternalLink link = new ExternalLink(perspectiveLink);
+    private String commitToPerspective(String perspectiveId, String commitId, String auth) throws Exception {
     	
     	MvcResult result = 
     		this.mockMvc
-	    	.perform(put("/1/persp/" + link.getElement())
+	    	.perform(put("/1/persp/" + perspectiveId)
 	    	.param("headId", commitId)
 	    	.header("Authorization", "Bearer " + auth))
 	    	.andReturn();
@@ -379,6 +378,43 @@ public class TestContextController extends AbstractTest {
     	
     }
     
+    private void setView(ViewDto view, String auth) throws Exception {
+    	String json =  gson.toJson(view);
+    	
+    	MvcResult result = 
+    		this.mockMvc
+	    	.perform(put("/1/view")
+	    	.contentType(MediaType.APPLICATION_JSON)
+	    	.content(json)
+	    	.header("Authorization", "Bearer " + auth))
+	    	.andReturn();
+    	
+    	assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+    	
+    }
+    
+    private ViewDto getView(String elementId, String inElementId, String auth) throws Exception {
+    	MvcResult result = 
+        		this.mockMvc
+    	    	.perform(get("/1/view/" + elementId)
+    	    	.param("inElementId", inElementId)
+    	    	.header("Authorization", "Bearer " + auth))
+    	    	.andReturn();
+    	
+		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+	    		200, result.getResponse().getStatus());
+         
+ 		GetResult<ViewDto> getResult = 
+        		gson.fromJson(result.getResponse().getContentAsString(), 
+         				new TypeToken<GetResult<ViewDto>>(){}.getType());
+         
+        assertEquals("error getting view: " + getResult.getMessage(),
+        		"success", getResult.getResult());
+         
+        return getResult.getData();
+    }
+    
     private DataDto newTextData(String text) throws JsonProcessingException {
     	DataDto data = new DataDto();
     	data.setType(DataType.TEXT);
@@ -404,30 +440,18 @@ public class TestContextController extends AbstractTest {
     	return data;    	
     }
     
-    private DraftDto newTextDraft(String perspectiveLink, DataDto data) {
-    	ExternalLink link = new ExternalLink(perspectiveLink);
-    	
-    	DraftDto draft = new DraftDto();
-    	
-    	draft.setElementId(link.getElement());
-    	draft.setData(data);
-    	
-    	return draft;    	
-    }
-    
     private NodeDataDto getNodeDataOfPerspective(String perspectiveLink) throws Exception {
     	PerspectiveDto perspective = getPerspective(perspectiveLink);
     	CommitDto commit = getCommit(perspective.getHeadId());
     	return getNodeData(commit.getDataId());
     }
     
-    private TextDataDto getTextDataDraft(String perspectiveLink, String auth) throws Exception {
-    	ExternalLink link = new ExternalLink(perspectiveLink);
+    private TextDataDto getTextDataDraft(String perspectiveId, String auth) throws Exception {
     	
     	MvcResult result = 
         		this.mockMvc
     	    	.perform(get("/1/draft")
-    	    	.param("elementId", link.getElement())
+    	    	.param("elementId", perspectiveId)
     	    	.header("Authorization", "Bearer " + auth))
     	    	.andReturn();
     	
@@ -444,12 +468,11 @@ public class TestContextController extends AbstractTest {
         return gson.fromJson(getResult.getData().getJsonData(), TextDataDto.class); 
     }
     
-    private NodeDataDto getNodeDataDraft(String perspectiveLink, String auth) throws Exception {
-    	ExternalLink link = new ExternalLink(perspectiveLink);
+    private NodeDataDto getNodeDataDraft(String perspectiveId, String auth) throws Exception {
     	
     	MvcResult result = 
         		this.mockMvc
-    	    	.perform(get("/1/draft/" + link.getElement())
+    	    	.perform(get("/1/draft/" + perspectiveId)
     	    	.header("Authorization", "Bearer " + auth))
     	    	.andReturn();
     	
@@ -483,7 +506,7 @@ public class TestContextController extends AbstractTest {
     			new CommitDto("message 01", new ArrayList<String>(), dataId01),
     			authorizationTokenUser1);
     	
-    	String perspectiveLink01 = createPerspective(
+    	String perspectiveId01 = createPerspective(
     			new PerspectiveDto(contextId01, "perspective 01", commitId01),
     			authorizationTokenUser1);
     	
@@ -492,7 +515,7 @@ public class TestContextController extends AbstractTest {
     	String dataId02 = createData(
     			newNodeData(
     					getTextData(dataId01, authorizationTokenUser1).getText(), 
-    					Arrays.asList(new LinkDto(perspectiveLink01))), 
+    					Arrays.asList(new LinkDto(perspectiveId01))), 
     			authorizationTokenUser1);
     	
     	/* commit this to the root perspective */
@@ -500,31 +523,40 @@ public class TestContextController extends AbstractTest {
     			new CommitDto("added subcontext", Arrays.asList(commitId01), dataId02),
     			authorizationTokenUser1);
     	
-    	commitToPerspective(user1.getRootPerspectiveLink(), commitId02, authorizationTokenUser1);
+    	commitToPerspective(user1.getRootPerspectiveId(), commitId02, authorizationTokenUser1);
     	
     	/* get root perspective */
-    	NodeDataDto data01 = getNodeDataOfPerspective(user1.getRootPerspectiveLink());
+    	NodeDataDto data01 = getNodeDataOfPerspective(user1.getRootPerspectiveId());
     	
     	assertEquals("unexpected number of subperspectives", 
     			1, data01.getLinks().size());
     	
     	assertEquals("unexpected subperspective id", 
-    			perspectiveLink01, data01.getLinks().get(0).getLink());
+    			perspectiveId01, data01.getLinks().get(0).getLink());
     	
     	/* add a draft data to perspective 01 */
     	String dataDraftText = "data 01 draft";
     	
-    	updateDraft(newTextDraft(
-    			perspectiveLink01,
+    	updateDraft(new DraftDto(
+    			perspectiveId01,
     			newTextData(dataDraftText)), 
     		authorizationTokenUser1);
     	
-    	TextDataDto data03 = getTextDataDraft(perspectiveLink01, authorizationTokenUser1);
+    	TextDataDto data03 = getTextDataDraft(perspectiveId01, authorizationTokenUser1);
     	
     	assertEquals("unexpected draft data", 
     			dataDraftText, data03.getText());
     	
-
+    	
+    	/* set a view for a perspective */
+    	setView(
+			new ViewDto(perspectiveId01, user1.getRootPerspectiveId(), ElementViewType.TITLE), 
+			authorizationTokenUser1);
+    	
+    	ViewDto view01 = getView(perspectiveId01, user1.getRootPerspectiveId(), authorizationTokenUser1);
+    	
+    	assertEquals("unexpectedView", ElementViewType.TITLE, view01.getElementViewType());
+    	
     }
     
 }

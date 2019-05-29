@@ -4,7 +4,7 @@ import org.collectiveone.modules.users.nannies.DIDNannyDto;
 
 public class AppUserDto {
 	private String did;
-	private String rootPerspectiveLink;
+	private String rootPerspectiveId;
 	private DIDNannyDto nanny;
 	
 	public String getDid() {
@@ -13,11 +13,11 @@ public class AppUserDto {
 	public void setDid(String did) {
 		this.did = did;
 	}
-	public String getRootPerspectiveLink() {
-		return rootPerspectiveLink;
+	public String getRootPerspectiveId() {
+		return rootPerspectiveId;
 	}
-	public void setRootPerspectiveLink(String rootPerspectiveLink) {
-		this.rootPerspectiveLink = rootPerspectiveLink;
+	public void setRootPerspectiveId(String rootPerspectiveId) {
+		this.rootPerspectiveId = rootPerspectiveId;
 	}
 	public DIDNannyDto getNanny() {
 		return nanny;

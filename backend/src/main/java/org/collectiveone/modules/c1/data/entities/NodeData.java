@@ -14,6 +14,7 @@ import javax.persistence.Table;
 
 import org.collectiveone.modules.c1.data.dtos.LinkDto;
 import org.collectiveone.modules.c1.data.dtos.NodeDataDto;
+import org.collectiveone.modules.ipld.IpldService;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -46,9 +47,9 @@ public class NodeData {
 		for (Link link : links) {
 			LinkDto linkDto = new LinkDto();
 			
-			linkDto.setLink(link.getLink().toString());
-			linkDto.setAfter(link.getAfter() != null ? link.getAfter().toString() : null);
-			linkDto.setBefore(link.getBefore() != null ? link.getBefore().toString() : null);
+			linkDto.setLink(IpldService.decode(link.getLink()));
+			linkDto.setAfter(link.getAfter() != null ? IpldService.decode(link.getAfter()) : null);
+			linkDto.setBefore(link.getBefore() != null ? IpldService.decode(link.getBefore()) : null);
 			
 			dto.getLinks().add(linkDto);	
 		}

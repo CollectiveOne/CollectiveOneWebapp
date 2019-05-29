@@ -7,9 +7,6 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
-import org.bitcoinj.core.Base58;
-import org.collectiveone.modules.c1.data.entities.ExternalLink;
-import org.collectiveone.modules.c1.data.enums.NetworkId;
 import org.collectiveone.modules.ipld.IpldService;
 import org.collectiveone.modules.uprtcl.dtos.CommitDto;
 import org.collectiveone.modules.uprtcl.dtos.ContextDto;
@@ -182,21 +179,21 @@ public class UprtclService {
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public List<String> createPerspectives(List<PerspectiveDto> perspectiveDtos, String requestBy) throws Exception {
-		List<String> perspectiveLinks = new ArrayList<String>();
+	public List<byte[]> createPerspectives(List<PerspectiveDto> perspectiveDtos, String requestBy) throws Exception {
+		List<byte[]> perspectiveIds = new ArrayList<byte[]>();
 		
 		for (PerspectiveDto perspectiveDto : perspectiveDtos) {
-			perspectiveLinks.add(getLocalLink(createPerspective(perspectiveDto, requestBy).getId()).toString());
+			perspectiveIds.add(createPerspective(perspectiveDto, requestBy).getId());
 		}
 		
-		return perspectiveLinks;
+		return perspectiveIds;
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public String updatePerspective(byte[] perspectiveId, byte[] headId) throws Exception {
+	public byte[] updatePerspective(byte[] perspectiveId, byte[] headId) throws Exception {
 		Perspective perspective = perspectiveRepository.getOne(perspectiveId);
 		perspective.setHeadId(headId);
-		return getLocalLink(perspectiveRepository.save(perspective).getId()).toString();
+		return perspectiveRepository.save(perspective).getId();
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
@@ -205,30 +202,21 @@ public class UprtclService {
 		Boolean clone = false;
 		if (perspectiveDto.getId() != null && perspectiveDto.getCreatorId() != null) {
 			clone = true;
+			throw new Exception("perspectives cant be cloned, they are platform dependant");
 		}
 		
-		Perspective perspective = null;
+		Perspective perspective = new Perspective();
+		perspective.setCreatorId(requestBy);
+		perspective.setTimestamp(new Timestamp(
+				perspectiveDto.getTimestamp() != null ? perspectiveDto.getTimestamp() : System.currentTimeMillis()));
 		
-		if (clone) {
-			Cid cid = IpldService.encode(perspectiveDto.getId());
-			perspective = perspectiveRepository.getOne(cid.toBytes());
-		}
-		
-		if (perspective == null) {
-			perspective = new Perspective();
-		}
-		
-		if (clone) {
-			perspective.setCreatorId(perspectiveDto.getCreatorId());
-			perspective.setTimestamp(new Timestamp(perspectiveDto.getTimestamp()));
-		} else {
-			perspective.setCreatorId(requestBy);
-			perspective.setTimestamp(new Timestamp(
-					perspectiveDto.getTimestamp() != null ? perspectiveDto.getTimestamp() : System.currentTimeMillis()));
-		}
-		
-		if (perspectiveDto.getContextId() != null) perspective.setContextId(IpldService.encode(perspectiveDto.getContextId()).toBytes());
+		if (perspectiveDto.getContextId() == null) {
+			throw new Exception("context cannot be empty");
+		} 
+			
+		perspective.setContextId(IpldService.encode(perspectiveDto.getContextId()).toBytes());
 		perspective.setName(perspectiveDto.getName());
+		perspective.setOrigin(UPRTCL_ENPOINT);
 		
 		if (perspectiveDto.getHeadId() != null) perspective.setHeadId(IpldService.encode(perspectiveDto.getHeadId()).toBytes());
 		
@@ -277,13 +265,33 @@ public class UprtclService {
 		return commit;
 	}
 	
-	
-	public ExternalLink getLocalLink(byte[] elementId) {
-		return new ExternalLink(NetworkId.http + "://" + UPRTCL_ENPOINT + "/" + IpldService.decode(elementId));
+	@Transactional(rollbackOn = Exception.class)
+	public String getElementCreator(String elementId) throws Exception {
+		return getElementCreator(IpldService.encode(elementId).toBytes());
 	}
 	
-	public Boolean isLocalLink(ExternalLink link) {
-		return (link.getNetwork() == NetworkId.http) && (link.getNetworkAddress() == UPRTCL_ENPOINT);
+	@Transactional(rollbackOn = Exception.class)
+	public String getElementCreator(byte[]  elementId) {
+		
+		Context context = contextRepository.getOne(elementId);
+		
+		if (context != null) {
+			return context.getCreatorId();
+		}
+		
+		Perspective perspective = perspectiveRepository.getOne(elementId);
+		
+		if (perspective != null) {
+			return perspective.getCreatorId();
+		}
+		
+		Commit commit = commitRepository.getOne(elementId);
+		
+		if (commit != null) {
+			return commit.getCreatorId();
+		}
+		
+		return null;
 	}
 
 }

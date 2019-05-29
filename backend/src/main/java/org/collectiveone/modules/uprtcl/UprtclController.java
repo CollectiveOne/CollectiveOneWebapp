@@ -75,12 +75,14 @@ public class UprtclController extends BaseController {
 	public PostResult createPerspective(
 			@RequestBody List<PerspectiveDto> perspectiveDtos) throws Exception {
 		
-		List<String> perspectivesLinks = uprtclService.createPerspectives(perspectiveDtos, getLoggedUserId());
+		List<byte[]> perspectivesLinks = uprtclService.createPerspectives(perspectiveDtos, getLoggedUserId());
 		
 		return new PostResult(
 				"success", 
 				"perspective created", 
-				perspectivesLinks);
+				perspectivesLinks
+					.stream().map(id -> IpldService.decode(id))
+					.collect(Collectors.toList()));
 	}
 	
 	@RequestMapping(path = "/persp/{perspectiveId}", method = RequestMethod.GET)
@@ -98,12 +100,14 @@ public class UprtclController extends BaseController {
 			@PathVariable("perspectiveId") String perspectiveId, 
 			@RequestParam("headId") String headId) throws Exception {
 		
+		byte[] perspectiveIdret = uprtclService.updatePerspective(
+				IpldService.encode(perspectiveId).toBytes(), 
+				IpldService.encode(headId).toBytes());
+		
 		return new PostResult(
 				"success", 
 				"perspective created", 
-				Arrays.asList(uprtclService.updatePerspective(
-						IpldService.encode(perspectiveId).toBytes(), 
-						IpldService.encode(headId).toBytes())));
+				Arrays.asList(IpldService.decode(perspectiveIdret)));
 	}
 	
 	

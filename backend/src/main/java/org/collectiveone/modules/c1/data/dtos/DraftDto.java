@@ -5,6 +5,14 @@ public class DraftDto {
 	private String elementId;
 	private DataDto data;
 	
+	public DraftDto() {
+		super();
+	}
+	public DraftDto(String elementId, DataDto data) {
+		super();
+		this.elementId = elementId;
+		this.data = data;
+	}
 	public String getElementId() {
 		return elementId;
 	}

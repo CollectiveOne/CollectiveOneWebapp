@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.bitcoinj.core.ECKey;
 import org.collectiveone.modules.c1.data.entities.DefaultPerspective;
 import org.collectiveone.modules.c1.data.repositories.DefaultPerspectiveRepositoryIf;
+import org.collectiveone.modules.ipld.IpldService;
 import org.collectiveone.modules.uprtcl.UprtclService;
 import org.collectiveone.modules.uprtcl.entities.Context;
 import org.collectiveone.modules.uprtcl.entities.Perspective;
@@ -72,7 +73,8 @@ public class AppUserService {
 		AppUserDto appUserDto = user.toDto();
 		
 		/* inject root perspective */
-		appUserDto.setRootPerspectiveLink(getDefaultRootPerspectiveLink(user.getDid()));
+		appUserDto.setRootPerspectiveId(
+				IpldService.decode(getDefaultRootPerspectiveId(user.getDid())));
 		
 		return appUserDto;
 	}
@@ -141,11 +143,6 @@ public class AppUserService {
 		}
 	}
 	
-	
-	@Transactional(rollbackOn = Exception.class)
-	public String getDefaultRootPerspectiveLink(String userDid) throws Exception {
-		return uprtclService.getLocalLink(getDefaultRootPerspectiveId(userDid)).toString();
-	}
 	
 	@Transactional(rollbackOn = Exception.class)
 	public byte[] getDefaultRootPerspectiveId(String userDid) throws Exception {

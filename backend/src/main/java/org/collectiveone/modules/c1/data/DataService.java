@@ -13,7 +13,6 @@ import org.collectiveone.modules.c1.data.dtos.TextDataDto;
 import org.collectiveone.modules.c1.data.entities.Data;
 import org.collectiveone.modules.c1.data.entities.DataIf;
 import org.collectiveone.modules.c1.data.entities.Draft;
-import org.collectiveone.modules.c1.data.entities.ExternalLink;
 import org.collectiveone.modules.c1.data.entities.Link;
 import org.collectiveone.modules.c1.data.entities.NodeData;
 import org.collectiveone.modules.c1.data.entities.TextData;
@@ -135,9 +134,9 @@ public class DataService {
 			for (LinkDto linkDto : nodeDataDto.getLinks()) {
 				Link link = new Link();
 				
-				link.setLink(new ExternalLink(linkDto.getLink()));
-				link.setBefore(linkDto.getBefore() != null ? new ExternalLink(linkDto.getBefore()) : null);
-				link.setAfter(linkDto.getAfter() != null ? new ExternalLink(linkDto.getAfter()) : null);
+				link.setLink(IpldService.encode(linkDto.getLink()).toBytes());
+				link.setBefore(linkDto.getBefore() != null ? IpldService.encode(linkDto.getBefore()).toBytes() : null);
+				link.setAfter(linkDto.getAfter() != null ? IpldService.encode(linkDto.getAfter()).toBytes() : null);
 				
 				nodeData.getLinks().add(link);
 			}
