@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,9 +23,13 @@ import org.collectiveone.modules.c1.data.dtos.TextDataDto;
 import org.collectiveone.modules.c1.data.enums.DataType;
 import org.collectiveone.modules.c1.views.ElementViewType;
 import org.collectiveone.modules.c1.views.ViewDto;
+import org.collectiveone.modules.ipld.IpldService;
 import org.collectiveone.modules.uprtcl.dtos.CommitDto;
 import org.collectiveone.modules.uprtcl.dtos.ContextDto;
 import org.collectiveone.modules.uprtcl.dtos.PerspectiveDto;
+import org.collectiveone.modules.uprtcl.entities.Commit;
+import org.collectiveone.modules.uprtcl.entities.Context;
+import org.collectiveone.modules.uprtcl.entities.Perspective;
 import org.collectiveone.modules.users.AppUserDto;
 import org.junit.After;
 import org.junit.Before;
@@ -48,6 +53,8 @@ import com.auth0.net.AuthRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+
+import io.ipfs.multihash.Multihash.Type;
 
 
 @RunWith(SpringRunner.class)
@@ -78,41 +85,53 @@ public class TestContextController extends AbstractTest {
 	@Value("${TEST_USER_PWD_1}")
 	private String testPwd1;
 	
-	private String authorizationTokenUser1;
-	
 	@Value("${TEST_USER_EMAIL_2}")
 	private String testEmail2;
 	
 	@Value("${TEST_USER_PWD_2}")
 	private String testPwd2;
 	
-	private String authorizationTokenUser2;
+	private AppUserAuthDto user1;
 	
-	private AppUserDto user1;
+	private AppUserAuthDto user2;
 	
-	private AppUserDto user2;
+	private AuthAPI auth;
+	
+	private AuthAPI getAuth() {
+		if (auth == null) {
+			auth = new AuthAPI(auth0Domain, clientId, clientSecret);
+		} 
+		return auth;
+	}
 	
 	@Before
     public void setUp() throws Exception {
-		
-		AuthAPI auth = new AuthAPI(auth0Domain, clientId, clientSecret);
-		
-		AuthRequest request = auth.login(testEmail1, testPwd1)
-		    .setScope("openid contacts");
+		user1 = signUpUser(testEmail1, testPwd1);
+		user2 = signUpUser(testEmail2, testPwd2);
+    }
+
+    @After
+    public void tearDown() {
+        // clean up after each test method
+    }
+    
+    private AppUserAuthDto signUpUser(String testEmail, String testPwd) throws Exception {
+    	AppUserAuthDto user = new AppUserAuthDto();
+    	
+    	AuthRequest request = getAuth().login(testEmail, testPwd)
+    		    .setScope("openid contacts");
 		try {
 		    TokenHolder holder = request.execute();
-		    authorizationTokenUser1 = holder.getIdToken();
+		    user.setAuthToken(holder.getIdToken());
 		} catch (APIException exception) {
 			System.out.println(exception);
 		} catch (Auth0Exception exception) {
 			System.out.println(exception);
 		}
 		
-		authorizationTokenUser1 = authorizationTokenUser1.substring(0, authorizationTokenUser1.length() - 5) + "AAAAA";
-		
 		MvcResult result = this.mockMvc
 	    	.perform(get("/1/u/me")
-	        .header("Authorization", "Bearer " + authorizationTokenUser1))	    	
+	        .header("Authorization", "Bearer " + user.getAuthToken()))	    	
 	    	.andReturn();
 		
 		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
@@ -123,43 +142,15 @@ public class TestContextController extends AbstractTest {
         		gson.fromJson(result.getResponse().getContentAsString(), 
         				new TypeToken<GetResult<AppUserDto>>(){}.getType());
         
-        user1 = getResult.getData();
-		
-        logger.debug("Test user created:" + result.getResponse().getContentAsString());
+        user.setUser(getResult.getData());
         
-        request = auth.login(testEmail2, testPwd2)
-    		    .setScope("openid contacts");
-		try {
-		    TokenHolder holder = request.execute();
-		    authorizationTokenUser2 = holder.getIdToken();
-		} catch (APIException exception) {
-			System.out.println(exception);
-		} catch (Auth0Exception exception) {
-			System.out.println(exception);
-		}
-		
-		result = this.mockMvc
-	    	.perform(get("/1/u/me")
-	        .header("Authorization", "Bearer " + authorizationTokenUser2))	    	
-	    	.andReturn();
-		
-		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
-        		200, result.getResponse().getStatus());
-		
-		
-		getResult = 
-        		gson.fromJson(result.getResponse().getContentAsString(), 
-        				new TypeToken<GetResult<AppUserDto>>(){}.getType());
+        List<PerspectiveDto> perspectives = getPerspectivesOfContext(user.getUser().getRootContextId());
         
-        user2 = getResult.getData();
-		
-        logger.debug("Test user created:" + result.getResponse().getContentAsString());
-
-    }
-
-    @After
-    public void tearDown() {
-        // clean up after each test method
+        assertEquals("unexpected number of perspectives", 1, perspectives.size());
+        
+        user.setRootPerspectiveId(perspectives.get(0).getId());
+        
+        return user;
     }
     
     private String createData(DataDto dataDto, String auth) throws Exception {
@@ -278,6 +269,25 @@ public class TestContextController extends AbstractTest {
  		GetResult<PerspectiveDto> getResult = 
         		gson.fromJson(result.getResponse().getContentAsString(), 
          				new TypeToken<GetResult<PerspectiveDto>>(){}.getType());
+         
+        assertEquals("error getting perspective: " + getResult.getMessage(),
+        		"success", getResult.getResult());
+         
+        return getResult.getData();
+    }
+    
+    private List<PerspectiveDto> getPerspectivesOfContext(String contextId) throws Exception {
+    	MvcResult result = 
+        		this.mockMvc
+    	    	.perform(get("/1/ctx/" + contextId + "/perspectives"))
+    	    	.andReturn();
+    	
+		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+	    		200, result.getResponse().getStatus());
+         
+ 		GetResult<List<PerspectiveDto>> getResult = 
+        		gson.fromJson(result.getResponse().getContentAsString(), 
+         				new TypeToken<GetResult<List<PerspectiveDto>>>(){}.getType());
          
         assertEquals("error getting perspective: " + getResult.getMessage(),
         		"success", getResult.getResult());
@@ -468,6 +478,25 @@ public class TestContextController extends AbstractTest {
         return gson.fromJson(getResult.getData().getJsonData(), TextDataDto.class); 
     }
     
+    private String getOrigin() throws Exception {
+    	MvcResult result = 
+        		this.mockMvc
+    	    	.perform(get("/1/discovery/you"))
+    	    	.andReturn();
+    	
+		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+	    		200, result.getResponse().getStatus());
+         
+ 		GetResult<String> getResult = 
+        		gson.fromJson(result.getResponse().getContentAsString(), 
+         				new TypeToken<GetResult<String>>(){}.getType());
+         
+        assertEquals("error getting commit: " + getResult.getMessage(),
+        		"success", getResult.getResult());
+         
+        return getResult.getData(); 
+    }
+    
     private NodeDataDto getNodeDataDraft(String perspectiveId, String auth) throws Exception {
     	
     	MvcResult result = 
@@ -488,6 +517,56 @@ public class TestContextController extends AbstractTest {
          
         return gson.fromJson(getResult.getData().getJsonData(), NodeDataDto.class); 
     }
+    
+    
+    private ContextDto createContextLocal(String creatorId) throws Exception {
+    	Context context = new Context();
+		
+    	context.setCreatorId(creatorId);
+		context.setTimestamp(new Timestamp(System.currentTimeMillis()));
+		context.setNonce(0L);
+		
+		context.setId(Type.sha2_256);
+		
+		return context.toDto();
+    }
+    
+    private PerspectiveDto createPerspectiveLocal(String creatorId, String contextId) throws Exception {
+    	Perspective perspective = new Perspective();
+		
+    	perspective.setCreatorId(creatorId);
+    	perspective.setContextId(IpldService.encode(contextId).toBytes());
+    	perspective.setHeadId(null);
+    	perspective.setName("DEFAULT");
+    	perspective.setOrigin(getOrigin());
+    	perspective.setTimestamp(new Timestamp(System.currentTimeMillis()));
+    	
+    	perspective.setId(Type.sha2_256);
+		
+		return perspective.toDto();
+    }
+    
+    private CommitDto createCommitLocal(
+    		String creatorId,
+    		String dataId,
+    		List<String> parentsIds) throws Exception {
+    	
+    	Commit commit = new Commit();
+		
+    	commit.setCreatorId(creatorId);
+    	commit.setDataId(IpldService.encode(dataId).toBytes());
+    	commit.setMessage("a commit message");
+    	commit.setTimestamp(new Timestamp(System.currentTimeMillis()));
+    	
+    	for (String id : parentsIds) {
+    		commit.getParentsIds().add(IpldService.encode(id).toBytes());
+    	}
+    	
+    	commit.setId(Type.sha2_256);
+		
+		return commit.toDto();
+    }
+    
        
     @Test
     @Rollback(false)
@@ -496,34 +575,34 @@ public class TestContextController extends AbstractTest {
     	/* creates a context and fill it with one perspective/commit/data triplet */
     	String contextId01 = createContext(
     			new ContextDto(),
-    			authorizationTokenUser1);
+    			user1.getAuthToken());
     	
     	String dataId01 = createData(
     			newTextData("data 01"), 
-    			authorizationTokenUser1);
+    			user1.getAuthToken());
     	
     	String commitId01 = createCommit(
     			new CommitDto("message 01", new ArrayList<String>(), dataId01),
-    			authorizationTokenUser1);
+    			user1.getAuthToken());
     	
     	String perspectiveId01 = createPerspective(
     			new PerspectiveDto(contextId01, "perspective 01", commitId01),
-    			authorizationTokenUser1);
+    			user1.getAuthToken());
     	
     	
     	/* add the just created context (perspective) as subcontext of user 1 root */
     	String dataId02 = createData(
     			newNodeData(
-    					getTextData(dataId01, authorizationTokenUser1).getText(), 
+    					getTextData(dataId01, user1.getAuthToken()).getText(), 
     					Arrays.asList(new LinkDto(perspectiveId01))), 
-    			authorizationTokenUser1);
+    			user1.getAuthToken());
     	
     	/* commit this to the root perspective */
     	String commitId02 = createCommit(
     			new CommitDto("added subcontext", Arrays.asList(commitId01), dataId02),
-    			authorizationTokenUser1);
+    			user1.getAuthToken());
     	
-    	commitToPerspective(user1.getRootPerspectiveId(), commitId02, authorizationTokenUser1);
+    	commitToPerspective(user1.getRootPerspectiveId(), commitId02, user1.getAuthToken());
     	
     	/* get root perspective */
     	NodeDataDto data01 = getNodeDataOfPerspective(user1.getRootPerspectiveId());
@@ -540,9 +619,9 @@ public class TestContextController extends AbstractTest {
     	updateDraft(new DraftDto(
     			perspectiveId01,
     			newTextData(dataDraftText)), 
-    		authorizationTokenUser1);
+    			user1.getAuthToken());
     	
-    	TextDataDto data03 = getTextDataDraft(perspectiveId01, authorizationTokenUser1);
+    	TextDataDto data03 = getTextDataDraft(perspectiveId01, user1.getAuthToken());
     	
     	assertEquals("unexpected draft data", 
     			dataDraftText, data03.getText());
@@ -551,11 +630,31 @@ public class TestContextController extends AbstractTest {
     	/* set a view for a perspective */
     	setView(
 			new ViewDto(perspectiveId01, user1.getRootPerspectiveId(), ElementViewType.TITLE), 
-			authorizationTokenUser1);
+			user1.getAuthToken());
     	
-    	ViewDto view01 = getView(perspectiveId01, user1.getRootPerspectiveId(), authorizationTokenUser1);
+    	ViewDto view01 = getView(perspectiveId01, user1.getRootPerspectiveId(), user1.getAuthToken());
     	
     	assertEquals("unexpectedView", ElementViewType.TITLE, view01.getElementViewType());
+    	
+    	/* test clone objects */
+    	String contextCloneId01 = createContext(
+    			createContextLocal(user2.getUser().getDid()),
+    			user1.getAuthToken());
+    	
+    	/* perspective cloned */
+    	String contextPerspectiveId01 = createPerspective(
+    			createPerspectiveLocal(user2.getUser().getDid(), contextCloneId01),
+    			user1.getAuthToken());
+    	
+    	String dataId03 = createData(
+    			newTextData("data 03"), 
+    			user1.getAuthToken());
+    	
+    	String commitCloneId01 = createCommit(
+    			createCommitLocal(user2.getUser().getDid(), dataId03, Arrays.asList(commitId01)),
+    			user1.getAuthToken());
+    	
+    	
     	
     }
     

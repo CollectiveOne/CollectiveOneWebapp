@@ -61,14 +61,14 @@ public class UprtclController extends BaseController {
 				Base58.encode(uprtclService.getContextId(contextDto)));
 	}
 	
-	@RequestMapping(path = "/ctxPersps", method = RequestMethod.GET)
+	@RequestMapping(path = "/ctx/{contextId}/perspectives", method = RequestMethod.GET)
 	public GetResult<List<PerspectiveDto>> getContextPerspectives(
 			@PathVariable("contextId") String contextId) throws Exception {
 		
 		return new GetResult<List<PerspectiveDto>>(
 				"success", 
 				"contex created", 
-				uprtclService.getContextPerspectives(contextId));
+				uprtclService.getContextPerspectives(IpldService.encode(contextId).toBytes()));
 	}
 	
 	@RequestMapping(path = "/persp", method = RequestMethod.POST)

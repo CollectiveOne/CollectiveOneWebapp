@@ -135,8 +135,13 @@ public class DataService {
 				Link link = new Link();
 				
 				link.setLink(IpldService.encode(linkDto.getLink()).toBytes());
-				link.setBefore(linkDto.getBefore() != null ? IpldService.encode(linkDto.getBefore()).toBytes() : null);
-				link.setAfter(linkDto.getAfter() != null ? IpldService.encode(linkDto.getAfter()).toBytes() : null);
+				
+				if (linkDto.getPosition() != null) {
+					link.setBefore(linkDto.getPosition().getBefore() != null ? 
+							IpldService.encode(linkDto.getPosition().getBefore()).toBytes() : null);
+					link.setAfter(linkDto.getPosition().getAfter() != null ? 
+							IpldService.encode(linkDto.getPosition().getAfter()).toBytes() : null);
+				}
 				
 				nodeData.getLinks().add(link);
 			}

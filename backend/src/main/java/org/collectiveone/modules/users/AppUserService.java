@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 import org.bitcoinj.core.ECKey;
 import org.collectiveone.modules.c1.data.entities.DefaultPerspective;
 import org.collectiveone.modules.c1.data.repositories.DefaultPerspectiveRepositoryIf;
-import org.collectiveone.modules.ipld.IpldService;
 import org.collectiveone.modules.uprtcl.UprtclService;
 import org.collectiveone.modules.uprtcl.entities.Context;
 import org.collectiveone.modules.uprtcl.entities.Perspective;
@@ -68,18 +67,6 @@ public class AppUserService {
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public AppUserDto toDtoWithRootPerspective(AppUser user) throws Exception {
-		
-		AppUserDto appUserDto = user.toDto();
-		
-		/* inject root perspective */
-		appUserDto.setRootPerspectiveId(
-				IpldService.decode(getDefaultRootPerspectiveId(user.getDid())));
-		
-		return appUserDto;
-	}
-	
-	@Transactional(rollbackOn = Exception.class)
 	private AppUser addUserToLocalDB(String auth0Id) throws Exception {
 		/* retrieve from Auth0 */
 		AppUser appUser = null;
@@ -120,6 +107,12 @@ public class AppUserService {
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
+	public byte[] getRootContextId(String userDid) throws Exception {
+		return appUserRepository.getContextId(userDid);
+	}
+	
+	
+	@Transactional(rollbackOn = Exception.class)
 	private DIDNanny newDIDNanny(DIDMethod method, DIDNannyType nannyType, String extId) throws Exception {
 		switch (method) {
 			case secp256k1: 
@@ -143,11 +136,6 @@ public class AppUserService {
 		}
 	}
 	
-	
-	@Transactional(rollbackOn = Exception.class)
-	public byte[] getDefaultRootPerspectiveId(String userDid) throws Exception {
-		return getDefaultPerspectiveId(userDid, appUserRepository.getContextId(userDid));
-	}
 	
 	@Transactional(rollbackOn = Exception.class)
 	public byte[] getDefaultPerspectiveId(String userDid, byte[] contextId) throws Exception {

@@ -2,11 +2,13 @@ package org.collectiveone.modules.uprtcl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.collectiveone.modules.c1.discovery.DiscoveryService;
 import org.collectiveone.modules.ipld.IpldService;
 import org.collectiveone.modules.uprtcl.dtos.CommitDto;
 import org.collectiveone.modules.uprtcl.dtos.ContextDto;
@@ -28,11 +30,11 @@ import io.ipfs.multihash.Multihash.Type;
 @Service
 public class UprtclService {
 	
-	@Value("${UPRTLC_ENDPOINT}")
-	private String UPRTCL_ENPOINT;
-	
 	@Value("${UPRTLC_DFT_MULTIHASH_TYPE}")
 	private Type UPRTCL_DFT_TYPE;
+	
+	@Autowired
+	private DiscoveryService discoveryService;
 	
 	@Autowired
 	private ContextRepositoryIf contextRepository;
@@ -81,7 +83,7 @@ public class UprtclService {
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
-	public List<PerspectiveDto> getContextPerspectives(String contextId) throws Exception {
+	public List<PerspectiveDto> getContextPerspectives(byte[] contextId) throws Exception {
 		return perspectiveRepository
 				.findByContextId(contextId)
 				.stream()
@@ -112,20 +114,23 @@ public class UprtclService {
 	public Context createContext(ContextDto contextDto, String requestBy) throws Exception {
 		
 		Boolean clone = false;
+		Cid existingCid = null;
+		
 		if (contextDto.getId() != null && contextDto.getCreatorId() != null) {
 			clone = true;
+			existingCid = IpldService.encode(contextDto.getId());
 		}
 		
 		Context context = null;
 		
 		if (clone) {
-			Cid cid = IpldService.encode(contextDto.getId());
-			context = contextRepository.getOne(cid.toBytes());
+			byte[] contextId = existingCid.toBytes();
+			context = contextRepository.findById(contextId).orElse(null);
 		}
 		
 		if (context == null) {
 			context = new Context();
-		}
+		} 
 		
 		if (clone) {
 			context.setCreatorId(contextDto.getCreatorId());
@@ -142,16 +147,17 @@ public class UprtclService {
 			/* Use the same hash type and base encoding to have the same 
 			 * id string */	
 			
-			Cid existingCid = IpldService.encode(contextDto.getId());
 			context.setId(existingCid.getType());
 			
 			/* validate the ID is as expected */
-			if (!context.getId().equals(existingCid.toBytes())) {
+			byte[] existingBytes = existingCid.toBytes();
+			
+			if (!Arrays.equals(context.getId(), (existingBytes))) {
 				throw new Exception(
 						"object ID inconsistent, expecting \"" 
-						+ context.getId() 
+						+ IpldService.decode(context.getId(), Multibase.encoding(contextDto.getId())) 
 						+ "\" but it was \"" 
-						+ Multibase.encode(Multibase.encoding(contextDto.getId()), existingCid.toBytes()) + "\"");
+						+ contextDto.getId() + "\"");
 			}
 		} else {
 			context.setId(UPRTCL_DFT_TYPE);
@@ -200,27 +206,65 @@ public class UprtclService {
 	public Perspective createPerspective(PerspectiveDto perspectiveDto, String requestBy) throws Exception {
 		
 		Boolean clone = false;
+		Cid existingCid = null;
+		
 		if (perspectiveDto.getId() != null && perspectiveDto.getCreatorId() != null) {
 			clone = true;
-			throw new Exception("perspectives cant be cloned, they are platform dependant");
+			if(!perspectiveDto.getOrigin().equals(discoveryService.getOrigin())) {
+				throw new Exception("perspectives from another origin cant be cloned");	
+			}
+			existingCid = IpldService.encode(perspectiveDto.getId());
 		}
 		
-		Perspective perspective = new Perspective();
-		perspective.setCreatorId(requestBy);
-		perspective.setTimestamp(new Timestamp(
-				perspectiveDto.getTimestamp() != null ? perspectiveDto.getTimestamp() : System.currentTimeMillis()));
+		Perspective perspective = null;
+		
+		if (clone) {
+			byte[] perspectiveId = existingCid.toBytes();
+			perspective = perspectiveRepository.findById(perspectiveId).orElse(null);
+		}
+		
+		if (perspective == null) {
+			perspective = new Perspective();
+		}
 		
 		if (perspectiveDto.getContextId() == null) {
 			throw new Exception("context cannot be empty");
 		} 
-			
+		
+		if (clone) {
+			perspective.setCreatorId(perspectiveDto.getCreatorId());
+			perspective.setTimestamp(new Timestamp(perspectiveDto.getTimestamp()));
+			perspective.setOrigin(discoveryService.getOrigin());
+		} else {
+			perspective.setCreatorId(requestBy);
+			perspective.setTimestamp(new Timestamp(
+					perspectiveDto.getTimestamp() != null ? perspectiveDto.getTimestamp() : System.currentTimeMillis()));
+			perspective.setOrigin(discoveryService.getOrigin());
+		}
+		
+		if (perspectiveDto.getHeadId() != null) 
+			perspective.setHeadId(IpldService.encode(perspectiveDto.getHeadId()).toBytes());
+		
 		perspective.setContextId(IpldService.encode(perspectiveDto.getContextId()).toBytes());
 		perspective.setName(perspectiveDto.getName());
-		perspective.setOrigin(UPRTCL_ENPOINT);
 		
-		if (perspectiveDto.getHeadId() != null) perspective.setHeadId(IpldService.encode(perspectiveDto.getHeadId()).toBytes());
+		if (clone) {
+			perspective.setId(existingCid.getType());
+			
+			/* validate the ID is as expected */
+			byte[] existingBytes = existingCid.toBytes();
+			
+			if (!Arrays.equals(perspective.getId(), (existingBytes))) {
+				throw new Exception(
+						"object ID inconsistent, expecting \"" 
+						+ IpldService.decode(perspective.getId(), Multibase.encoding(perspectiveDto.getId())) 
+						+ "\" but it was \"" 
+						+ perspectiveDto.getId() + "\"");
+			}
+		} else {
+			perspective.setId(UPRTCL_DFT_TYPE);
+		}
 		
-		perspective.setId(UPRTCL_DFT_TYPE);
 		perspective = perspectiveRepository.save(perspective);
 
 		return perspective;
@@ -245,11 +289,37 @@ public class UprtclService {
 	@Transactional(rollbackOn = Exception.class)
 	public Commit createCommit(CommitDto commitDto, String requestBy) throws Exception {
 
-		Commit commit = new Commit();
+		Boolean clone = false;
+		Cid existingCid = null;
 		
-		commit.setCreatorId(requestBy);
-		commit.setTimestamp(new Timestamp(
-				commitDto.getTimestamp() != null ? commitDto.getTimestamp() : System.currentTimeMillis()));
+		if (commitDto.getId() != null && commitDto.getCreatorId() != null) {
+			clone = true;
+			existingCid = IpldService.encode(commitDto.getId());
+		}
+		
+		Commit commit = null;
+		
+		if (clone) {
+			byte[] commitId = existingCid.toBytes();
+			commit = commitRepository.findById(commitId).orElse(null);
+		}
+		
+		if (commit == null) { 
+			commit = new Commit();
+		}
+		
+		if (commitDto.getDataId() == null) {
+			throw new Exception("commit data cannot be empty");
+		} 
+		
+		if (clone) {
+			commit.setCreatorId(commitDto.getCreatorId());
+			commit.setTimestamp(new Timestamp(commitDto.getTimestamp()));
+		} else {
+			commit.setCreatorId(requestBy);
+			commit.setTimestamp(new Timestamp(
+					commitDto.getTimestamp() != null ? commitDto.getTimestamp() : System.currentTimeMillis()));
+		}
 		
 		commit.setMessage(commitDto.getMessage());
 		
@@ -258,7 +328,23 @@ public class UprtclService {
 		}
 
 		commit.setDataId(IpldService.encode(commitDto.getDataId()).toBytes());
-		commit.setId(UPRTCL_DFT_TYPE);
+		
+		if (clone) {
+			commit.setId(existingCid.getType());
+			
+			/* validate the ID is as expected */
+			byte[] existingBytes = existingCid.toBytes();
+			
+			if (!Arrays.equals(commit.getId(), (existingBytes))) {
+				throw new Exception(
+						"object ID inconsistent, expecting \"" 
+						+ IpldService.decode(commit.getId(), Multibase.encoding(commitDto.getId())) 
+						+ "\" but it was \"" 
+						+ commitDto.getId() + "\"");
+			}
+		} else {
+			commit.setId(UPRTCL_DFT_TYPE);
+		}
 		
 		commit = commitRepository.save(commit);
 		

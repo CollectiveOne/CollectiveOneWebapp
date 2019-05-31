@@ -2,6 +2,7 @@ package org.collectiveone.modules.users;
 
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
+import org.collectiveone.modules.ipld.IpldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +24,17 @@ public class AppUserController extends BaseController {
 			return new GetResult<AppUserDto>("error", "anonymous user", null);
 		}
 		
-		AppUserDto userDto = appUserService.toDtoWithRootPerspective(
-				appUserService.getOrCreateFromMyAuth0Id(auth0Id));
+		AppUserDto userDto = appUserService.getOrCreateFromMyAuth0Id(auth0Id).toDto();
 		
 		return new GetResult<AppUserDto> ("success", "user retrieved", userDto);
+	}
+	
+	@RequestMapping(path = "/u/rootContextId",  method = RequestMethod.GET)
+    public GetResult<String> myRootContextId() throws Exception {
+		
+		String rootContextId = IpldService.decode(appUserService.getRootContextId(getLoggedUserId()));
+		
+		return new GetResult<String> ("success", "root context id retrieved", rootContextId);
 	}
 	
 }

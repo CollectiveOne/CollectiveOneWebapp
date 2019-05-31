@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.bitcoinj.core.Base58;
 import org.collectiveone.modules.ipld.IpldService;
 import org.collectiveone.modules.uprtcl.dtos.PerspectiveDto;
 
@@ -78,7 +77,7 @@ public class Perspective {
 	public PerspectiveDto toDto() throws Exception {
 		PerspectiveDto dto = new PerspectiveDto();
 		
-		dto.setId(Base58.encode(id));
+		dto.setId(IpldService.decode(id));
 		dto.setOrigin(origin);
 		dto.setCreatorId(creatorId);
 		dto.setTimestamp(timestamp.getTime());

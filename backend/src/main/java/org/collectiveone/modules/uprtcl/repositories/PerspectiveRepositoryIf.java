@@ -14,5 +14,5 @@ public interface PerspectiveRepositoryIf extends JpaRepository<Perspective, byte
 	public byte[] findIdOfOldestOfContext(
 			@Param("contextId") byte[] contextId);
 	
-	public List<Perspective> findByContextId(String contextId);
+	public List<Perspective> findByContextId(byte[] contextId);
 }

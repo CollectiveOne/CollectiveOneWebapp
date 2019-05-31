@@ -11,6 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.c1.data.entities.DefaultPerspective;
+import org.collectiveone.modules.ipld.IpldService;
 import org.collectiveone.modules.uprtcl.entities.Context;
 import org.collectiveone.modules.users.nannies.DIDNanny;
 
@@ -35,6 +36,7 @@ public class AppUser {
 		AppUserDto dto = new AppUserDto();
 		
 		dto.setDid(did);
+		dto.setRootContextId(IpldService.decode(context.getId()));
 		dto.setNanny(nanny.toDto());
 		
 		return dto;

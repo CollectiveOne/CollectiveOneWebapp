@@ -47,6 +47,12 @@ public class IpldService {
 		return Multibase.encode(UPRTCL_DFT_BASE, cidBytes);		
 	}
 	
+	/** Returns the Cid String of a multihash using the default base */
+	public static String decode(byte[] cidBytes, Base base) {
+		if (cidBytes == null) return null;
+		return Multibase.encode(base, cidBytes);		
+	}
+	
 	/** Returns the multihash bytes */
 	public static byte[] hash(String json, Type type) throws Exception {
 		String digest;
