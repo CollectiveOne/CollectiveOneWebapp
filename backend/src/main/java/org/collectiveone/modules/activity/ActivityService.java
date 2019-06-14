@@ -403,6 +403,8 @@ public class ActivityService {
 						subscriberRepository.findByUser_C1IdAndType(userId, type) :
 						subscriberRepository.findByElementIdAndTypeAndUser_C1Id(elementId, type, userId);
 						
+		if (subscriber == null) return;
+		
 		subscriberRepository.delete(subscriber);
 	}
 	

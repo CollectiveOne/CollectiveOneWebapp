@@ -3,3 +3,7 @@
 /compileAndCopy.sh
 /mvnw
 /backend/log
+.project
+.settings
+frontend/.classpath
+.project

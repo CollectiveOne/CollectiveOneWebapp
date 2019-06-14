@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -33,6 +35,9 @@ public class Member implements Comparable<Member>{
 	
 	@ManyToOne
 	private AppUser user;
+	
+	@Enumerated(EnumType.STRING)
+	private MemberStatus status;
 	
 	@OneToMany(mappedBy = "member")
 	private List<MemberTransfer> tokensTransfers = new ArrayList<MemberTransfer>();
@@ -65,6 +70,14 @@ public class Member implements Comparable<Member>{
 
 	public void setUser(AppUser user) {
 		this.user = user;
+	}
+	
+	public MemberStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(MemberStatus status) {
+		this.status = status;
 	}
 
 	public List<MemberTransfer> getTokensTransfers() {
