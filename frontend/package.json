@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "auth0-lock": "^11.3.1",
-    "axios": "^0.16.1",
+    "axios": "^0.21.1",
     "file-saver": "^2.0.1",
     "popper.js": "^1.14.3",
     "register-service-worker": "^1.5.2",
