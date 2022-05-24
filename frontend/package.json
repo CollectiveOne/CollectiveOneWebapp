@@ -10,7 +10,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "auth0-lock": "^11.3.1",
+    "auth0-lock": "^11.33.0",
     "axios": "^0.16.1",
     "file-saver": "^2.0.1",
     "popper.js": "^1.14.3",
